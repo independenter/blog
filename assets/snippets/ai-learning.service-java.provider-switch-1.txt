@@ -1,0 +1,20 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.service-java.provider-switch · 来源 ProviderManager.java:67-83
+
+    public void addProvider(String name, ChatModel model) {
+        providers.put(name, model);
+        providerTypes.put(name, "openai_compatible");
+    }
+
+    public Map<String, Object> getStatus() {
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("provider", currentName);
+        out.put("provider_type", providerTypes.getOrDefault(currentName, ""));
+        out.put("model", currentModel);
+        out.put("embed_model", embedModel);
+        List<Map<String, Object>> ps = new ArrayList<>();
+        providers.forEach((n, m) -> ps.add(Map.of("name", n, "type", providerTypes.getOrDefault(n, ""))));
+        out.put("providers", ps);
+        return out;
+    }
+}

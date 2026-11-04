@@ -1,0 +1,11 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-java.checkpointer · 来源 Checkpointer.java:18-25
+
+    public boolean has(String threadId) {
+        return checkpoints.containsKey(threadId);
+    }
+
+    public void remove(String threadId) {
+        checkpoints.remove(threadId);
+    }
+}

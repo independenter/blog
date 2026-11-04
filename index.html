@@ -69,6 +69,8 @@
   .ai-tool-features span { font: 11px/1.4 var(--mono); color: var(--accent); padding: 4px 8px; border: 1px solid var(--accent-dim); background: rgba(62, 224, 200, 0.05); }
   .ai-tool-link { font: 12px/1 var(--mono); color: var(--accent); text-decoration: none; margin-top: auto; }
   .ai-tool-link:hover { text-decoration: underline; }
+  .status-dot.new { background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
   @media (max-width: 1023px) {
     .about-grid, .contact-block { grid-template-columns: minmax(0,1fr); }
     .featured { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -345,6 +347,7 @@ check: hashes identical across rerun</pre>
   const C = window.Catalog;
 
   const HIGHLIGHT = [
+    "ai-learning.react-py.loop", "ai-learning.service-py.fastapi", "ai-learning.extension.mcp-client",
     "ukey.skf.rsa-sign", "ukey.gui.assist-diag", "ukey.cli.keygen",
     "bc-learning.sm2.biased-k", "bc-learning.trace.audit",
     "algtool.sm9.decap", "algtool.sm2.consistency",
@@ -353,6 +356,7 @@ check: hashes identical across rerun</pre>
   ];
 
   const FEATURED = [
+    { pid: "ai-learning", no: "★", title: "AI 工程化", desc: "Python/Java 双语言 · ReAct/RAG/Graph/MCP · 6 阶段渐进式 Agent 学习" },
     { pid: "flk-demo", no: "01", title: "国密加密演示平台", desc: "Spring Boot 4.1 + Electron · SM2/SM3/SM4/AI 对话 · 37 模块" },
     { pid: "ukey", no: "02", title: "Ukey 智能密码钥匙", desc: "Qt6 + C++ · GM/T 0016 · 多家厂商 SKF 库 · 三通道架构" },
     { pid: "algtool", no: "03", title: "AlgTool 算法工具", desc: "Qt6 + GmSSL/OpenSSL 双后端 · 后量子密码 · 证书信封" },
@@ -377,16 +381,27 @@ check: hashes identical across rerun</pre>
   }
 
   function platformCards(platforms) {
-    document.getElementById("platform-cards").innerHTML = platforms.map((p, i) => {
+    // 把 ai-learning 置顶
+    const sorted = platforms.slice().sort((a, b) => {
+      if (a.id === "ai-learning") return -1;
+      if (b.id === "ai-learning") return 1;
+      return a.id.localeCompare(b.id);
+    });
+    document.getElementById("platform-cards").innerHTML = sorted.map((p, i) => {
       const letter = String.fromCharCode(65 + i);
       const dot = p.visibility === "public" ? "" : " amber";
+      const isNew = p.id === "ai-learning";
       const years = (p.period[0] || "").slice(0, 4) + "–" + (p.period[1] || "").slice(2, 4);
       return '<a class="platform-card" href="platform.html?p=' + encodeURIComponent(p.id) + '">' +
-        '<div class="pc-top"><span class="pc-id">' + letter + " / " + C.esc(p.en) + '</span><span class="status-dot' + dot + '"></span></div>' +
+        '<div class="pc-top"><span class="pc-id">' + letter + " / " + C.esc(p.en) + '</span>' +
+        (isNew ? '<span class="status-dot new" title="NEW"></span>' : '<span class="status-dot' + dot + '"></span>') +
+        '</div>' +
         "<h3>" + C.esc(p.title) + "</h3>" +
         '<p class="pc-desc">' + C.esc(p.summary) + "</p>" +
         '<div class="pc-foot"><b>' + p.tools + "</b> 工具 <span>·</span> " +
-        p.modules.length + " 模块 <span>·</span> " + C.esc(years) + "</div></a>";
+        p.modules.length + " 模块 <span>·</span> " + C.esc(years) +
+        (isNew ? ' <span style="color:var(--accent);margin-left:6px">NEW</span>' : '') +
+        "</div></a>";
     }).join("");
   }
 
@@ -424,9 +439,12 @@ check: hashes identical across rerun</pre>
     document.getElementById("featured-cards").innerHTML = FEATURED.map((f) => {
       const p = byId[f.pid];
       const meta = p ? p.tools + " 工具 · " + p.modules.length + " 模块" : "";
-      return '<a href="platform.html?p=' + encodeURIComponent(f.pid) + '">' +
+      const isNew = f.pid === "ai-learning";
+      return '<a href="platform.html?p=' + encodeURIComponent(f.pid) + '"' +
+        (isNew ? ' style="border-color:var(--accent-dim);background:rgba(62,224,200,0.03)"' : '') +
+        '>' +
         '<span class="f-id">' + f.no + " / " + C.esc(p ? p.en : f.pid) + "</span>" +
-        "<h3>" + C.esc(f.title) + "</h3>" +
+        "<h3>" + C.esc(f.title) + (isNew ? ' <span style="font-size:10px;color:var(--accent);vertical-align:middle">NEW</span>' : '') + "</h3>" +
         "<p>" + C.esc(f.desc) + "</p>" +
         '<span class="f-foot">' + C.esc(meta) + " →</span></a>";
     }).join("");

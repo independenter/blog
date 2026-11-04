@@ -1,0 +1,17 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-java.graph · 来源 StateGraph.java:17-30
+
+    public StateGraph addEdge(String from, String to) {
+        edges.put(from, to);
+        return this;
+    }
+
+    public StateGraph addConditionalEdges(String from, Function<Map<String, Object>, String> router) {
+        conditionalEdges.put(from, router);
+        return this;
+    }
+
+    public CompiledGraph compile() {
+        return new CompiledGraph(nodes, edges, conditionalEdges);
+    }
+}

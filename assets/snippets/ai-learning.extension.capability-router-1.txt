@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.extension.capability-router · 来源 capability_router.py:128-149
+
+    def _match_tags_to_ids(self, tags: list[str]) -> list[str]:
+        all_caps = self.registry.get_all_caps_info()
+        tag_to_id = {}
+        for cap in all_caps:
+            tag_to_id[cap["tag"]] = cap["id"]
+            tag_to_id[cap["tag"].lower()] = cap["id"]
+            tag_to_id[cap["label"].lower()] = cap["id"]
+            tag_to_id[cap["id"].lower()] = cap["id"]
+
+        selected = []
+        for tag in tags:
+            tag_lower = tag.strip().lower()
+            if tag_lower in tag_to_id:
+                cid = tag_to_id[tag_lower]
+                if cid not in selected:
+                    selected.append(cid)
+                continue
+
+            for cap in all_caps:
+                if (tag_lower in cap["label"].lower() or
+                    tag_lower in cap["description"].lower() or
+                    tag_lower in cap["id"].lower()):

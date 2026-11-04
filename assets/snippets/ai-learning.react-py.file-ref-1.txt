@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-py.file-ref · 来源 dev_tools.py:40-61
+
+def grep_file(path: str, keyword: str, context: int = 2) -> str:
+    """在文件中搜索关键词，返回匹配行及上下文"""
+    target = Path(path)
+    if not target.is_absolute():
+        target = PROJECT_ROOT / path
+    if not target.exists():
+        return f"文件不存在: {target}"
+    if not target.is_file():
+        return f"不是文件: {target}"
+    try:
+        lines = target.read_text(encoding="utf-8", errors="replace").splitlines()
+        matches = []
+        for i, line in enumerate(lines):
+            if keyword.lower() in line.lower():
+                start = max(0, i - context)
+                end = min(len(lines), i + context + 1)
+                ctx_lines = [f"{j+1:4d} | {lines[j]}" for j in range(start, end)]
+                marker = " >>> " if i - start == context else "     "
+                matches.append(f"--- 第 {i+1} 行匹配 ---")
+                for k, cl in enumerate(ctx_lines):
+                    prefix = ">>>" if start + k == i else "   "
+                    matches.append(f"{prefix} {cl}")

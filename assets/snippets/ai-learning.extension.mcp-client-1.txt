@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.extension.mcp-client · 来源 client.py:10-31
+
+class MCPClient:
+    """单个 MCP 服务器的客户端"""
+
+    def __init__(self, name: str, command: str, args: list[str] | None = None,
+                 env: dict | None = None):
+        self.name = name
+        self.command = command
+        self.args = args or []
+        self.env = env
+        self.session = None
+        self._tools: list[dict] = []
+        self._connected = False
+        self._loop: asyncio.AbstractEventLoop | None = None
+        self._thread: threading.Thread | None = None
+
+    def connect(self):
+        self._thread = threading.Thread(target=self._run_loop, daemon=True)
+        self._thread.start()
+        while self._loop is None:
+            pass
+        future = asyncio.run_coroutine_threadsafe(self._connect(), self._loop)
+        future.result(timeout=30)

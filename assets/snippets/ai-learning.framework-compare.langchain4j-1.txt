@@ -1,0 +1,13 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.framework-compare.langchain4j · 来源 L4jApplication.java:21-30
+
+        if (cli) {
+            builder.web(WebApplicationType.NONE).properties("spring.main.banner-mode=off");
+        }
+        ConfigurableApplicationContext ctx = builder.run(args);
+        if (cli) {
+            ctx.getBean(CliRunner.class).run();
+            ctx.close();
+        }
+    }
+}

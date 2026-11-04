@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.foundation.makefile · 来源 Makefile:99-120
+
+	@mvn $(MVN_FLAGS) -f $(JAS_POM) -q package -DskipTests
+	@cd src/java/stage-agentscope && java -jar target/stage-agentscope-1.0-SNAPSHOT.jar
+
+agentscope-cli:
+	@mvn $(MVN_FLAGS) -f $(JAS_POM) -q package -DskipTests
+	@cd src/java/stage-agentscope && java -jar target/stage-agentscope-1.0-SNAPSHOT.jar --cli
+
+# 搜索功能测试目标
+test-search:
+	@echo "=== 测试搜索引擎（完整降级链）==="
+	@cd src/python/stage4_fastapi_service && python3 -c "from search_engines import web_search; query = '$(if $(query),$(query),杭州今天天气怎么样)'; print('查询:', query); print(); result = web_search(query, 5); print(result)"
+
+test-search-ddgs:
+	@echo "=== 测试 DDGS 搜索 ==="
+	@cd src/python/stage4_fastapi_service && python3 -c "from search_engines import DDGSSearch; ddgs = DDGSSearch(); print('可用:', ddgs.is_available); query = '$(if $(query),$(query),杭州今天天气怎么样)'; print('查询:', query); print(); result = ddgs.search(query, 5) if ddgs.is_available else 'DDGS 不可用'; print(result)"
+
+test-search-bing:
+	@echo "=== 测试 Bing 搜索 ==="
+	@cd src/python/stage4_fastapi_service && python3 -c "from search_engines import BingSearch; bing = BingSearch(); query = '$(if $(query),$(query),杭州今天天气怎么样)'; print('查询:', query); print(); result = bing.search(query, 5); print(result)"
+
+test-search-stage6:
+	@echo "=== 测试 Stage6 搜索引擎 ==="

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.framework-compare.agentscope · 来源 MetaController.java:4-25
+
+import com.agentlearning.agentscope.rag.KnowledgeService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api")
+public class MetaController {
+
+    private final AgentFactory agent;
+    private final KnowledgeService knowledge;
+
+    public MetaController(AgentFactory agent, KnowledgeService knowledge) {
+        this.agent = agent;
+        this.knowledge = knowledge;
+    }
+
+    @GetMapping("/health")
+    public Map<String, Object> health() {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("status", "ok");

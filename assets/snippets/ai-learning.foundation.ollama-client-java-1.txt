@@ -1,0 +1,13 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.foundation.ollama-client-java · 来源 ChatResponse.java:6-15
+
+    public boolean done;
+    public int evalCount;
+    public long evalDuration;
+
+    public static class MessageInfo {
+        public String role;
+        public String content;
+        public String thinking;
+    }
+}

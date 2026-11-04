@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.memory-rag.context-compress · 来源 context_manager.py:78-99
+
+        if len(conversation) <= 4:
+            return messages, {"compressed": False, "old_tokens": old_tokens, "new_tokens": old_tokens}
+
+        split_idx = int(len(conversation) * 0.4)
+        old_messages = conversation[:split_idx]
+        recent_messages = conversation[split_idx:]
+
+        old_text = "\n".join(
+            f"[{m['role']}]: {m['content'][:500]}"
+            for m in old_messages
+        )
+
+        summary_prompt = f"""请将以下对话历史压缩为简洁的摘要，保留关键信息（用户意图、工具调用结果、重要结论）：
+
+{old_text}
+
+请用3-5句话总结："""
+
+        try:
+            response = self.provider_manager.chat([
+                {"role": "user", "content": summary_prompt},
+            ])

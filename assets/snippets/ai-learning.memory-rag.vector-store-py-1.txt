@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.memory-rag.vector-store-py · 来源 vector_store.py:8-28
+
+import numpy as np
+from dataclasses import dataclass
+from pathlib import Path
+
+from .loader import Chunk
+
+
+@dataclass
+class RetrievalResult:
+    """检索结果"""
+    chunk: Chunk
+    score: float
+
+
+class VectorStore:
+    """向量库（NumPy 实现）"""
+
+    def __init__(self, persist_path: str | None = None):
+        self.chunks: list[Chunk] = []
+        self.embeddings: np.ndarray | None = None
+        self.persist_path = Path(persist_path) if persist_path else None

@@ -1,0 +1,14 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-java.loop · 来源 Prompts.java:79-89
+
+    public static List<Map<String, String>> buildMessagesWithTools(String userInput) {
+        List<Map<String, String>> messages = new ArrayList<>();
+        messages.add(Map.of("role", "system", "content", getSystemPrompt()));
+        messages.add(Map.of("role", "user", "content", userInput));
+        return messages;
+    }
+
+    public static Map<String, String> buildObservationMessage(String observation) {
+        return Map.of("role", "tool", "content", observation);
+    }
+}

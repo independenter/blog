@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.memory-rag.tiered-memory · 来源 tiered_memory.py:96-116
+
+        if len(self.memories) > self.max_memories:
+            self.memories = self.memories[-self.max_memories:]
+            self._save()
+
+
+class LongTermMemory(MemoryTier):
+    """长期记忆 — 记录用户偏好和习惯"""
+    
+    def __init__(self, client, user_id: str = "default", persist_dir: str = ".memory"):
+        persist_path = f"{persist_dir}/longterm_{user_id}.json"
+        super().__init__("longterm", persist_path, client)
+        self.user_id = user_id
+    
+    def add_preference(self, preference: str, category: str = "general"):
+        """添加用户偏好
+        
+        Args:
+            preference: 偏好描述
+            category: 类别 (coding_style/tool_preference/workflow/communication)
+        """
+        super().add(preference, {"category": category, "type": "preference"})

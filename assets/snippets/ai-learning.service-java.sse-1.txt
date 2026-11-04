@@ -1,0 +1,15 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.service-java.sse · 来源 MemoryController.java:27-38
+
+    @GetMapping("/memories")
+    public Map<String, Object> memories() {
+        return Map.of("memories", memory.all());
+    }
+
+    @GetMapping("/memories/recall")
+    public Map<String, Object> recall(@RequestParam(defaultValue = "") String query,
+                                      @RequestParam(name = "top_k", defaultValue = "3") int topK) {
+        List<String> results = query.isBlank() ? List.of() : memory.recall(query, topK);
+        return Map.of("memories", results, "query", query);
+    }
+}

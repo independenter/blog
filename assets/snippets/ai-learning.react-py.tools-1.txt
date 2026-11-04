@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-py.tools · 来源 tools.py:13-34
+
+@dataclass
+class Tool:
+    name: str
+    description: str
+    parameters: dict
+    func: Callable[..., Any]
+
+
+def get_time(timezone: str = "Asia/Shanghai") -> str:
+    """获取指定时区的当前时间"""
+    tz = zoneinfo.ZoneInfo(timezone)
+    now = datetime.now(tz)
+    return now.strftime("%Y-%m-%d %H:%M:%S %Z")
+
+
+def calculator(expression: str) -> str:
+    """计算数学表达式（仅支持四则运算）"""
+    allowed = set("0123456789+-*/.() ")
+    if not all(c in allowed for c in expression):
+        return "错误: 包含非法字符"
+    try:
+        result = eval(expression, {"__builtins__": {}})

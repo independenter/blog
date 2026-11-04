@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-java.harness · 来源 AgentHarness.java:86-107
+
+    private Map<String, Object> buildInitialState(String userInput) {
+        Map<String, Object> state = new LinkedHashMap<>();
+        state.put("messages", new ArrayList<>(List.of(Map.of("role", "user", "content", userInput))));
+        state.put("tool_results", new ArrayList<>());
+        state.put("next_action", "planner");
+        state.put("final_answer", "");
+        state.put("iteration", 0);
+        state.put("max_iterations", maxIterations);
+        return state;
+    }
+
+    private static void logInfo(String msg) {
+        System.out.println(CYAN + "[INFO] " + msg + RESET);
+    }
+
+    private static void logAgent(String msg) {
+        System.out.println("\n" + BOLD + MAGENTA + "<<< Agent: " + msg + RESET);
+    }
+
+    private static void logNode(String name) {
+        System.out.println(BLUE + "  [节点] " + name + RESET);
+    }

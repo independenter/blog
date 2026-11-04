@@ -1,0 +1,21 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.service-java.chat-memory · 来源 LongTermMemory.java:86-103
+
+    @SuppressWarnings("unchecked")
+    private void load() {
+        if (!Files.exists(persistPath)) return;
+        try {
+            List<Map<String, Object>> raw = mapper.readValue(persistPath.toFile(),
+                    new TypeReference<List<Map<String, Object>>>() {
+                    });
+            for (Map<String, Object> m : raw) {
+                List<Number> emb = (List<Number>) m.get("embedding");
+                float[] arr = new float[emb == null ? 0 : emb.size()];
+                for (int i = 0; emb != null && i < emb.size(); i++) arr[i] = emb.get(i).floatValue();
+                memories.add(new Entry(((Number) m.get("id")).intValue(), (String) m.get("content"), arr));
+            }
+        } catch (Exception e) {
+            memories.clear();
+        }
+    }
+}

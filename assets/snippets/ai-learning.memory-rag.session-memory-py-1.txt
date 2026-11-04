@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.memory-rag.session-memory-py · 来源 long_term.py:53-74
+
+    def recall(self, query: str, top_k: int = 3) -> list[str]:
+        """召回相关记忆"""
+        if not self.memories:
+            return []
+
+        # 生成查询向量
+        result = self.client.embed(query)
+        query_embedding = result.get("embeddings", [[]])[0]
+
+        if not query_embedding:
+            return []
+
+        # 计算相似度
+        import numpy as np
+        query_vec = np.array(query_embedding, dtype=np.float32)
+        memory_vecs = np.array([m.embedding for m in self.memories if m.embedding], dtype=np.float32)
+
+        if len(memory_vecs) == 0:
+            return []
+
+        # 余弦相似度
+        norms = np.linalg.norm(memory_vecs, axis=1) * np.linalg.norm(query_vec)

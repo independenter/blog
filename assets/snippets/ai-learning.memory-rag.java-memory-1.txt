@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.memory-rag.java-memory · 来源 ShortTermMemory.java:22-43
+
+    public void addTool(String content) {
+        messages.add(Map.of("role", "tool", "content", content));
+        trim();
+    }
+
+    public List<Map<String, String>> getMessages() {
+        return new ArrayList<>(messages);
+    }
+
+    public void setSystem(String content) {
+        messages.removeIf(m -> "system".equals(m.get("role")));
+        messages.add(0, Map.of("role", "system", "content", content));
+    }
+
+    public void clear() {
+        List<Map<String, String>> systemMsgs = new ArrayList<>();
+        for (Map<String, String> msg : messages) {
+            if ("system".equals(msg.get("role"))) {
+                systemMsgs.add(msg);
+            }
+        }
+        messages.clear();

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.service-py.search-engines · 来源 search_engines.py:45-66
+
+    @property
+    def name(self) -> str:
+        return "DuckDuckGo"
+
+    @property
+    def is_available(self) -> bool:
+        try:
+            from ddgs import DDGS
+            return True
+        except ImportError:
+            return False
+
+    def search(self, query: str, max_results: int = 5) -> str:
+        from ddgs import DDGS
+
+        def do_search():
+            with DDGS() as ddgs:
+                return list(ddgs.text(query, max_results=max_results))
+
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(do_search)
+            results = future.result(timeout=10)

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.extension.java-mcp · 来源 McpManager.java:29-50
+
+    public List<McpClient.McpTool> loadAndConnect() {
+        List<McpClient.McpTool> all = new ArrayList<>();
+        if (!Files.exists(configPath)) return all;
+        Map<String, Object> config;
+        try {
+            config = mapper.readValue(Files.readString(configPath), Map.class);
+        } catch (Exception e) {
+            System.out.println("  [MCP] 配置读取失败: " + e.getMessage());
+            return all;
+        }
+        List<Map<String, Object>> servers = (List<Map<String, Object>>) config.getOrDefault("servers", List.of());
+        Path configDir = configPath.toAbsolutePath().getParent();
+        for (Map<String, Object> srv : servers) {
+            if (!Boolean.TRUE.equals(srv.getOrDefault("enabled", true))) continue;
+            String name = (String) srv.get("name");
+            String command = (String) srv.get("command");
+            if (name == null || command == null) continue;
+            List<String> cmd = new ArrayList<>();
+            cmd.add(command);
+            for (Object a : (List<Object>) srv.getOrDefault("args", List.of())) {
+                String s = String.valueOf(a);
+                Path p = configDir.resolve(s);

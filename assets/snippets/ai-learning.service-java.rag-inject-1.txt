@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.service-java.rag-inject · 来源 KnowledgeLoader.java:79-100
+
+    public Map<String, Object> page(int pageNo, int pageSize) {
+        int total = chunkIndex.size();
+        int start = Math.max(0, (pageNo - 1) * pageSize);
+        int end = Math.min(total, start + pageSize);
+        List<Map<String, Object>> slice = start < end ? chunkIndex.subList(start, end) : List.of();
+        Map<String, Object> out = new HashMap<>();
+        out.put("chunks", slice);
+        out.put("total", total);
+        out.put("page", pageNo);
+        out.put("page_size", pageSize);
+        out.put("total_pages", total == 0 ? 0 : (total + pageSize - 1) / pageSize);
+        return out;
+    }
+
+    public int chunkCount() {
+        return chunkIndex.size();
+    }
+
+    /** 简单定长 + 重叠切分（对应 Python _split）。 */
+    static List<String> split(String text, int size, int overlap) {
+        List<String> chunks = new ArrayList<>();
+        if (text == null) return chunks;

@@ -1,0 +1,23 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.fde-eval.java-eval · 来源 AgentConfig.java:17-36
+
+@Configuration
+public class AgentConfig {
+
+    /**
+     * ChatClient：默认挂载运维工具集。危险工具（restart_service）在方法内部经过
+     * {@link com.agentlearning.stage5.human.HumanReviewPolicy} 审批门，因此框架自动执行也是安全的。
+     */
+    @Bean
+    public ChatClient chatClient(ChatClient.Builder builder, OpsTools opsTools) {
+        return builder
+                .defaultTools(opsTools)
+                .build();
+    }
+
+    /** Trace 持久化 + 延迟统计（对应 Python TraceLogger，注入 trace-log 路径）。 */
+    @Bean
+    public TraceLogger traceLogger(@Value("${agent.trace-log:traces-java.jsonl}") String traceLog) {
+        return new TraceLogger(traceLog);
+    }
+}

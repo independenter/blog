@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.foundation.json-parser · 来源 service.py:762-783
+
+        final = "达到最大迭代次数，未能得出结论"
+        trace.finish(answer=final)
+        self.tracer.log(trace)
+        yield {"type": "answer", "content": final}
+
+    def resume_after_approval(self, session_id: str = "default") -> Generator[dict, None, None]:
+        pending = self._pending_approvals.pop(session_id, None)
+        if not pending:
+            yield {"type": "error", "content": "没有待审批的操作"}
+            return
+
+        tool_name = pending["tool_name"]
+        tool_args = pending["tool_args"]
+        messages = pending["messages"]
+        response_text = pending["response_text"]
+        start_iteration = pending["iteration"] + 1
+        invalid_tool_retries = pending["invalid_tool_retries"]
+
+        self.approved_tools.add(tool_name)
+        tool = self._get_tool(tool_name)
+        if tool is None:
+            yield {"type": "error", "content": f"工具 {tool_name} 不存在"}

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.framework-compare.spring-ai · 来源 ChatController.java:104-125
+
+    @PostMapping("/reset")
+    public Map<String, Object> reset(@RequestBody ResetRequest req) {
+        String session = req.sessionIdOrDefault();
+        chatMemory.clear(session);
+        Map<String, Object> out = new HashMap<>();
+        out.put("session_id", session);
+        out.put("message", "会话已重置");
+        return out;
+    }
+
+    /** 组装动态 system prompt：基础人设 + 知识库参考 + 相关记忆（对应 Python 的做法）。 */
+    private String buildSystem(String query) {
+        StringBuilder sb = new StringBuilder(Prompts.SYSTEM);
+
+        if (knowledgeLoader.chunkCount() > 0) {
+            List<Document> docs = vectorStore.similaritySearch(
+                    SearchRequest.builder().query(query).topK(3).similarityThresholdAll().build());
+            if (docs != null && !docs.isEmpty()) {
+                StringBuilder ctx = new StringBuilder();
+                for (int i = 0; i < docs.size(); i++) {
+                    Object src = docs.get(i).getMetadata().getOrDefault("source", "未知");
+                    ctx.append("[").append(i + 1).append("] 来源: ").append(src)

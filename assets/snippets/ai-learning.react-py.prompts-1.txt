@@ -1,0 +1,18 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-py.prompts · 来源 prompts.py:81-95
+
+def build_messages_with_tools(user_input: str, history: list[dict] = None) -> list[dict]:
+    """构建带工具描述的消息列表"""
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    if history:
+        messages.extend(history)
+    messages.append({"role": "user", "content": user_input})
+    return messages
+
+
+def build_observation_message(observation: str) -> dict:
+    """构建工具观察结果消息"""
+    return {
+        "role": "tool",
+        "content": observation
+    }

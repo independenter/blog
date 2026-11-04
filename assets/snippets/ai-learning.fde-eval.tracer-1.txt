@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.fde-eval.tracer · 来源 tracer.py:79-100
+
+    def log(self, trace: Trace):
+        self.traces.append(trace)
+        try:
+            with open(self.log_path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(trace.to_dict(), ensure_ascii=False) + "\n")
+        except Exception:
+            pass
+
+    def get_traces(self) -> list[Trace]:
+        return self.traces
+
+    def get_slow_steps(self, threshold_ms: int = 500) -> list[dict]:
+        result = []
+        for t in self.traces:
+            for s in t.steps:
+                if s.latency_ms > threshold_ms:
+                    result.append({
+                        "trace_id": t.trace_id,
+                        "node": s.node,
+                        "latency_ms": s.latency_ms,
+                    })
+        return result

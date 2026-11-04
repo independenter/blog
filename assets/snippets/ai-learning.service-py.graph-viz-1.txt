@@ -1,0 +1,22 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.service-py.graph-viz · 来源 nodes.py:202-220
+
+        return _parse_decision(data)
+    except json.JSONDecodeError:
+        return AgentDecision(thought=text, answer=text)
+
+
+def _parse_decision(data: dict) -> AgentDecision:
+    """解析决策数据"""
+    thought = data.get("thought", "")
+    action_data = data.get("action")
+    answer = data.get("answer")
+
+    action = None
+    if action_data and isinstance(action_data, dict):
+        action = ToolCall(
+            name=action_data.get("name", ""),
+            arguments=action_data.get("arguments", {})
+        )
+
+    return AgentDecision(thought=thought, action=action, answer=answer)

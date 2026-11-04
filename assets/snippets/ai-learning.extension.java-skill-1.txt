@@ -1,0 +1,10 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.extension.java-skill · 来源 Skill.java:8-14
+
+    public Map<String, Object> toMap() {
+        return Map.of(
+                "name", name,
+                "description", description,
+                "version", version);
+    }
+}

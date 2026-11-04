@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.service-py.fastapi · 来源 main.py:122-143
+
+@app.post("/api/remember")
+def remember(req: dict):
+    fact = req.get("fact", "")
+    if fact:
+        agent_service.remember(fact)
+    return {"status": "ok", "fact": fact}
+
+
+@app.get("/api/memories")
+def memories():
+    return {"memories": agent_service.get_memories()}
+
+
+@app.get("/api/memories/recall")
+def recall_memories(query: str = "", top_k: int = 3):
+    if not query:
+        return {"memories": [], "query": ""}
+    results = agent_service.recall_memories(query, top_k)
+    return {"memories": results, "query": query}
+
+
+@app.get("/api/knowledge/chunks")

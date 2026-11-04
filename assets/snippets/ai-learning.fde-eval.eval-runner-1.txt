@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.fde-eval.eval-runner · 来源 run_eval.py:28-48
+
+def run_eval(model: str = "qwen3:4b", max_items: int = 0, auto_approve: bool = True,
+             output_path: str = "report.json") -> dict:
+    dataset = load_dataset()
+    if max_items > 0:
+        dataset = dataset[:max_items]
+
+    agent = OpsAgent(model=model)
+
+    evaluations = []
+    latencies = []
+
+    print(f"=== FDE Eval ===")
+    print(f"模型: {model}")
+    print(f"数据集: {len(dataset)} 条")
+    print(f"{'='*50}")
+
+    for i, item in enumerate(dataset, 1):
+        qid = item["id"]
+        question = item["question"]
+        category = item.get("category", "")
+        print(f"[{i}/{len(dataset)}] (#{qid}) [{category}] {question[:40]}...")

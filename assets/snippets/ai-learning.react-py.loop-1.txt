@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-py.loop · 来源 agent.py:73-94
+
+def log_tool_call(name: str, args: dict):
+    """工具调用"""
+    print(f"{Color.CYAN}  [工具] {name}({args}){Color.RESET}")
+
+
+def log_tool_result(result: str):
+    """工具结果"""
+    print(f"{Color.GREEN}  [结果] {result}{Color.RESET}")
+
+
+def log_iteration(current: int, max_iter: int):
+    """迭代标记"""
+    print(f"\n{Color.DIM}--- 迭代 {current}/{max_iter} ---{Color.RESET}")
+
+
+def print_separator():
+    """分隔线"""
+    print(f"{Color.DIM}{'─' * 60}{Color.RESET}")
+
+
+@dataclass
+class AgentState:

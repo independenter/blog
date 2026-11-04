@@ -1,0 +1,23 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.react-py.colored-output · 来源 agent.py:193-212
+
+    def _parse_response(self, text: str) -> dict | None:
+        """从模型响应中解析 JSON"""
+        json_match = re.search(r'```json\s*(\{.*?\})\s*```', text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1))
+            except json.JSONDecodeError:
+                pass
+
+        brace_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', text, re.DOTALL)
+        if brace_match:
+            try:
+                return json.loads(brace_match.group())
+            except json.JSONDecodeError:
+                pass
+
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            return None

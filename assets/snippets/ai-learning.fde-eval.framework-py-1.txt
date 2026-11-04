@@ -1,0 +1,21 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.fde-eval.framework-py · 来源 harness.py:245-262
+
+    @staticmethod
+    def _parse_response(text: str) -> dict | None:
+        json_match = re.search(r'```json\s*(\{.*?\})\s*```', text, re.DOTALL)
+        if json_match:
+            try:
+                return json.loads(json_match.group(1))
+            except json.JSONDecodeError:
+                pass
+        brace_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', text, re.DOTALL)
+        if brace_match:
+            try:
+                return json.loads(brace_match.group())
+            except json.JSONDecodeError:
+                pass
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError:
+            return None

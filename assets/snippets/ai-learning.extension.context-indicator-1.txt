@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.extension.context-indicator · 来源 context_manager.py:22-43
+
+    def get_context_window(self) -> int:
+        if self._context_window is not None:
+            return self._context_window
+
+        raw = self.provider_manager.get_context_length(self.provider_manager.current_model)
+        if raw is not None:
+            self._context_window = min(raw, self.max_practical)
+            return self._context_window
+
+        model_name = self.provider_manager.current_model
+        for prefix, size in FALLBACK_CONTEXT.items():
+            if prefix != "default" and model_name.startswith(prefix):
+                self._context_window = min(size, self.max_practical)
+                return self._context_window
+
+        self._context_window = min(FALLBACK_CONTEXT["default"], self.max_practical)
+        return self._context_window
+
+    def estimate_tokens(self, messages: list[dict], session_id: str = "default") -> int:
+        if messages:
+            total_chars = sum(len(m.get("content", "")) for m in messages)
+            all_text = "".join(m.get("content", "") for m in messages)

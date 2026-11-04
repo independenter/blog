@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ai-learning.fde-eval.guardrails · 来源 guardrails.py:44-65
+
+def register_tools(tool_names: list[str], is_dangerous: bool = False):
+    for name in tool_names:
+        register_tool(name, is_dangerous)
+
+MAX_INPUT_LENGTH = 10000
+
+RATE_LIMIT_WINDOW = 60
+RATE_LIMIT_MAX_REQUESTS = 30
+
+
+@dataclass
+class GuardrailResult:
+    passed: bool
+    action: str = ""
+    reason: str = ""
+    cleaned_input: str = ""
+
+
+class RateLimiter:
+    """简单的滑动窗口速率限制器"""
+
+    def __init__(self, window_seconds: int = RATE_LIMIT_WINDOW,
