@@ -48,6 +48,15 @@
   .featured h3 { font-size: 15px; }
   .featured p { color: var(--ink-2); font-size: 12px; line-height: 1.6; }
   .featured .f-foot { margin-top: auto; font: 11px/1 var(--mono); color: var(--accent); }
+  .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .achievement-card { display: flex; align-items: center; gap: 16px; padding: 18px; border: 1px solid var(--line); background: var(--panel); text-decoration: none; color: var(--ink); transition: all 0.15s; }
+  .achievement-card:hover { border-color: var(--accent); background: var(--panel-2); }
+  .ach-icon { font-size: 32px; flex-shrink: 0; }
+  .ach-content { flex: 1; min-width: 0; }
+  .ach-content h3 { font-size: 15px; margin: 0 0 6px 0; }
+  .ach-title { font-size: 13px; color: var(--ink-2); margin: 0 0 4px 0; line-height: 1.5; }
+  .ach-meta { font: 11px/1.4 var(--mono); color: var(--muted); margin: 0; }
+  .ach-arrow { font-size: 18px; color: var(--accent); flex-shrink: 0; }
   @media (max-width: 1023px) {
     .about-grid, .contact-block { grid-template-columns: minmax(0,1fr); }
     .featured { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -87,7 +96,7 @@
           <div class="eyebrow">SYSTEM OVERVIEW / 2026.11</div>
           <h1>密码工程作品集，<br><em>拆到每一个工具</em>。</h1>
           <p class="hero-lede">
-            我是<strong>一休</strong>：8 年 Java 全栈、6 年网络安全密码学骨干，现在借助 AI 做全语言独立开发。
+            我是<strong>一休</strong>：海洋科学出身，8 年全栈开发、近 6 年密码学研发，现在借助 AI 做全语言独立开发。
             这里按「平台 → 模块 → 工具」拆解了我做过的全部东西——每条都有场景、技术要点、证据路径与时间戳；
             个人自研公开代码，公司项目只给说明与架构示意。
           </p>
@@ -102,6 +111,7 @@
             <a class="chip" href="#featured">精选项目</a>
             <a class="chip" href="#method">方法</a>
             <a class="chip" href="#experience">经历</a>
+            <a class="chip" href="#achievements">资质</a>
             <a class="chip" href="#contact">联系</a>
           </div>
         </div>
@@ -157,9 +167,9 @@ check: hashes identical across rerun</pre>
         <div class="section-head"><h2>关于</h2><span class="meta">01 / ABOUT</span></div>
         <div class="about-grid">
           <div class="about-copy">
-            <p class="lead">我是<strong>一休</strong>，一个把密码学与工程实现放在同一张桌子上的人。过去 8 年做 Java 全栈开发，近 6 年专注网络安全与密码学，是团队里的密码学骨干。现在借助 AI 进行全栈全语言开发，从问题定义一直做到上线。</p>
-            <p>我习惯先弄清楚「谁在什么场景下卡住」，再决定要不要写代码。密码学工具阶段就用真实算法、真实密钥和真实边界去验证，避免交付时才暴露问题。能自己实现的部分，我尽量自己写完——少一次转述，就少一层损耗。</p>
-            <p>日常使用 Java、C++、Go、Python、C#，也写 Vue 3 和 Spring Boot。喜欢纸质书、手写笔记和慢一点的工具。</p>
+            <p class="lead">我是<strong>一休</strong>，海洋科学出身，却把职业生涯交给了代码。8 年全栈开发、近 6 年密码学研发，现在借助 AI 做全语言独立开发——从问题定义到上线部署，一个人走完。</p>
+            <p>2018 年毕业时，我已经写了两年代码。通信行业的业务维护、教育行业的框架设计、网络安全行业的密码学工具链——每一段都在解决「谁在什么场景下卡住」的问题。密码学工具阶段就用真实算法、真实密钥和真实边界去验证，避免交付时才暴露问题。</p>
+            <p>日常使用 Java、C++、Go、Python、C#，也写 Vue 3 和 Spring Boot。现在依托 AI 实现全栈多语言开发，把经验提取成流程、Skill 和知识库，组织提效。熟练 Agent 主流的 Java 和 Python 使用，积累了 <code>remote-server-debug</code> 和 <code>perf-tuning-root-cause</code> 两个 Skill。</p>
             <blockquote class="pull-quote">
               <p>「密码解决能不能被信任，代码解决能不能到达。分开做，磨损的是同一个人对作品的判断。」</p>
               <cite>— 工作笔记</cite>
@@ -185,17 +195,44 @@ check: hashes identical across rerun</pre>
       </section>
 
       <section class="section" id="experience">
-        <div class="section-head"><h2>经历</h2><span class="meta">05 / EXPERIENCE · 机构名称均为示例</span></div>
+        <div class="section-head"><h2>经历</h2><span class="meta">05 / EXPERIENCE · 2017 — 至今</span></div>
         <ol class="timeline">
-          <li><span class="t-year">2024 — 至今</span><div><h3>网络安全密码学骨干</h3><span class="t-org">某安全公司（示例）</span><p>专注国密算法工具链开发，主导 Ukey 管理、HSM 监控、签名验签服务器等核心产品。从 C++ Qt6 界面到 Java Spring Boot 后端，全栈交付。</p></div></li>
-          <li><span class="t-year">2021 — 2024</span><div><h3>高级 Java 开发工程师</h3><span class="t-org">某科技公司（示例）</span><p>负责密码服务平台架构设计，集成 SM2/SM3/SM4/RSA 等算法，实现证书生命周期管理、密钥分发与审计日志。带领 3 人小组完成从 0 到 1 交付。</p></div></li>
-          <li><span class="t-year">2019 — 2021</span><div><h3>Java 开发工程师</h3><span class="t-org">某互联网公司（示例）</span><p>参与电商平台后端开发，使用 Spring Boot + MyBatis 构建订单、支付与库存系统。优化数据库查询性能，QPS 提升 40%。</p></div></li>
-          <li><span class="t-year">2018</span><div><h3>计算机科学学士</h3><span class="t-org">某大学（示例）</span><p>主修 Java 开发与密码学基础。毕业设计：基于 SM2 的轻量级身份认证协议实现。</p></div></li>
+          <li><span class="t-year">2020.12 — 至今</span><div><h3>网络安全密码学研发专家</h3><span class="t-org">某安全公司</span><p>主导国密算法工具链研发：Ukey 管理、HSM 监控、签名验签服务器。从框架设计到功能开发、研发计划管理、客户需求沟通，全栈交付。C++ Qt6 界面、Java Spring Boot 后端、密码算法集成（SM2/SM3/SM4/SM9/ZUC）。</p></div></li>
+          <li><span class="t-year">2019.06 — 2020.12</span><div><h3>中级 Java 开发工程师 · 教育行业</h3><span class="t-org">某教育科技公司</span><p>框架部署设计与功能开发，业务维护与研发计划制定。从 0 到 1 搭建在线教育平台后端，使用 Spring Boot + MyBatis，支撑高并发场景。</p></div></li>
+          <li><span class="t-year">2017.06 — 2019.05</span><div><h3>初级开发工程师 · 通信行业</h3><span class="t-org">某通信公司（实习 + 正式）</span><p>业务维护与模块功能开发。上学期间热爱计算机，实习期开始正式投入开发工作。接触 Java、数据库优化、接口联调。</p></div></li>
+          <li><span class="t-year">2018</span><div><h3>海洋科学专业学士</h3><span class="t-org">某高校</span><p>主修海洋科学，辅修计算机。毕业设计期间确定转行方向，开始系统性学习软件开发与工程实践。</p></div></li>
         </ol>
       </section>
 
+      <section class="section" id="achievements">
+        <div class="section-head"><h2>资质与成果</h2><span class="meta">06 / ACHIEVEMENTS</span></div>
+        <div class="achievements-grid">
+          <a href="https://zedpuboljbzkdpbzzlxl.supabase.co/storage/v1/object/public/certificates/patent.pdf" target="_blank" class="achievement-card">
+            <div class="ach-icon">⚙</div>
+            <div class="ach-content">
+              <h3>发明专利</h3>
+              <p class="ach-title">一种信息提示方法、装置、设备及存储介质</p>
+              <p class="ach-meta">专利号 202111037874.0 · 2021 年授权</p>
+            </div>
+            <div class="ach-arrow">→</div>
+          </a>
+          <a href="https://zedpuboljbzkdpbzzlxl.supabase.co/storage/v1/object/public/certificates/pmp.pdf" target="_blank" class="achievement-card">
+            <div class="ach-icon">📋</div>
+            <div class="ach-content">
+              <h3>PMP 项目管理专业人士</h3>
+              <p class="ach-title">Project Management Professional</p>
+              <p class="ach-meta">PMI 认证 · 证书编号见 PDF</p>
+            </div>
+            <div class="ach-arrow">→</div>
+          </a>
+        </div>
+        <p style="margin-top:16px;color:var(--muted);font-size:12px;text-align:center">
+          点击证书可查看带水印的原件 · 所有证书均嵌入隐藏标识字节
+        </p>
+      </section>
+
       <section class="section" id="contact">
-        <div class="section-head"><h2>联系</h2><span class="meta">06 / CONTACT</span></div>
+        <div class="section-head"><h2>联系</h2><span class="meta">07 / CONTACT</span></div>
         <div class="contact-block">
           <div>
             <h3 style="font-size:20px;line-height:1.4">有一个想认真做出来的东西？</h3>
