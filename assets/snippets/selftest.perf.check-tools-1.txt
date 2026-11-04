@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.check-tools · 来源 check_tools.py:95-116
+
+def main():
+    args = parse_args()
+
+    if args.all:
+        remotes = RemoteTool.load_all_hosts(args.config)
+        if not remotes:
+            print("未配置任何主机")
+            sys.exit(1)
+    elif args.host:
+        # 按 name 过滤
+        with open(args.config, 'r', encoding='utf-8') as f:
+            import yaml
+            data = yaml.safe_load(f)
+        match = None
+        for h in data.get('hosts', []):
+            if h.get('name') == args.host:
+                match = h
+                break
+        if not match:
+            print("未找到主机: {}".format(args.host))
+            sys.exit(1)
+        remotes = [RemoteTool(host_config=match)]

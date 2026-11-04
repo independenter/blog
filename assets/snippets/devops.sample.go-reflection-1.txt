@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.go-reflection · 来源 reflection.go:46-67
+
+func (info *ObjectInfo) processFields(v reflect.Value, t reflect.Type) {
+	for i := 0; i < v.NumField(); i++ {
+		field := t.Field(i)
+		value := v.Field(i)
+		
+		// 如果是嵌套结构体，递归处理
+		if field.Type.Kind() == reflect.Struct && field.Anonymous {
+			info.processFields(value, field.Type)
+			continue
+		}
+		
+		if field.IsExported() { // 只处理可导出的字段
+			info.Fields[field.Name] = value.Interface()
+			info.FieldValue[field.Name] = value.Interface()
+		}
+	}
+}
+
+// processMethods 处理方法信息（包括嵌套结构体的方法）
+func (info *ObjectInfo) processMethods(v reflect.Value, t reflect.Type) {
+	// 获取当前类型的方法
+	// 注意：方法是在指针类型上定义的，所以我们需要获取指针类型的方法

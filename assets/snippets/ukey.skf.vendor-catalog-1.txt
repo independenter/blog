@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.vendor-catalog · 来源 VendorCatalog.cpp:118-139
+
+        int bits = p[4] == 2 ? 64 : (p[4] == 1 ? 32 : 0);  // ELFCLASS64 / ELFCLASS32
+        // e_machine@18 的字节序看 EI_DATA@5 (1=小端, 2=大端); 读错端序会把 mips 大端包认成别家
+        uint32_t em = p[5] == 2 ? ((uint32_t)p[18] << 8 | p[19]) : le16(18);
+        if (arch) {
+            switch (em) {
+                case 0x03: *arch = "x86"; break;
+                case 0x28: *arch = "arm"; break;
+                case 0x3e: *arch = "x86-64"; break;
+                case 0x08: *arch = bits == 64 ? "mips64" : "mips"; break;
+                case 0xb7: *arch = "arm64"; break;
+                case 0x13e: *arch = "riscv64"; break;
+                default: *arch = ""; break;
+            }
+        }
+        return bits;
+    }
+    if (p[0] != 'M' || p[1] != 'Z') return 0;
+    uint32_t off = le32(0x3c);
+    if (off + 6 > n || p[off] != 'P' || p[off + 1] != 'E') return 0;
+    uint32_t machine = le16(off + 4);
+    if (arch) {
+        switch (machine) {

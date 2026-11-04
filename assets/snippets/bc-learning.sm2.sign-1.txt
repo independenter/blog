@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.sign · 来源 Sm2EssenceTest.java:367-388
+
+    private static BigInteger[] mul(BigInteger k, BigInteger[] point)
+    {
+        return mul(k, point, null);
+    }
+
+    private static BigInteger[] mul(BigInteger k, BigInteger[] point, String loopName)
+    {
+        return mul(k, point, loopName, loopName);
+    }
+
+    /**
+     * @param loopId 循环实例的唯一 id（事件 metadata.loopName，用于绑定进度条）
+     * @param group  事件分组（可带阶段前缀，如 "verify1:mul_sG"），用于流程图定位
+     */
+    private static BigInteger[] mul(BigInteger k, BigInteger[] point, String loopId, String group)
+    {
+        boolean tracing = loopId != null && helperTraceEnabled() && Tracer.isEnabled();
+        int total = k.bitLength();
+        // 抽样步长：最多 MAX_LOOP_TRACES 条事件，同时保证最后一位一定被记录
+        int stride = Math.max(1, (total + MAX_LOOP_TRACES - 1) / MAX_LOOP_TRACES);
+        if (tracing)
+        {

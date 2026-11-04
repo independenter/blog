@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.scale-up · 来源 scale_up_test.py:15-36
+
+def main():
+    remote = RemoteTool(config_path=CONFIG_PATH)
+    try:
+        remote.connect()
+        print("SSH 连接成功\n")
+    except Exception as e:
+        print("SSH 连接失败: {}".format(e))
+        sys.exit(1)
+
+    r = remote
+    def run(cmd, desc="", timeout=120):
+        if desc:
+            print("\n>> {}".format(desc))
+        try:
+            code, out, err = r.exec(cmd, timeout=timeout)
+            out = (out or '').strip()
+            err = (err or '').strip()
+            if err and 'warning' not in err.lower():
+                print("[stderr] {}".format(err[:300]))
+            if out:
+                print(out[:5000])
+            return out

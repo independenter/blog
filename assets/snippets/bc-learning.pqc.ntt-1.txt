@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.ntt · 来源 PqcEssenceTest.java:2107-2128
+
+        int gamma2 = (Q_DSA - 1) / 88;
+        int[] w1 = new int[N];
+        for (int i = 0; i < N; i++)
+        {
+            w1[i] = decompose(Q_DSA, 2 * gamma2, wy[i])[0];
+        }
+        Assert.assertTrue("w1 必须在 [0, 44) 内，因此 6 bit 就够存", allInRange(w1, 0, 44));
+        Assert.assertEquals("6-bit 打包：256·6/8 = 192 字节", 192, pack(6, w1).length);
+        Assert.assertTrue("6-bit 打包/解包互逆", same(w1, unpack(6, N, pack(6, w1))));
+        Tracer.trace("decompose-w1", new Object[]{"gamma2", gamma2, "alpha", 2 * gamma2},
+            new Object[]{"w1[0..3]", Arrays.toString(Arrays.copyOf(w1, 4)),
+                "inRange", allInRange(w1, 0, 44), "packedBytes", pack(6, w1).length}, "sign");
+
+        // 步骤 4：z = y + c·s1 的形状检查 —— c 是 τ-稀疏的，所以这一步是 τ 次移位加（见命题七）
+        //
+        // ┌─ 为什么签名侧必须"拒绝采样 + 重试"（本类最该讲清的一条推导）────────────────────────
+        // │ z 的定义：z = y + c·s1  （环 R_q 里的加法/乘法；c·s1 就是那 τ 次带符号移位加）
+        // │   y    —— 一次性掩码：每签一枚就重抽，系数在 [0, γ1−1] 上均匀（中心化后 ‖y‖∞ ≤ γ1−1）
+        // │   c    —— 挑战多项式：恰好 τ 个非零系数、每个是 ±1，故 ‖c‖∞ = 1、‖c‖₁ = τ
+        // │   s1   —— 私钥短多项式：‖s1‖∞ ≤ η（FIPS 204 表里 η = 2/4/2）
+        // │
+        // │ 范数上界的推导（卷积的"1-范数 × ∞-范数"不等式，负卷积同样成立）：

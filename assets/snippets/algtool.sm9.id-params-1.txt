@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm9.id-params · 来源 Sm9Panel.h:402-423
+
+    void onDecap() {
+        if (idWrap_.bytes.empty()) { status("解封装失败: 请填写身份 ID"); return; }
+        alg::Bytes C;
+        try { C = alg::fromHex(wrapC_->toPlainText().toStdString()); } catch (...) {}
+        if (C.empty()) { status("解封装失败: 密文 C 为空"); return; }
+        alg::Bytes de = algui::hexBytes(deWrap_);
+        // de 为空则由主私钥 ke + ID 派生并回填
+        if (de.empty()) {
+            alg::Bytes ke = algui::hexBytes(keWrap_);
+            if (ke.empty()) { status("解封装失败: 请填用户私钥 de 或 加密主私钥 ke (用于派生 de)"); return; }
+            if (!alg->loadEncMaster(ke)) { status("解封装失败: 加密主私钥 ke 无效 (需 [1, N-1] 内 32 字节)"); return; }
+            de = alg->extractEncKey(idWrap_.bytes);
+            if (de.empty()) { status("解封装失败: 由 ke+ID 派生 de 失败 (详见日志)"); return; }
+            deWrap_->setText(QString::fromStdString(alg::toHex(de)));
+        }
+        const size_t klen = (size_t)spWrapKlen_->value();
+        alg::Bytes M = alg->kemDecapsulateRaw(de, idWrap_.bytes, klen, C);
+        if (M.empty()) { status("解封装失败 (de/C 不符或 ID 不一致, 详见日志)"); return; }
+        alg::Bytes K = algui::hexBytes(wrapK_);
+        const bool same = (!K.empty() && K == M);
+        status(QString("解封装得 M=%1  ").arg(QString::fromStdString(alg::toHex(M))) +
+               (K.empty() ? "(未填密钥值 K, 无法自动比对)"

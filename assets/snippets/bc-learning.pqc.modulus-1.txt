@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.modulus · 来源 PqcEssenceTest.java:1074-1095
+
+    @TraceExecution(value = "NTT 是换基", algorithm = "PQC", flow = "PQC-MATH")
+    @Test
+    public void nttIsAChangeOfBasisThatMakesConvolutionPointwise()
+    {
+        Tracer.trace("start", new Object[]{"psi", PSI_DSA, "N", N, "q", Q_DSA},
+            "NTT change of basis", "start");
+
+        // ψ 必须满足 ψ^256 = -1（等价于 ψ 是 512 次本原单位根）。BC 源码里注释掉的 1753 正是它。
+        Assert.assertEquals("1753^256 mod q 必须等于 -1", Q_DSA - 1, powMod(PSI_DSA, N, Q_DSA));
+        Assert.assertEquals("于是 1753^512 = 1", 1, powMod(PSI_DSA, 2L * N, Q_DSA));
+        Tracer.trace("psi-order", new Object[]{"psi", PSI_DSA, "exp256", N, "exp512", 2L * N},
+            new Object[]{"psi^256", powMod(PSI_DSA, N, Q_DSA), "psi^512", powMod(PSI_DSA, 2L * N, Q_DSA)}, "ntt");
+
+        // r_i = ψ^(2i+1) 是 X^256+1 的 256 个互不相同的根 —— "X^256+1 在 Z_q 上完全分裂"的构造性证明
+        int[] roots = roots(Q_DSA, PSI_DSA);
+        Assert.assertEquals("256 个根必须互不相同（否则插值不唯一，NTT 就不是双射）",
+            N, countDistinct(roots));
+        boolean everyRootNegates = true;
+        for (int i = 0; i < roots.length; i++)
+        {
+            if (powMod(roots[i], N, Q_DSA) != Q_DSA - 1)
+            {

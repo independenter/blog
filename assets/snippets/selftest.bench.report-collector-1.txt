@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.report-collector · 来源 report_collector.py:227-248
+
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(report, f, ensure_ascii=False, indent=2, default=str)
+        log.info("JSON 报告已保存: {}".format(path))
+        return path
+
+    def mark_vsm_result(self, vsm_name, exit_code, records_before):
+        """记录单个 VSM 测试结果（exit_code + 是否有数据）
+        records_before: 调用 parse_stats_file 前的 len(report._records)
+        """
+        has_data = len(self._records) > records_before
+        passed = self._metadata.setdefault('vsms_passed', [])
+        failed = self._metadata.setdefault('vsms_failed', [])
+        if exit_code == 0 and has_data:
+            if vsm_name not in passed:
+                passed.append(vsm_name)
+        else:
+            if vsm_name not in failed:
+                failed.append(vsm_name)
+
+    def _compute_summary(self):
+        """计算汇总统计"""
+        if not self._records:

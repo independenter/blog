@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.api-sym-decrypt · 来源 test_data.py:90-110
+
+def size_label(nbytes):
+    """字节数 → 可读标签"""
+    for unit, mult in [("M", 1024 ** 2), ("K", 1024)]:
+        if nbytes % mult == 0 and nbytes >= mult:
+            return "{}{}".format(nbytes // mult, unit)
+    return str(nbytes)
+
+
+# =========================================================================
+# payload 生成
+# =========================================================================
+
+def _gen_payload_b64(nbytes):
+    """生成指定字节数的随机数据 Base64"""
+    raw = os.urandom(nbytes)
+    return base64.b64encode(raw).decode()
+
+
+def _gen_payload_hex(nbytes):
+    """生成指定字节数的随机数据 hex"""
+    return os.urandom(nbytes).hex()

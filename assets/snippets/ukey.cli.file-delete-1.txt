@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.file-delete · 来源 ukeyctl.cpp:792-813
+
+int cmd_fileRead() {
+    std::string err;
+    openIdentity(false);
+    std::string n = g_cli.get("name");
+    if (n.empty()) die("请指定 --name FILE");
+    Bytes b;
+    if (!mgr.readFile(n, b, err)) die("读失败: " + err);
+    if (!writeOut(b, "文件内容")) std::printf("%s\n", std::string(b.begin(), b.end()).c_str());
+    return 0;
+}
+
+int cmd_fileWrite() {
+    std::string err;
+    openIdentity();
+    std::string n = g_cli.get("name");
+    if (n.empty()) die("请指定 --name FILE");
+    Bytes b;
+    if (g_cli.has("in")) {
+        std::string e;
+        if (!readFileAll(g_cli.get("in"), b, &e)) die("读取失败: " + e);
+    } else {
+        b = inputData("data_b64");

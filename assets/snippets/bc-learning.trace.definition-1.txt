@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.definition · 来源 Flows.java:742-763
+
+    private static FlowDefinition pqcQuantum()
+    {
+        FlowDefinition flow = new FlowDefinition("后量子安全性分析");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "shor", "Shor: 分解 / 离散对数", FlowNodeType.OPERATION, "多项式时间");
+        node(flow, "grover", "Grover: 平方加速", FlowNodeType.OPERATION, "暴力搜索减半");
+        node(flow, "lattice", "格问题: 无已知量子加速", FlowNodeType.OPERATION, "SIS / LWE");
+        node(flow, "compare", "经典 vs 后量子对比", FlowNodeType.OPERATION, "安全假设");
+        node(flow, "params", "参数选择 (NIST 等级)", FlowNodeType.DECISION, "安全裕度");
+        node(flow, "end", "结束", FlowNodeType.TERMINAL, "");
+
+        chain(flow, "start", "shor", "grover", "lattice", "compare", "params", "end");
+        flow.addEdge("compare", "params", "结论");
+        flow.setStartNodeId("start");
+        return flow;
+    }
+
+    // ------------------------------------------------------------------ 协议类
+
+    private static FlowDefinition thresholdEcdsa()
+    {

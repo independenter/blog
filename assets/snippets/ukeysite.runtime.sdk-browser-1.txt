@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukeysite.runtime.sdk-browser · 来源 ukey-sdk.browser.js:540-561
+
+function mod(a, m) {
+  const r = a % m;
+  return r >= 0n ? r : r + m;
+}
+
+function intToBytes(v, nbytes) {
+  let hex = v.toString(16);
+  if (hex.length > nbytes * 2) throw new UkeyError('整数超过 ' + nbytes + ' 字节');
+  return fromHex(hex.padStart(nbytes * 2, '0'));
+}
+
+/**
+ * GmSSL sm2_z256_point_get_x_hat(): x' = 2^127 + (x mod 2^127)。
+ * 国标写作 2^(w-1) + (x mod 2^(w-1)), w=256 时即 2^127, 两端必须一致。
+ */
+function sm2XBar(x) {
+  return _W127 + mod(x, _W127);
+}
+
+/** 模逆 (扩展欧几里得); JS 没有 pow(a,-1,m), 这里自己实现。 */
+function invMod(a, m) {
+  let x0 = 0n, x1 = 1n, b = mod(a, m), mm = m;

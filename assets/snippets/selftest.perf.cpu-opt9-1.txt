@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt9 · 来源 cpu_optimize9.py:101-122
+
+""", "僵尸进程状态")
+
+    # 向所有僵尸的父进程发送 SIGCHLD
+    run("""
+echo "=== 尝试清理僵尸 ==="
+# 找到所有僵尸的父进程
+for ppid in $(ps -eo ppid,stat | grep ' Z ' | awk '{print $1}' | sort -u); do
+    kill -SIGCHLD $ppid 2>/dev/null
+done
+sleep 2
+echo "清理后僵尸数: $(ps -eo stat | grep -c 'Z')"
+""", "发送 SIGCHLD 清理僵尸")
+
+    # === 等待稳定 ===
+    print("\n等待 25 秒...")
+    time.sleep(25)
+
+    # === 最终状态 ===
+    print("\n" + "=" * 60)
+    print("【最终状态】")
+    print("=" * 60)
+    run("top -b -n 1 | head -10", "CPU 概览")

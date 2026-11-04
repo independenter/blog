@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.container-list · 来源 ukeyctl.cpp:35-56
+
+bool g_quiet = false;
+
+// ---------------------------------------------------------------- 小工具
+
+void die(const std::string& msg) {
+    std::fprintf(stderr, "错误: %s\n", msg.c_str());
+    exit(2);
+}
+
+void show(const std::string& key, const std::string& val) {
+    if (g_quiet) return;
+    std::printf("%-14s %s\n", (key + ":").c_str(), val.c_str());
+}
+
+void showJson(const Json& j) { std::printf("%s\n", j.dump(false).c_str()); }
+
+// 读取输入数据: --text / --file / --hex 三选一
+Bytes inputData(const std::string& b64key = "") {
+    std::string t = g_cli.get("text");
+    if (!t.empty()) return Bytes(t.begin(), t.end());
+    std::string f = g_cli.get("file");
+    if (!f.empty()) {

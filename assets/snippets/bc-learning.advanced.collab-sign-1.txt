@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.collab-sign · 来源 InteractiveCollaborativeSignatureEssenceTest.java:10-31
+
+import org.bouncycastle.crypto.digests.SM3Digest;
+import org.bouncycastle.crypto.params.ECDomainParameters;
+import org.bouncycastle.learning.trace.TraceExecution;
+import org.bouncycastle.learning.trace.TraceExecutionRule;
+import org.bouncycastle.learning.trace.Tracer;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+
+/**
+ * 交互式协同签名（Interactive Collaborative Signature）的本质计算 —— 面向过程版。
+ *
+ * <p>三种"多方签名"方案的本质区别：
+ * <ul>
+ *   <li><b>门限签名 (t, n)</b>：用 Shamir 秘密共享把私钥切成 n 份，任意 t 份可恢复私钥并签名；
+ *       签名过程中私钥会被重构（虽然只在内存里短暂存在）。</li>
+ *   <li><b>多重签名 (n, n)</b>：每个参与方有自己的密钥对，聚合公钥 P_agg = Σ P_i，
+ *       签名时所有方共用同一个随机数 k，各自计算局部签名后聚合；需要秘密分发 e/n。</li>
+ *   <li><b>交互式协同签名</b>：每个参与方有自己的密钥对，<b>私钥从不离开本地</b>；
+ *       通过多轮交互（承诺 → 响应）协同产出一张标准签名；验证时用聚合公钥验一次即可。</li>
+ * </ul>
+ *

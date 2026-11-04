@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.threshold-2of3 · 来源 ThresholdSignatureTest.java:250-271
+
+    private static BigInteger[] splitSecret(BigInteger s, int t, int n)
+    {
+        // 使用 SM2 曲线的阶作为模数（保证是素数）
+        BigInteger modulus = SM2_N;
+        
+        // 确保秘密小于模数
+        s = s.mod(modulus);
+
+        // 构造 t−1 次多项式：f(x) = s + a₁x + a₂x² + … (mod modulus)
+        BigInteger[] coeffs = new BigInteger[t];
+        coeffs[0] = s;
+        SecureRandom rng = new SecureRandom();
+        for (int i = 1; i < t; i++)
+        {
+            coeffs[i] = new BigInteger(256, rng).mod(modulus);
+        }
+
+        // 在 x = 1, 2, …, n 处求值
+        BigInteger[] shares = new BigInteger[n];
+        for (int i = 0; i < n; i++)
+        {
+            BigInteger x = BigInteger.valueOf(i + 1);

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukeysite.runtime.der · 来源 der.js:78-99
+
+function base128(v, out) {
+  const stack = [];
+  let n = v;
+  stack.unshift(n & 0x7f);
+  n = Math.floor(n / 128);
+  while (n > 0) { stack.unshift((n & 0x7f) | 0x80); n = Math.floor(n / 128); }
+  for (const x of stack) out.push(x);
+}
+
+function oid(dotted) {
+  const parts = String(dotted).split('.').map(Number);
+  const bs = [];
+  base128(parts[0] * 40 + parts[1], bs);
+  for (let i = 2; i < parts.length; i++) base128(parts[i], bs);
+  return tagBytes(0x06, new Uint8Array(bs));
+}
+
+// X.501 Name: SEQUENCE OF SET OF SEQUENCE { OID, 值 }。CN/O/OU 用 UTF8String,
+// C/ST/L 用 PrintableString —— 与 GM/T 0015 的常见口径一致。
+const NAME_ATTRS = {
+  CN: { oid: OID.cn, utf8: true },
+  O: { oid: OID.o, utf8: true },

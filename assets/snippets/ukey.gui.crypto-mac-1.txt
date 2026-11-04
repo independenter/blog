@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.crypto-mac · 来源 CryptoPanel.cpp:65-86
+
+        std::string err;
+        Bytes b;
+        bool ok = ctx.mgr->random((size_t)rn->value(), b, err);
+        if (ok) rnOut->setText(s2q(uk::toHex(b)));
+        show("生成随机数", ok, err, ok ? s2q(uk::toHex(b)) : QString());
+        ctx.done("生成随机数", ok, err);
+    });
+
+    // ---------------------------------------------------------------- 摘要 / HMAC
+    auto g1 = addGroup(lay, "杂凑与 MAC");
+    auto* hAlg = new QComboBox();
+    hAlg->addItem("SM3 (SGD_SM3)", (int)SGD_SM3);
+    hAlg->addItem("SHA1 (SGD_SHA1)", (int)SGD_SHA1);
+    hAlg->addItem("SHA256 (SGD_SHA256)", (int)SGD_SHA256);
+    row(g1.lay, "算法", hAlg);
+    auto din1 = makeDataIn(g1.lay, "数据", "ukey 摘要测试数据");
+    auto* btnHash = new QPushButton("计算摘要");
+    auto* btnHashId = new QPushButton("SM2 ZA||M 摘要 (需签名公钥)");
+    {
+        auto* h = new QHBoxLayout();
+        h->addWidget(btnHash);
+        h->addWidget(btnHashId);

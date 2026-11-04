@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.kem-length · 来源 PqcEssenceTest.java:1888-1909
+
+    @TraceExecution(value = "ML-KEM 封装纯粹且拒绝静默", algorithm = "PQC", flow = "PQC-MLKEM")
+    @Test
+    public void mlkemEncapsulationIsPureAndRejectionIsSilent()
+    {
+        Tracer.trace("start", new Object[]{"levels", 3, "q", Q_KEM},
+            "ML-KEM encapsulation pure + silent reject", "start");
+
+        MLKEMParameters[] params = new MLKEMParameters[]{
+            MLKEMParameters.ml_kem_512, MLKEMParameters.ml_kem_768, MLKEMParameters.ml_kem_1024,
+        };
+
+        for (int i = 0; i < params.length; i++)
+        {
+            MLKEMParameters p = params[i];
+            MLKEMEngine eng = MLKEMEngine.getInstance(p);
+            byte[] d = shakeBytes(("d" + p.getName()).getBytes(), MLKEMEngine.SymBytes);
+            byte[] z = shakeBytes(("z" + p.getName()).getBytes(), MLKEMEngine.SymBytes);
+
+            // keygen 只由 (d, z) 决定
+            byte[][] kp1 = eng.generateKemKeyPairInternal(d, z);
+            byte[][] kp2 = eng.generateKemKeyPairInternal(d, z);
+            Assert.assertArrayEquals("同一对种子必须长出同一把钥匙：" + p.getName(), kp1[0], kp2[0]);

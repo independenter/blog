@@ -1,0 +1,17 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.zuc.conf-256 · 来源 AlgZuc.cpp:67-80
+
+bool ZucAlg::available() { return false; }
+Bytes ZucAlg::crypt(const Bytes&, const Bytes&, const Bytes&) {
+    Chrono t; logOp("crypt", Rc::NotSupported, t.ms(), "ZUC unavailable (GmSSL not built)"); return {};
+}
+Bytes ZucAlg::mac(const Bytes&, const Bytes&, const Bytes&) {
+    Chrono t; logOp("mac", Rc::NotSupported, t.ms(), "ZUC unavailable (GmSSL not built)"); return {};
+}
+Bytes ZucAlg::crypt256(const Bytes&, const Bytes&, const Bytes&) {
+    Chrono t; logOp("crypt256", Rc::NotSupported, t.ms(), "ZUC unavailable (GmSSL not built)"); return {};
+}
+
+#endif
+
+} // namespace alg

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.device-list · 来源 ukeyctl.cpp:210-231
+
+        std::printf("  %zu. %-24s %s\n", i + 1, v[i].c_str(),
+                    st == SKF_DEV_STATE_PRESENT ? "在位" : (st == SKF_DEV_STATE_ABSENT ? "不在位" : "未知"));
+    }
+    return 0;
+}
+
+int cmd_init() {
+    std::string err;
+    backendOrDie();
+    if (!mgr.softBackend())
+        die("当前后端是硬件 SKF 库, 不能创建设备 (要建软 Ukey 请设 backend = soft)");
+    std::string serial = g_cli.get("serial", "SOFT0001");
+    uint32_t space = (uint32_t)g_cli.getInt("space", 1024);
+    std::string name;
+    if (!mgr.softCreateDevice(serial, space, name, err)) die("创建设备失败: " + err);
+    show("设备名", name);
+    // 顺手把默认应用/容器建好, 让"克隆即跑"成立
+    if (!mgr.connect(name, err)) die("连接失败: " + err);
+    std::string app = g_cfg.appName(), cont = g_cfg.containerName();
+    if (!mgr.createApp(app, g_cfg.adminPin(), g_cfg.userPin(), 6, err))
+        std::fprintf(stderr, "创建应用 %s: %s\n", app.c_str(), err.c_str());
+    else if (!mgr.verifyPin(ADMIN_PIN, g_cfg.adminPin(), nullptr, err))

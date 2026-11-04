@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.device-probe · 来源 ukeyctl.cpp:1112-1133
+
+    std::printf("客户端证书已保存到 %s\n", clientCertPath().c_str());
+    return 0;
+}
+
+int cmd_secCall() {
+    std::string err;
+    bool useUkey = g_cli.flag("ukey");
+    std::string keyPath;
+    std::unique_ptr<SecClient> pc = makeClient(useUkey, keyPath);
+    SecClient& cli2 = *pc;
+    if (g_cli.flag("insecure")) cli2.setInsecureNoCertCheck(true);
+    std::string op = g_cli.get("op");
+    if (op.empty()) die("请指定 --op NAME (例如 ukey.info / echo / ca.list)");
+    if (!cli2.handshake(err)) die("握手失败: " + err);
+    std::printf("安全通道已建立: sid=%s  服务端公钥=%s\n", cli2.sid().c_str(),
+                toHex(cli2.serverPub()).c_str());
+    std::string args = g_cli.get("args", "{}");
+    std::string result;
+    if (!cli2.callJson(op, args, result, err)) die("调用失败: " + err);
+    bool okj = false;
+    Json j = Json::parse(result, &okj, &err);
+    if (okj) showJson(j);

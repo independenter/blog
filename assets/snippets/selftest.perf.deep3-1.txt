@@ -1,0 +1,15 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.deep3 · 来源 deep_dive3.py:207-218
+
+with open(LOCAL_TMP, 'w', encoding='utf-8', newline='\n') as f:
+    f.write(REMOTE_PROBE)
+remote.upload(LOCAL_TMP, REMOTE_PATH)
+
+code, out, err = remote.exec("python3 {} 2>&1 || python {} 2>&1".format(REMOTE_PATH, REMOTE_PATH), timeout=900)
+out = (out or '').strip()
+print(out[:19500])
+if err and err.strip():
+    print("[stderr]", err.strip()[:500])
+
+remote.close()
+print("\n探针3完成!")

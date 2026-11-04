@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.app-delete · 来源 ukeyctl.cpp:1275-1296
+
+    std::fprintf(stderr, "未知命令: %s\n\n", cmd.c_str());
+    usage();
+    return 2;
+}
+
+}  // namespace
+
+int main(int argc, char** argv) {
+    std::string err;
+    g_cli.parse(argc, argv, err);
+    if (g_cli.help || g_cli.positional().empty()) {
+        usage();
+        return g_cli.help ? 0 : 1;
+    }
+    g_quiet = g_cli.flag("quiet");
+    Logger::instance().configure("logs", g_cli.flag("verbose") ? LogLevel::DEBUG : LogLevel::WARN,
+                             true, false);
+
+    std::string configPath = g_cli.get("config");
+    if (!configPath.empty()) {
+        std::string le;
+        if (!g_cfg.load(configPath, &le)) die("读取配置失败: " + le);

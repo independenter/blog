@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm4.gcm · 来源 Sm4EssenceTest.java:548-569
+
+    private static byte[] cfbEncrypt(long[] roundKeys, byte[] iv, byte[] data)
+    {
+        List<byte[]> parts = Calc.chunks(data, BS);
+        // prev 是公式里的反馈块 C_{i−1}，第一圈取 IV
+        byte[] prev = iv;
+        byte[] out = new byte[0];
+        for (int i = 0; i < parts.size(); i++)
+        {
+            // Cᵢ = Pᵢ ⊕ E_K(C_{i−1})：加密器的输入是上一块密文，不是计数器、也不是自己的输出
+            byte[] c = Calc.xor(sm4Block(roundKeys, prev), parts.get(i));
+            out = Calc.concat(out, c);
+            prev = Arrays.copyOf(c, BS);
+        }
+        return out;
+    }
+
+    /**
+     * CFB 解密：与加密共用密钥流来源 —— 反馈仍然取自<b>密文</b>。
+     * <pre>
+     *   公式  Pᵢ = Cᵢ ⊕ E_K(C_{i−1})，约定 C_{−1} = IV
+     *   为什么解密不需要"逆置换" D_K  异或两头同时消掉密钥流：
+     *             Cᵢ ⊕ E_K(C_{i−1}) = (Pᵢ ⊕ E_K(C_{i−1})) ⊕ E_K(C_{i−1}) = Pᵢ；

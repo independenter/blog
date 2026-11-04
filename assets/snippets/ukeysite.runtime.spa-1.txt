@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukeysite.runtime.spa · 来源 app.js:615-636
+
+  function parseDemo(code) {
+    if (!/@flk\/Ukey/.test(code)) return null;
+    const fields = [];
+    const seen = {};
+    // 示例里写的是 TS, Form.Item 可能带泛型参数: <Form.Item<FieldType> label=...>
+    const itemRe = /<Form\.Item(?:<[^>\n]*>)?([^>]*?)>([\s\S]*?)<\/Form\.Item>/g;
+    let m;
+    while ((m = itemRe.exec(code))) {
+      const attrs = m[1], body = m[2];
+      const name = attrOf(attrs, 'name');
+      if (!name) continue;                      // 只包按钮/只写 label 的那种 Item
+      const cm = body.match(/<(Input\.TextArea|Input\.Password|InputNumber|Radio\.Group|Select|Input)\b/);
+      const tag = cm ? cm[1] : 'Input';
+      const opts = tag === 'Radio.Group' || tag === 'Select' ? optionsOf(body) : [];
+      const ph = attrOf(body, 'placeholder');
+      fields.push({
+        k: name, l: attrOf(attrs, 'label') || FIELD_LABEL[name] || name,
+        kind: tag === 'Input.TextArea' ? 'area' : tag === 'Input.Password' ? 'pwd'
+          : tag === 'InputNumber' ? 'num' : opts.length ? 'sel' : 'text',
+        opts: opts, req: /required:\s*true/.test(attrs),
+        ro: /\bdisabled\b|\breadOnly\b|\bdisable\b/.test(body), ph: ph,
+      });

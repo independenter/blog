@@ -1,0 +1,21 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukeysite.runtime.server · 来源 serverCore.js:113-130
+
+class Logger {
+  constructor(dir, level) {
+    this.dir = abs(dir || 'logs');
+    this.level = level || 'INFO';
+    fs.mkdirSync(this.dir, { recursive: true });
+    this.stream = fs.createWriteStream(path.join(this.dir, 'ukeysite.log'), { flags: 'a' });
+  }
+  write(level, msg) {
+    const line = new Date().toISOString() + ' [' + level + '] ' + msg;
+    this.stream.write(line + '\n');
+    if (level !== 'TRACE') console.log(line);
+  }
+  info(m) { this.write('INFO', m); }
+  warn(m) { this.write('WARN', m); }
+  error(m) { this.write('ERROR', m); }
+}
+
+module.exports = { loadConfig, parseArgs, Logger, serveSite, startSite, abs, ROOT };

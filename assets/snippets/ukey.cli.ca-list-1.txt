@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.ca-list · 来源 ukeyctl.cpp:1148-1169
+
+    std::string serial;
+    if (!cli2.enroll("demo-client", certtype::kClient, g_cfg.get("service", "enroll_code", ""),
+                     serial, err)) {
+        std::printf("领证失败 (可能已领过或注册已关闭): %s\n", err.c_str());
+    } else {
+        show("证书序列号", serial);
+    }
+    Bytes der;
+    std::string e2;
+    if (readFileAll(clientCertPath(), der, &e2) && !der.empty()) cli2.setClientCert(der);
+
+    // 2) 握手
+    if (!cli2.handshake(err)) die("握手失败: " + err + "  (ukeyserv 是否在跑?)");
+    show("会话 sid", cli2.sid());
+    std::string cn;
+    SmallCa::certSubjectCn(cli2.serverCert(), cn);
+    show("服务端证书", "CN=" + cn);
+
+    // 3) 加密 echo
+    Json args = Json::object();
+    args.set("msg", Json(std::string("hello over ") + sec::kTag));
+    Json res;

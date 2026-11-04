@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.bridge · 来源 ukeybridge.cpp:33-54
+
+#include <chrono>
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
+#include <memory>
+#include <string>
+#include <thread>
+#include <vector>
+
+using namespace uk;
+
+namespace {
+
+std::atomic<bool> g_stop{false};
+void onSignal(int) { g_stop = true; }
+
+void usage() {
+    std::printf(
+        "Ukey 桥 —— 32 位进程, 替 64 位侧真正调用 SKF_*\n"
+        "\n"
+        "  --config FILE        配置文件 (默认自动定位 config/ukey.ini)\n"
+        "  --backend soft|skf   覆盖 [ukey] backend (桥这边不认 remote, 只能是真后端)\n"

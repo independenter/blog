@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.hsm-threads · 来源 check_hsm_threads.py:188-209
+
+    cat /proc/$HEAVY_PID/task/*/comm 2>/dev/null | sort | uniq -c | sort -rn | head -20
+fi
+""", "hsm 二进制分析", timeout=60)
+
+    # === 6. 线程详情 ===
+    print("\n" + "=" * 60)
+    print("【6. 重 hsm 进程的线程详情】")
+    print("=" * 60)
+    run("""
+HEAVY_PID=$(pgrep -f 'bin/hsm' | while read pid; do
+    t=$(ls /proc/$pid/task 2>/dev/null | wc -l)
+    if [ "$t" -gt 10 ]; then echo $pid; break; fi
+done)
+if [ -n "$HEAVY_PID" ]; then
+    echo "PID: $HEAVY_PID"
+    echo "总线程: $(ls /proc/$HEAVY_PID/task 2>/dev/null | wc -l)"
+    echo ""
+    echo "=== 线程名分布 ==="
+    for tid in $(ls /proc/$HEAVY_PID/task 2>/dev/null); do
+        cat /proc/$HEAVY_PID/task/$tid/comm 2>/dev/null
+    done | sort | uniq -c | sort -rn
+    echo ""

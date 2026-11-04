@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm9.encap · 来源 AlgSm9.cpp:411-432
+
+    int rc = sm9_kem_encrypt(&impl_->enc_msk, id.data(), id.size(), klen, kbuf.data(), &C);
+    if (rc != 1) { logOp("encap", Rc::CryptoError, t.ms(), "id=" + id); return {}; }
+    // 以 65 字节非压缩坐标 (0x04||X||Y) 保存 C
+    outC.assign(65, 0);
+    sm9_z256_point_to_uncompressed_octets(&C, outC.data());
+    logOp("encap", Rc::Ok, t.ms(), "id=" + id + " klen=" + std::to_string(klen));
+    return kbuf;
+}
+
+Bytes Sm9::kemDecapsulate(const std::string& id, size_t klen, const Bytes& C) {
+    Chrono t;
+    if (!impl_->have_enc) { logOp("decap", Rc::InvalidArg, t.ms(), "no enc master key"); return {}; }
+    SM9_ENC_KEY key;
+    if (sm9_enc_master_key_extract_key(&impl_->enc_msk, id.data(), id.size(), &key) != 1) {
+        logOp("decap", Rc::CryptoError, t.ms(), "extract key failed id=" + id); return {};
+    }
+    SM9_Z256_POINT pt;
+    if (C.size() != 65) { logOp("decap", Rc::InvalidArg, t.ms(), "C must be 65-byte uncompressed octets"); return {}; }
+    if (sm9_z256_point_from_uncompressed_octets(&pt, C.data()) != 1) {
+        logOp("decap", Rc::InvalidArg, t.ms(), "bad C point"); return {};
+    }
+    Bytes kbuf(klen);

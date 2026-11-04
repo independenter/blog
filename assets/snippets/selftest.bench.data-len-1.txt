@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.data-len · 来源 tts_tool.py:360-380
+
+    def __exit__(self, *args):
+        self.close()
+
+    # ------------------------------------------------------------------
+    # 校验 / 命令构造
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def validate_target(target):
+        if not target or not TARGET_RE.match(target):
+            raise ValueError("非法设备目录名: {!r}（只允许字母/数字/_.-）".format(target))
+        return target
+
+    def validate_targets(self, targets):
+        if not self.base_dir:
+            raise ValueError("未配置 tts.base_dir")
+        if not targets:
+            raise ValueError("未指定设备目录（请配置 tts.targets 或传 --target）")
+        for target in targets:
+            self.validate_target(target)
+        return targets

@@ -1,0 +1,19 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.scaling-v2 · 来源 scaling_test_v2.py:203-218
+
+    print("\n\n" + "=" * 60)
+    print("【汇总】HSM_THREADS=4 优化后 openapi 数量 vs CPU 性能")
+    print("=" * 60)
+    print("{:<22} {:>10} {:>10} {:>10} {:>10} {:>10}".format(
+        '阶段', 'idle%', '线程数', 'cs/s', 'shim', 'hsm'))
+    print("-" * 75)
+    for r_item in results:
+        print("{:<22} {:>10} {:>10} {:>10} {:>10} {:>10}".format(
+            r_item['label'], r_item['idle'], r_item['threads'],
+            r_item['cs'], r_item['shim'], r_item['hsm']))
+
+    remote.close()
+    print("\n测试完成!")
+
+if __name__ == '__main__':
+    main()

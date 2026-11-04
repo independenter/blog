@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.sign-steps · 来源 PqcEssenceTest.java:1705-1726
+
+    @TraceExecution(value = "ML-DSA 是种子的纯函数", algorithm = "PQC", flow = "PQC-MLDSA")
+    @Test
+    public void mldsaIsAPureFunctionOfItsSeedAcrossEveryMode()
+        throws Exception
+    {
+        Calc.useBc();
+        byte[] msg = "post-quantum but still just hash-then-ring-math".getBytes();
+        Tracer.trace("start", new Object[]{"msgBytes", msg.length, "pureModes", 3, "jceModes", 6},
+            "ML-DSA deterministic by seed", "start");
+
+        // ---- 裁判层：BC crypto 层（pure 模式，3 个安全级别）
+        MLDSAParameters[] pure = new MLDSAParameters[]{
+            MLDSAParameters.ml_dsa_44, MLDSAParameters.ml_dsa_65, MLDSAParameters.ml_dsa_87,
+        };
+        int[] sigLen = new int[]{ 2420, 3309, 4627 };
+
+        for (int i = 0; i < pure.length; i++)
+        {
+            MLDSAParameters p = pure[i];
+            byte[] seed = shakeBytes(new byte[]{ (byte)(i + 1) }, MLDSAEngine.SeedBytes);
+
+            // 私钥 = 种子的展开；同一份种子给 BC 与"我们包出去的函数"，必须得到同一把钥匙

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm2.encrypt · 来源 AlgSm2.cpp:173-194
+
+    bool fixed = (fixedK.size() == FE);
+    bool done = false;
+    for (int attempt = 0; attempt < 64 && !done; ++attempt) {
+        if (fixed) { BN_free(k); k = BN_bin2bn(fixedK.data(), FE, nullptr); }
+        else       { BN_rand_range(k, n); }
+        if (BN_is_zero(k)) { if (fixed) break; continue; }
+
+        EC_POINT* kg = EC_POINT_new(g);
+        EC_POINT_mul(g, kg, k, nullptr, nullptr, ctx);
+        BIGNUM* x1 = BN_new(); BIGNUM* y1 = BN_new();
+        EC_POINT_get_affine_coordinates(g, kg, x1, y1, ctx);
+
+        BN_mod_add(r, e, x1, n, ctx);              // r = (e + x1) mod n
+        BIGNUM* rk = BN_new(); BN_mod_add(rk, r, k, n, ctx);  // (r + k) mod n
+        bool bad = BN_is_zero(r) || BN_is_zero(rk);
+        BN_free(rk); EC_POINT_free(kg); BN_free(x1); BN_free(y1);
+        if (bad) { if (fixed) break; continue; }
+
+        // s = (1+d)^{-1} * (k - r*d) mod n
+        BIGNUM* d1 = BN_new(); BN_copy(d1, d); BN_add_word(d1, 1); BN_mod(d1, d1, n, ctx);
+        BIGNUM* inv = BN_mod_inverse(nullptr, d1, n, ctx);
+        BIGNUM* rd = BN_new(); BN_mod_mul(rd, r, d, n, ctx);

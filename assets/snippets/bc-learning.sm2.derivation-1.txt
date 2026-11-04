@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.derivation · 来源 SM2DerivationTest.java:43-64
+
+            int q = r / newR;
+            int tempT = t - q * newT;
+            t = newT;
+            newT = tempT;
+            int tempR = r - q * newR;
+            r = newR;
+            newR = tempR;
+        }
+        if (r > 1) throw new ArithmeticException("no inverse");
+        if (t < 0) t += mod;
+        return t;
+    }
+
+    int modSqrt(int v) {
+        for (int i = 0; i < p; i++) {
+            if ((i * i) % p == v) return i;
+        }
+        return -1;
+    }
+
+    /* =========================================================
+     * 点加公式（修复：正确处理所有边界）

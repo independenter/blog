@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.params · 来源 PqcEssenceTest.java:2178-2199
+
+    @TraceExecution(value = "参数集是一张表", algorithm = "PQC", flow = "PQC-MATH")
+    @Test
+    public void parameterSetsAreATableNotAClassHierarchy()
+    {
+        Tracer.trace("start", new Object[]{"dsaModes", 6, "kemModes", 3},
+            "parameter sets as a table", "start");
+
+        Calc.useBc();
+        List<MLDSAParameters> dsa = Arrays.asList(
+            MLDSAParameters.ml_dsa_44, MLDSAParameters.ml_dsa_65, MLDSAParameters.ml_dsa_87,
+            MLDSAParameters.ml_dsa_44_with_sha512, MLDSAParameters.ml_dsa_65_with_sha512,
+            MLDSAParameters.ml_dsa_87_with_sha512);
+        List<MLKEMParameters> kem = Arrays.asList(
+            MLKEMParameters.ml_kem_512, MLKEMParameters.ml_kem_768, MLKEMParameters.ml_kem_1024);
+
+        // 同一份代码路径 + 不同常量 = 不同模式：这里连一个 if 都不需要
+        Assert.assertEquals("pure 模式不预哈希", Boolean.FALSE, Boolean.valueOf(dsa.get(0).isPreHash()));
+        Assert.assertEquals("后 3 个是 SHA-512 预哈希模式", Boolean.TRUE, Boolean.valueOf(dsa.get(3).isPreHash()));
+        Assert.assertEquals("同级别的 pure / 预哈希共用 k",
+            dsa.get(0).getK(), dsa.get(3).getK());
+        Tracer.trace("table", new Object[]{"dsaModes", dsa.size(), "kemModes", kem.size()},
+            new Object[]{"preHash[0]", dsa.get(0).isPreHash(), "preHash[3]", dsa.get(3).isPreHash(),

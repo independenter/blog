@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.slhdsa · 来源 SlhDsaEssenceTest.java:173-194
+
+        int sum = 0;
+        for (int i = 0; i < len; i++)
+        {
+            sum += allCoeffs[i];
+        }
+        int maxSum = len1 * (w - 1);
+        Tracer.trace("concatCoeffs", new Object[]{
+            "len1", len1, "len2", len2, "len", len
+        }, "coeffSum=" + sum, "wots");
+        Tracer.traceDecision("checkInvariant", new Object[]{
+            "sum", sum, "maxSum", maxSum
+        }, sum <= maxSum, "security", "Σ allCoeffs ≤ len1·(w−1)");
+        Assert.assertTrue("WOTS+ 不变量：系数和 ≤ len1·(w−1) = " + maxSum + "，实际 = " + sum,
+            sum <= maxSum);
+        log.info("[WOTS+] 系数和 = {} ≤ len1·(w−1) = {} ✓", sum, maxSum);
+        Tracer.trace("end", new Object[]{
+            "len", len, "sum", sum, "maxSum", maxSum
+        }, "WOTS+ chain invariant verified", "end");
+    }
+
+    /**
+     * 把字节数组拆成 base-w 表示的系数数组。

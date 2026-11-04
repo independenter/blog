@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.file-list · 来源 ukeyctl.cpp:605-625
+
+        std::string body;
+        for (size_t i = text.find('\n', s) + 1; i < e2; i++)
+            if (text[i] != '\r' && text[i] != '\n') body += text[i];
+        b = b64Decode(body);
+    }
+    bool sign = !g_cli.flag("enc");
+    if (!mgr.importCert(sign, b, err)) die("写入容器失败: " + err);
+    std::printf("证书已写入容器 (%s 证书, %zu 字节)\n", sign ? "签名" : "加密", b.size());
+    std::printf("%s\n", SmallCa::describe(b).c_str());
+    return 0;
+}
+
+int cmd_certInfo() {
+    std::string err;
+    std::string f = g_cli.get("in");
+    if (f.empty()) die("请指定 --in FILE");
+    Bytes b;
+    if (!readFileAll(f, b, &err)) die("读取失败: " + err);
+    std::printf("%s\n", SmallCa::describe(b).c_str());
+    return 0;
+}

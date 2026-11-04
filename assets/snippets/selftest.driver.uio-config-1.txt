@@ -1,0 +1,13 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.driver.uio-config · 来源 ccore_917_config.ini:10-19
+
+keycmd = 2
+jobsize = 128
+pqcmode = 0
+smkptable = 1
+pcie_sram = 0
+
+[HugePages]
+mount_point = /mnt/huge
+page_count = 1024
+page_size = 2048

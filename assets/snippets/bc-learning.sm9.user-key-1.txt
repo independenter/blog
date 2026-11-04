@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.user-key · 来源 Sm9KeyEssenceTest.java:298-319
+
+    @TraceExecution(value = "主密钥 DER 前导零往返", algorithm = "SM9", flow = "SM9-KEY")
+    @Test
+    public void masterKeyDerRoundTripsEvenWithALeadingZeroByte()
+        throws Exception
+    {
+        Tracer.trace("start", new Object[]{"ks", HEX_KS, "kex", HEX_KEX}, null, "start");
+
+        // hex_ks/hex_ke/hex_kex 首字节都是 0x00：DER 会把这个前导零省掉，编码只有 31 字节
+        byte[] ksBytes = Calc.toBytes(HEX_KS, 32);
+        Assert.assertEquals(0x00, ksBytes[0] & 0xff);
+
+        BigInteger[][] ppubs = Sm9Math.signMasterPublicKey(HEX_KS);
+        ASN1EncodableVector vector = new ASN1EncodableVector();
+        vector.add(new ASN1Integer(HEX_KS));
+        vector.add(new DERBitString(Sm9Math.twistToOctets(ppubs)));
+        byte[] der = new DERSequence(vector).getEncoded();
+        Tracer.trace("derEncodeSignMasterKey", new Object[]{"ks", HEX_KS, "ksBytesLen", ksBytes.length,
+            "ppubsLen", Sm9Math.twistToOctets(ppubs).length}, der, "marshal");
+
+        ASN1Sequence parsed = ASN1Sequence.getInstance(der);
+        // SEQUENCE 的两个成员顺序不能换：0 = INTEGER(主私钥标量)，1 = BIT STRING(主公钥点)
+        Assert.assertEquals(2, parsed.size());

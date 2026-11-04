@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.api-sign-keynum · 来源 test_data.py:122-142
+
+def set_payload_bytes(nbytes):
+    """切换当前档位 payload"""
+    global _current_data_b64, _current_data_hex
+    _current_data_b64, _current_data_hex = make_payloads(nbytes)
+
+
+# =========================================================================
+# 构建函数（返回 path, body）
+# =========================================================================
+
+def build_sign(did=None):
+    """数据签名（外部密钥）"""
+    body = {
+        "privateKey": PRIVATE_KEY,
+        "algorithmType": ALGORITHM_TYPE,
+        "data": _current_data_hex,
+        "pucId": PUC_ID,
+        "plainIsEncode": False,
+        "publicKey": PUBLIC_KEY,
+    }
+    return "/api/crypto/sign", body

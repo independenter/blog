@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.discover-only · 来源 kubectl_tool.py:145-166
+
+                if not exposed and svc_type in ('LoadBalancer', 'NodePort'):
+                    exposed = p.get('port', 0)
+                if container_port in ('9090', '8880', '9443') and exposed:
+                    port_map[container_port] = exposed
+
+            if len(port_map) > 2:  # 至少有 name + vsm + 一个端口
+                results.append(port_map)
+                log.info("Service [{}] (vsm={}): {}".format(svc_name, port_map['vsm'],
+                    {k: v for k, v in port_map.items() if k not in ('name', 'vsm')}))
+
+        return results
+
+    def discover_ports(self):
+        """
+        自动发现云密码机端口（仅内存，不修改 config.yaml）。
+        - 指定 vsm_name → 只获取该 VSM 的端口
+        - 未指定 → 获取全部 VSM 的端口，返回第一个可用的
+        返回 dict: {'vsm_name': ..., 'http_port': ..., 'tcp_port': ..., 'https_port': ...}
+        """
+        target = self.vsm_name or '(全部)'
+        log.info("=" * 60)
+        log.info("  自动发现 VSM: {} 虚拟密码机端口".format(target))

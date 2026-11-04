@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm4.modes · 来源 Sm4EssenceTest.java:1150-1171
+
+    @TraceExecution(value = "SM4 ECB/CBC 分组模式", algorithm = "SM4", flow = "SM4-MODES")
+    @Test
+    public void blockModesAreCombinatorsOverTheBlockFunction()
+        throws Exception
+    {
+        Calc.useBc();
+        byte[] key = Calc.unhex("0123456789abcdeffedcba9876543210");
+        // iv 是 CBC 链条的第一环，相当于公式里的 C_{−1}；这里取一个 16 字节的十六进制串充当随机 IV
+        byte[] iv = Calc.unhex("00112233445566778899aabbccddeeff");
+        byte[] pt = Calc.concat(Calc.repeatedByte(0xaa, BS), Calc.repeatedByte(0xbb, BS), Calc.repeatedByte(0xcc, BS));   // 3 个整块
+        SecretKeySpec ks = new SecretKeySpec(key, "SM4");
+        // 加密轮密钥表：rk₀..rk₃₁ 正序
+        long[] encKeys = expandKey(key);
+        // 解密轮密钥表：同一张表倒过来读，rk₃₁..rk₀
+        long[] decKeys = keySchedule(key, false);
+
+        Tracer.trace("start", new Object[]{
+            "algorithm", "SM4", "modes", "ECB/CBC", "key", Calc.hex(key)
+        }, null, "start");
+        Tracer.trace("pad", new Object[]{
+            "blockSize", BS, "plainBytes", pt.length, "blocks", pt.length / BS, "padding", "NoPadding"
+        }, pt.length / BS, "pad");

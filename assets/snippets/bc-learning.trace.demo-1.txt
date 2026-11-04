@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.demo · 来源 TracerDemoTest.java:161-182
+
+    private static BigInteger[] ecMul(BigInteger k, BigInteger gx, BigInteger gy, BigInteger mod)
+    {
+        long startNanos = System.nanoTime();
+
+        BigInteger[] result = new BigInteger[0];
+        BigInteger[] base = {gx, gy};
+        BigInteger exp = k;
+        int step = 0;
+
+        while (exp.signum() > 0)
+        {
+            if (exp.testBit(0))
+            {
+                result = ecAdd(result, base);
+                step++;
+
+                // 每 4 步记录一次（避免追踪数据过多）
+                if (Tracer.isEnabled() && step % 4 == 0)
+                {
+                    Tracer.trace("ecMul.step", new Object[]{
+                        "bit", k.bitLength() - exp.bitLength(),
+                        "intermediate", result

@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.pin-admin · 来源 ukeyctl.cpp:228-248
+
+    std::string app = g_cfg.appName(), cont = g_cfg.containerName();
+    if (!mgr.createApp(app, g_cfg.adminPin(), g_cfg.userPin(), 6, err))
+        std::fprintf(stderr, "创建应用 %s: %s\n", app.c_str(), err.c_str());
+    else if (!mgr.verifyPin(ADMIN_PIN, g_cfg.adminPin(), nullptr, err))
+        std::fprintf(stderr, "校验管理员 PIN: %s\n", err.c_str());
+    else if (!mgr.createContainer(cont, err))
+        std::fprintf(stderr, "创建容器 %s: %s\n", cont.c_str(), err.c_str());
+    else {
+        // 密钥对也顺手在**令牌内**生成好 —— 出厂就能直接签名, 私钥不落文件
+        Bytes pub;
+        if (mgr.genKeyPair(false, pub, err)) show("签名公钥 (令牌内生成)", toHex(pub));
+        if (mgr.genKeyPair(true, pub, err)) show("加密公钥 (令牌内生成)", toHex(pub));
+    }
+    show("存储目录", g_cfg.softStoreDir());
+    std::printf("\n默认口令: 管理员 PIN = 用户 PIN = %s, 设备认证密钥 = %s\n",
+                g_cfg.userPin().c_str(), g_cfg.devAuthKeyHex().c_str());
+    std::printf("这是**出厂值**, 生产环境务必改: ukeyctl pin-change --type admin --old %s --new 新口令\n",
+                g_cfg.userPin().c_str());
+    std::printf("\n完成。接下来: ukeyctl info\n");
+    return 0;
+}

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-sm9 · 来源 Flows.java:496-517
+
+    private static FlowDefinition rsaPadding()
+    {
+        FlowDefinition flow = new FlowDefinition("RSA 填充方案");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "mgf1", "MGF1: hash(seed‖counter)", FlowNodeType.OPERATION, "掩码生成函数");
+        node(flow, "encode", "编码 (v1.5 / OAEP / PSS)", FlowNodeType.OPERATION, "EM 结构");
+        node(flow, "selfCheck", "编码自校验 (PSS)", FlowNodeType.OPERATION, "pssVerify / 确定性");
+        node(flow, "modExp", "模幂 (RSA 原语)", FlowNodeType.OPERATION, "填充与原语正交");
+        node(flow, "decode", "解码 / 还原", FlowNodeType.OPERATION, "分离字段");
+        node(flow, "verify", "字段校验通过?", FlowNodeType.DECISION, "填充检查");
+        node(flow, "end", "结束", FlowNodeType.TERMINAL, "");
+
+        chain(flow, "start", "mgf1", "encode", "selfCheck", "modExp", "decode", "verify", "end");
+        flow.addEdge("verify", "end", "通过");
+        flow.setStartNodeId("start");
+        return flow;
+    }
+
+    private static FlowDefinition rsaBlocks()
+    {
+        FlowDefinition flow = new FlowDefinition("RSA 分块加密");

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt5 · 来源 cpu_optimize5.py:102-123
+
+    run("""
+count=0
+for iface in /sys/class/net/veth*/queues/rx-*/rps_cpus; do
+    echo ffffffff > "$iface" 2>/dev/null && count=$((count + 1))
+done
+echo "已为 $count 个 veth RX 队列启用 RPS"
+""", "veth RPS")
+
+    # === 优化 7: 为 cni0 bridge 启用 RPS ===
+    print("\n" + "=" * 60)
+    print("【优化 7】为 cni0 bridge 启用 RPS")
+    print("=" * 60)
+    run("cat /sys/class/net/cni0/queues/rx-0/rps_cpus 2>/dev/null", "cni0 当前 RPS")
+    run("""
+for q in /sys/class/net/cni0/queues/rx-*/rps_cpus; do
+    echo ffffffff > "$q" 2>/dev/null
+done
+echo "cni0 RPS 已设置"
+""", "设置 cni0 RPS")
+    run("cat /sys/class/net/cni0/queues/rx-0/rps_cpus 2>/dev/null", "验证 cni0 RPS")
+
+    # === 优化 8: 减少 tcp 开销 ===

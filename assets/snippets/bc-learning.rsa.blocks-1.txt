@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.blocks · 来源 RsaEssenceTest.java:1830-1851
+
+    @TraceExecution(value = "MGF1 计数器模式", algorithm = "RSA", flow = "RSA-PADDING")
+    @Test
+    public void mgf1IsJustHashInCounterMode()
+        throws Exception
+    {
+        Calc.useBc();
+        Tracer.trace("start", new Object[]{"hashes", 3, "lengths", 6}, null, "start");
+        // 两张按下标对齐的值表：我们的摘要名 + BC 的 Digest 裁判
+        String[] hashNames = new String[]{ SHA1, SHA256, SM3 };
+        Digest[] bcDigests = new Digest[]{ new SHA1Digest(), new SHA256Digest(), new SM3Digest() };
+
+        for (int i = 0; i < hashNames.length; i++)
+        {
+            String hashName = hashNames[i];
+            Digest bcDigest = bcDigests[i];
+
+            byte[] seed = Calc.concat("seed".getBytes("UTF-8"), randomBytes(7));
+            int hLen = digestSize(hashName);
+            int[] lengths = new int[]{ 1, hLen - 1, hLen, hLen + 1, 300, K };
+            for (int j = 0; j < lengths.length; j++)
+            {
+                int len = lengths[j];

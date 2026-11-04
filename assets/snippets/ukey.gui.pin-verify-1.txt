@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.pin-verify · 来源 PinPanel.cpp:158-179
+
+        std::string why;
+        const int st = ctx.mgr->adminPinSupported(why);
+        const bool off = (st == 0);
+        const bool adminSel = (uint32_t)pinType->currentData().toInt() == ADMIN_PIN;
+        btnUnblock->setEnabled(!off);              // 解锁用户 PIN 必须要管理员 PIN
+        const bool offSel = off && adminSel;
+        btnVerify->setEnabled(!offSel);
+        btnChange->setEnabled(!offSel);
+        btnInfo->setEnabled(!offSel);
+        const QString tip = off ? s2q(why) : QString();
+        for (QPushButton* b : {btnUnblock, btnVerify, btnChange, btnInfo}) b->setToolTip(tip);
+    };
+    auto pinLine = [&ctx](uint32_t type, const char* label) -> QString {
+        uk::PinInfo pi;
+        std::string err;
+        if (!ctx.mgr->pinInfo(type, pi, err)) return s2q(label) + ": ?";
+        QString s = s2q(label) + ": 剩余 " + QString::number(pi.remainRetry) + "/" +
+                    QString::number(pi.maxRetry);
+        if (pi.remainRetry == 0) s += " 已锁定";
+        return s + (pi.defaultPin ? " (仍是出厂 PIN)" : " (已改过出厂 PIN)");
+    };
+    auto refreshPin = [pinStatus, &ctx, pinLine, applyAdminGate] {

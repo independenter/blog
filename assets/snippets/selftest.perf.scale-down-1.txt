@@ -1,0 +1,11 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.scale-down · 来源 _scale_down.py:64-71
+
+     "vmstat 5 2 2>/dev/null | tail -1"),
+]
+print("\n=== 恢复核验 ===")
+for desc, cmd in CMDS:
+    c, o, e = t.exec(cmd, timeout=120)
+    print("\n>> %s\n%s" % (desc, (o or e or '').strip()[:1200]))
+
+t.close()

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt6 · 来源 cpu_optimize6.py:105-126
+
+    # 检查是否有 virbr 接口活跃
+    virbr = run("ip link show type bridge 2>/dev/null | grep virbr || echo 'no virbr'", "virbr 接口")
+    if "no virbr" in virbr:
+        print("无 virbr 接口，清理 libvirt 规则")
+        # 从 INPUT 移除 LIBVIRT_INP
+        run("iptables -D INPUT -j LIBVIRT_INP 2>/dev/null; echo done", "移除 LIBVIRT_INP")
+        # 从 FORWARD 移除 LIBVIRT 链
+        run("iptables -D FORWARD -j LIBVIRT_FWX 2>/dev/null; echo done", "移除 LIBVIRT_FWX")
+        run("iptables -D FORWARD -j LIBVIRT_FWI 2>/dev/null; echo done", "移除 LIBVIRT_FWI")
+        run("iptables -D FORWARD -j LIBVIRT_FWO 2>/dev/null; echo done", "移除 LIBVIRT_FWO")
+        # 清除链
+        run("for chain in LIBVIRT_INP LIBVIRT_OUT LIBVIRT_FWX LIBVIRT_FWI LIBVIRT_FWO; do iptables -F $chain 2>/dev/null; iptables -X $chain 2>/dev/null; done; echo done", "清除所有 LIBVIRT 链")
+        # NAT 中的 LIBVIRT
+        run("iptables -t nat -F LIBVIRT_PRT 2>/dev/null; iptables -t nat -X LIBVIRT_PRT 2>/dev/null; echo done", "清除 NAT LIBVIRT_PRT")
+    else:
+        print("virbr 接口仍存在，跳过 libvirt 清理")
+
+    # === 验证清理结果 ===
+    print("\n" + "=" * 60)
+    print("【清理后验证】")
+    print("=" * 60)
+    run("iptables -L -n 2>/dev/null | wc -l", "iptables 总行数（清理后）")

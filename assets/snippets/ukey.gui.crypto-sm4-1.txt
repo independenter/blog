@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.crypto-sm4 · 来源 CryptoPanel.cpp:340-361
+
+        std::string err;
+        Bytes ukeyPub;
+        if (!ctx.mgr->exportPublicKey(true, ukeyPub, err)) {
+            showError(agreeOut, "取签名公钥失败: " + err);
+            return;
+        }
+        uksoft::cry::KeyPair peer = uksoft::cry::genKeyPair();
+        uksoft::cry::KeyPair temp = uksoft::cry::genKeyPair();
+        Bytes ukeyTemp, zUkey;
+        bool ok = ctx.mgr->agreeResponder(peer.pub, temp.pub, "1234567812345678",
+                                          "1234567812345678", ukeyTemp, zUkey, err);
+        Bytes zPeer;
+        if (ok)
+            ok = uksoft::cry::keyExchange(true, peer.priv, peer.pub, "1234567812345678", ukeyPub,
+                                      "1234567812345678", temp.priv, temp.pub, ukeyTemp, 16, zPeer);
+        agreeOut->setPlainText(ok && zUkey == zPeer
+                                   ? "协商成功, 双方 Z = " + s2q(uk::toHex(zUkey)) +
+                                         "\n(可再喂给 KDF 得到会话密钥, 见安全通道)"
+                                   : "失败: " + s2q(err) + "\nUkey Z = " + s2q(uk::toHex(zUkey)) +
+                                         "\n对端 Z = " + s2q(uk::toHex(zPeer)));
+        ctx.done("密钥协商", ok && zUkey == zPeer, err);
+    });

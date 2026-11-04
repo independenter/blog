@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.pin-retry · 来源 PinPanel.cpp:243-264
+
+        std::string err;
+        bool ok = ctx.mgr->deleteApp(q2s(apps->currentText()), err);
+        show("删除应用", ok, err);
+        ctx.done("删除应用", ok, err);
+        refreshAll();
+    });
+    // 口令彻底忘光时的出口: SKF_CreateApplication / DeleteApplication 属 GM/T 0016 §8.2.3 的
+    // "设备权限", 只看设备认证密钥, 不看管理员 PIN —— 所以管理员 PIN 也锁到 0 时这条路仍通。
+    btnRebuild->connect(btnRebuild, &QPushButton::clicked,
+                        [&ctx, apps, adAdmin, adUser, adRetry, page, refreshAll, show] {
+        const std::string name = q2s(apps->currentText());
+        if (name.empty()) {
+            show("强制重建应用", false, "先在上方选择或填写应用名");
+            return;
+        }
+        if (QMessageBox::question(
+                page, "确认重建",
+                "重建 = 先删除应用 " + s2q(name) + " (连同其下全部容器、密钥、证书),\n"
+                "再用左侧\u201c新建应用\u201d里的管理员/用户 PIN 建一个同名应用。\n\n"
+                "不需要旧口令, 只需要设备认证密钥 ([ukey] dev_auth_key)。\n"
+                "确认可接受丢失并重建吗?") != QMessageBox::Yes)
+            return;

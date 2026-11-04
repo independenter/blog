@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-agreement · 来源 Flows.java:574-595
+
+    private static FlowDefinition sm9Sign()
+    {
+        FlowDefinition flow = new FlowDefinition("SM9 签名验签");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "keygen", "用户私钥提取 dA", FlowNodeType.OPERATION, "H1(IDA‖hid)");
+        node(flow, "hash1", "h = H1(ID‖hid) → 范围内", FlowNodeType.OPERATION, "身份哈希");
+        node(flow, "genK", "随机 k ∈ [1,n−1]", FlowNodeType.OPERATION, "一次性随机数");
+        node(flow, "pointMul", "w = g^k", FlowNodeType.OPERATION, "G2 上的幂");
+        node(flow, "hash2", "h = H2(M‖w)", FlowNodeType.OPERATION, "挑战");
+        node(flow, "computeS", "s = (k − h·ks)·(h+ks)⁻¹ 形式", FlowNodeType.OPERATION, "签名值");
+        node(flow, "verify", "验签等式成立?", FlowNodeType.DECISION, "配对验证");
+        node(flow, "compare", "签名 / DER 编码一致?", FlowNodeType.DECISION, "交叉验证");
+        node(flow, "end", "结束", FlowNodeType.TERMINAL, "");
+
+        chain(flow, "start", "keygen", "hash1", "genK", "pointMul", "hash2", "computeS",
+            "verify", "compare", "end");
+        flow.addEdge("verify", "compare", "通过");
+        flow.addEdge("compare", "end", "一致");
+        flow.setStartNodeId("start");
+        return flow;
+    }

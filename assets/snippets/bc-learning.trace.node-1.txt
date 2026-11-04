@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.node · 来源 FlowNode.java:108-129
+
+    public void setLoopCurrent(int loopCurrent)
+    {
+        this.loopCurrent = loopCurrent;
+    }
+
+    public String getCondition()
+    {
+        return condition;
+    }
+
+    public void setCondition(String condition)
+    {
+        this.condition = condition;
+    }
+
+    public Boolean getDecisionResult()
+    {
+        return decisionResult;
+    }
+
+    public void setDecisionResult(Boolean decisionResult)
+    {

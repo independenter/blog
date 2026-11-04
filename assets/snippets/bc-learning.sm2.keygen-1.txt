@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.keygen · 来源 Sm2EssenceTest.java:674-695
+
+    private static String phaseGroup(String phase, String name)
+    {
+        return phase == null ? name : phase + ":" + name;
+    }
+
+    /** mod n 归约：把标量压回 [0, n)。n 是基点的阶 ⇒ [a]G = [a mod n]G，所以 d/k/r/s/t 都只在 Z/nZ 里有意义。 */
+    private static BigInteger modN(BigInteger x)
+    {
+        return x.mod(N);
+    }
+
+    /**
+     * KDF（SM3 计数器流）：加密里把共享点坐标变成密钥流的过程 —— 一个 while 循环逐块填充。
+     *
+     * <p>符号与公式（GM/T 0003.4 的密钥派生函数，计数器模式）：
+     * <pre>
+     *   z        输入密钥材料 (IKM)：这里是共享点的坐标拼接 x₂ ‖ y₂（各 32 字节大端，共 64 字节）
+     *   klen     要输出的字节数 —— 在 SM2 加密里就等于<b>明文长度</b>（标准写作 klen = 8·len(M) <b>位</b>）
+     *   ct       32-bit 计数器，从 <b>1</b> 开始每轮加 1，编码成 4 字节大端（Calc.toBytes(..., 4)）
+     *   第 ct 块 = SM3(z ‖ ct₄)，正好 32 字节 = 256 bit
+     *   输出     = 第 1 块 ‖ 第 2 块 ‖ … 拼到足够长，再截断到前 klen 字节（最后一块只取一部分）
+     * </pre>

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cs-attribution · 来源 cs_attribution.py:92-113
+
+for pid, comm, dcpu, dcs, th in sorted(rows, key=lambda r: -r[3])[:25]:
+    print("{:<22} pid={:<7} cs={:>9}/s cpu={:>6.1f}% 线程={}".format(
+        comm[:22], pid, int(dcs / DUR), dcpu / DUR, th))
+print()
+print("--- Top 25 CPU 核 ---")
+for pid, comm, dcpu, dcs, th in sorted(rows, key=lambda r: -r[2])[:25]:
+    print("{:<22} pid={:<7} cpu={:>6.2f}核 cs={:>9}/s 线程={}".format(
+        comm[:22], pid, dcpu / 100.0 / DUR, int(dcs / DUR), th))
+print()
+print("--- 按进程名聚合（cs 降序 Top 25）---")
+agg = {}
+for pid, comm, dcpu, dcs, th in rows:
+    a = agg.setdefault(comm, [0, 0, 0, 0])
+    a[0] += dcpu; a[1] += dcs; a[2] += 1; a[3] += th
+for comm, (dcpu, dcs, cnt, th) in sorted(agg.items(), key=lambda kv: -kv[1][1])[:25]:
+    print("{:<22} 数量={:<5} cs={:>10}/s cpu={:>7.2f}核 线程={}".format(
+        comm[:22], cnt, int(dcs / DUR), dcpu / 100.0 / DUR, th))
+print()
+print("--- 按进程名聚合（CPU 降序 Top 15）---")
+for comm, (dcpu, dcs, cnt, th) in sorted(agg.items(), key=lambda kv: -kv[1][0])[:15]:
+    print("{:<22} 数量={:<5} cpu={:>7.2f}核 cs={:>10}/s 线程={}".format(
+        comm[:22], cnt, dcpu / 100.0 / DUR, int(dcs / DUR), th))

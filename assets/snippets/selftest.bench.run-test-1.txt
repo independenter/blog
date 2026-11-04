@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.run-test · 来源 run_test.py:478-499
+
+    finally:
+        tool.close()
+        if failed_runs:
+            report.set_metadata(failed_runs=failed_runs)
+            log.warning("以下用例未产出统计: {}".format(', '.join(failed_runs)))
+        if aggregates:
+            report.set_metadata(aggregates=aggregates, summary_mode=True)
+        report.save_csv()
+        report.save_json()
+        report.print_summary()
+
+
+def _run_tcp(args, host_url, report, log, payload_size):
+    """
+    执行 TCP 压测（骨架）。
+
+    locustfile_tcp.py 的 ChsmTcpUser 在协议未实现时会在预热阶段退出，
+    因此骨架阶段跑不出流量属正常；实现 TcpClient.pack_request/unpack_response 后自动生效。
+    """
+    log.info("启动 TCP 压测（骨架）...")
+    locustfile = os.path.join(HERE, 'locustfile_tcp.py')
+    tool = LocustTool(host=host_url, locustfile=locustfile)

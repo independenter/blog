@@ -1,0 +1,27 @@
+# 一休作品集 · 脱敏接口说明
+# 条目 selftest.perf.uio-sweep · 公司项目不公开源代码
+
+// UIO 参数扫参
+// 公司项目 · 脱敏接口说明
+// 技术栈: 
+
+/**
+ * 核心功能接口
+ */
+public interface UioSweepService {
+    
+    /**
+     * 执行业务逻辑
+     */
+    Result execute(Request request);
+    
+    /**
+     * 参数校验
+     */
+    boolean validate(Input input);
+    
+    /**
+     * 审计记录
+     */
+    void audit(Action action, Result result);
+}

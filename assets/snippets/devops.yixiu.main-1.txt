@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.yixiu.main · 来源 MainWindow.xaml:60-81
+
+                    <ListBox x:Name="ToolListBox" SelectionMode="Single"
+                             BorderThickness="0" Background="Transparent"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             SelectionChanged="ToolListBox_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Margin" Value="0,0,0,4"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- 图标（由工具自描述 Icon / IconBackground 提供） -->
+                                    <Border Grid.Column="0" Width="38" Height="38"
+                                            CornerRadius="8" VerticalAlignment="Center"
+                                            Background="{Binding IconBackground}"
+                                            BorderBrush="{StaticResource BorderBrush2}" BorderThickness="1">

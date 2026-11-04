@@ -1,0 +1,23 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.cert-chain · 来源 CertPanel.cpp:428-447
+
+        std::string err;
+        // writeCrl = genCrl + 落盘 crl.der/crl.pem; 只 genCrl 的话说"已导出"是骗人的
+        bool ok = ca->writeCrl(err);
+        show("重建 CRL", ok, err,
+             ok ? "已写入 " + s2q(ca->caDir()) + "/crl.der 与 crl.pem (客户端握手时会校验)"
+                : QString());
+    });
+
+    // tail 必须真的挂到布局上: 之前它是个没有父控件的孤儿, 页面上看不到任何操作结果。
+    lay->addWidget(muted("最近一次操作输出:"));
+    lay->addWidget(tail);
+    lay->addStretch(1);
+    {
+        std::string e;
+        loadPub(e);  // 打开页面时尽力回填两个公钥框, 失败不打扰用户
+    }
+    return page;
+}
+
+}  // namespace ugui

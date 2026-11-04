@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.cert.csr · 来源 AlgCert.cpp:386-407
+
+        return x509_cert_sign_to_der(
+            X509_version_v3, serial.data(), serial.size(), OID_sm2sign_with_sm3,
+            issuer, issuerLen, notBefore, notAfter,
+            subject, subjectLen, &pubKey,
+            nullptr, 0, nullptr, 0,
+            exts.data(), exts.size(),
+            &impl_->caKey, kSm2CertId, kSm2CertIdLen,
+            out, outlen);
+    };
+    size_t certlen = 0;
+    if (doSign(nullptr, &certlen) != 1 || certlen == 0) {
+        logOp("issueFromRequest", Rc::CryptoError, t.ms(), "签发测量失败");
+        return false;
+    }
+    Bytes cert(certlen);
+    uint8_t* p = cert.data();
+    if (doSign(&p, &certlen) != 1) {
+        logOp("issueFromRequest", Rc::CryptoError, t.ms(), "签发失败");
+        return false;
+    }
+    impl_->cert = std::move(cert);
+    return logOp("issueFromRequest", Rc::Ok, t.ms(), "CSR 签发完成") == Rc::Ok;

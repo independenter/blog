@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.sm2-agree · 来源 Sm2KeyAgreementTest.java:408-429
+
+    static SM2KeyExchange bcExchange(boolean initiator, BigInteger staticPrivate, BigInteger ephemeralPrivate,
+        byte[] ownId)
+    {
+        SM2KeyExchangePrivateParameters privateParameters = new SM2KeyExchangePrivateParameters(initiator,
+            new ECPrivateKeyParameters(staticPrivate, SM2_DOMAIN),
+            new ECPrivateKeyParameters(ephemeralPrivate, SM2_DOMAIN));
+        SM2KeyExchange exchange = new SM2KeyExchange();
+        exchange.init(new ParametersWithID(privateParameters, ownId));
+        return exchange;
+    }
+
+    static byte[] bcKey(SM2KeyExchange exchange, ECPoint otherStatic, ECPoint otherEphemeral, byte[] otherId,
+        int keyLengthBits)
+    {
+        SM2KeyExchangePublicParameters publicParameters = new SM2KeyExchangePublicParameters(
+            new ECPublicKeyParameters(otherStatic, SM2_DOMAIN),
+            new ECPublicKeyParameters(otherEphemeral, SM2_DOMAIN));
+        return exchange.calculateKey(keyLengthBits, new ParametersWithID(publicParameters, otherId));
+    }
+
+    static byte[][] bcKeyWithConfirmation(SM2KeyExchange exchange, ECPoint otherStatic, ECPoint otherEphemeral,
+        byte[] otherId, byte[] peerConfirmationTag, int keyLengthBits)

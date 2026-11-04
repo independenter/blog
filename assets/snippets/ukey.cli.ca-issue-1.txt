@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.ca-issue · 来源 ukeyctl.cpp:852-873
+
+    std::printf("小 CA %s  根 CN=%s  证书 %d 张\n", ca.caDir().c_str(), ca.rootCn().c_str(),
+                (int)v.size());
+    std::printf("  %-18s %-4s %-7s %-20s %s\n", "序列号", "状态", "类型", "有效期止", "CN / 绑定对象");
+    for (auto& e : v) {
+        std::printf("  %-18s %-4c %-7s %-20s %s\n", e.serial.c_str(), e.status, e.type.c_str(),
+                    e.notAfter ? formatTime((uint64_t)e.notAfter).c_str() : "-",
+                    (e.cn + "  [" + (e.uid.empty() ? "-" : e.uid) + "]").c_str());
+    }
+    return 0;
+}
+
+int cmd_caIssue() {
+    std::string err;
+    SmallCa ca = openCa(true);
+    std::string cn = g_cli.get("cn");
+    if (cn.empty()) die("请指定 --cn NAME");
+    std::string type = g_cli.get("type", certtype::kClient);
+    int days = g_cli.getInt("days", 365);
+    std::string uid = g_cli.get("uid");
+    // 公钥从哪来: 显式 --pub, 或者干脆在令牌里解决 (--use-device-key / --keygen)。
+    // 后者是"申请证书"真正的常用姿势: 私钥从头到尾没离开过设备。
+    bool useDevice = g_cli.flag("keygen") || g_cli.flag("use-device-key");

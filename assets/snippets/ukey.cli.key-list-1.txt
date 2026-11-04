@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.key-list · 来源 ukeyctl.cpp:734-755
+
+    std::string js = o.dump();
+    if (!writeOut(Bytes(js.begin(), js.end()), "数字信封 JSON")) showJson(o);
+    return 0;
+}
+
+int cmd_open() {
+    std::string err;
+    openIdentity();
+    std::string f = g_cli.get("in");
+    if (f.empty()) die("请指定 --in env.json");
+    std::string text;
+    if (!readFileAllText(f, text, &err)) die("读取失败: " + err);
+    bool okj = false;
+    Json j = Json::parse(text, &okj, &err);
+    if (!okj) die("信封文件不是 JSON: " + err);
+    Envelope env;
+    env.sessionKeyCipher = b64Decode(j.at("key_cipher").asString());
+    env.macKeyCipher = b64Decode(j.at("mac_key_cipher").asString());
+    env.iv = b64Decode(j.at("iv").asString());
+    env.cipher = b64Decode(j.at("cipher").asString());
+    env.mac = b64Decode(j.at("mac").asString());
+    Bytes plain;

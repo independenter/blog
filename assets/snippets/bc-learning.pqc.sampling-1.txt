@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.sampling · 来源 PqcEssenceTest.java:1494-1515
+
+    @TraceExecution(value = "KEM 密文长度 = 压缩系数之和", algorithm = "PQC", flow = "PQC-MLKEM")
+    @Test
+    public void kemCiphertextLengthIsJustTheSumOfCompressedCoefficients()
+    {
+        Tracer.trace("start", new Object[]{"levels", 3, "q", Q_KEM},
+            "ML-KEM compressed ciphertext lengths", "start");
+
+        int[][] levels = new int[][]{
+            // {k, d_u, d_v, 密文长度} —— FIPS 203 参数表的三列，第四列拿来和 BC 对
+            new int[]{ 2, 10, 4, 768 },
+            new int[]{ 3, 10, 4, 1088 },
+            new int[]{ 4, 11, 5, 1568 },
+        };
+        MLKEMParameters[] params = new MLKEMParameters[]{
+            MLKEMParameters.ml_kem_512, MLKEMParameters.ml_kem_768, MLKEMParameters.ml_kem_1024,
+        };
+
+        for (int i = 0; i < levels.length; i++)
+        {
+            int k = levels[i][0], du = levels[i][1], dv = levels[i][2], ct = levels[i][3];
+            MLKEMEngine eng = MLKEMEngine.getInstance(params[i]);
+            Tracer.trace("params", new Object[]{"name", params[i].getName(), "k", k, "du", du, "dv", dv},

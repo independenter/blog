@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.deploy-package · 来源 package.sh:62-82
+
+    # Copy C directory with source code only
+    mkdir -p "$PROJECT_DIR/target/dist/src/main/c/src"
+    cp -r "$PROJECT_DIR/src/main/c/src" "$PROJECT_DIR/target/dist/src/main/c/"
+    cp -r "$PROJECT_DIR/src/main/c/include" "$PROJECT_DIR/target/dist/src/main/c/"
+    cp "$PROJECT_DIR/src/main/c/Makefile" "$PROJECT_DIR/target/dist/src/main/c/"
+
+    # Copy manifest directory (only needed for source package)
+    cp -r "$PROJECT_DIR/manifest" "$PROJECT_DIR/target/dist/"
+else
+    # Create a temporary directory for packaging
+    mkdir -p "$PROJECT_DIR/target/dist/target"
+    # Copy resources files
+    mkdir -p "$PROJECT_DIR/target/dist/conf"
+    cp -r "$PROJECT_DIR/src/main/resources/config.properties" "$PROJECT_DIR/target/dist/conf"
+    cp -r "$PROJECT_DIR/src/main/resources/config-arm.properties" "$PROJECT_DIR/target/dist/conf"
+    cp -r "$PROJECT_DIR/src/main/resources/config-x86.properties" "$PROJECT_DIR/target/dist/conf"
+    cp -r "$PROJECT_DIR/src/main/resources/simplelogger.properties" "$PROJECT_DIR/target/dist/conf"
+    # Copy build scripts
+    cp -r "$PROJECT_DIR/scripts" "$PROJECT_DIR/target/dist/"
+    # Copy JAR file
+    cp "$PROJECT_DIR/target/my-app.jar" "$PROJECT_DIR/target/dist/target" || { echo "Error: JAR file not found"; exit 1; }

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.snmp.port-test · 来源 test_snmp_port.sh:353-374
+
+    test_snmp_walk "1.3.6.1.4.1.2021.9.1.3"  "dskDevice"
+    test_snmp_walk "1.3.6.1.4.1.2021.9.1.6"  "dskTotal"
+    test_snmp_walk "1.3.6.1.4.1.2021.9.1.7"  "dskAvail"
+    test_snmp_walk "1.3.6.1.4.1.2021.9.1.8"  "dskUsed"
+    test_snmp_walk "1.3.6.1.4.1.2021.9.1.9"  "dskPercent"
+    test_snmp_walk "1.3.6.1.4.1.2021.9.1.10" "dskPercentNode"
+}
+
+# ======================== 生成报告 ========================
+generate_report() {
+    log ""
+    log "============================================================"
+    log " [3/3] 测试汇总"
+    log "============================================================"
+    log " 总 OID 数:  ${TOTAL}"
+    log " 成功:       ${OK}"
+    log " 失败:       ${FAIL}"
+    log " 超时:       ${TIMEOUT_COUNT}"
+
+    if [ ${TOTAL} -gt 0 ]; then
+        local pass_rate=$((100 * OK / TOTAL))
+        log " 通过率:     ${pass_rate}%"

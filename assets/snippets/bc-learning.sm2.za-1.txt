@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.za · 来源 Sm2EssenceTest.java:1508-1529
+
+    private static void assertRecoveredKeyCanForge(KeyPair kp, BigInteger recoveredD, byte[] zaFor)
+        throws Exception
+    {
+        byte[] fresh = "signature produced by the attacker".getBytes("UTF-8");
+        BigInteger[] forged = sm2Sign(recoveredD, eValue(zaFor, fresh), randomK());
+        Signature verifier = Signature.getInstance("SM3withSM2", "BC");
+        verifier.initVerify(kp.getPublic());
+        verifier.update(fresh);
+        Assert.assertTrue("反推出的 d 必须能签出 BC 认可的签名（否则它不是真私钥）", verifier.verify(der(forged)));
+    }
+
+    /**
+     * 测试①（不可预测性被破坏）：<b>可预测的 k = 可预测的私钥</b>。
+     * 设备用 8 bit 的种子（截断的毫秒数、递增的启动计数）喂 {@code java.util.Random} 生成 k，
+     * 攻击者<b>枚举种子</b>并重放同一个伪随机数生成器即可命中真实的 k，然后一次模逆拿到 d。
+     *
+     * <p>本方法里的符号：
+     * <pre>
+     *   deviceSeed   设备内部"保密"的种子，这里就是 90；它决定整条伪随机序列，所以保密性 = log₂256 = 8 bit
+     *   sig          设备真实产生的签名 (r, s)，公开可得
+     *   x1Target     = (r − e) mod n —— 由签名反解出的"x₁ 应有的值"，这就是那个免费 oracle 的期望值
+     *                  （r = (e + x₁) mod n 是唯一一次加法，两边减 e 就还原；对 n 取模是因为

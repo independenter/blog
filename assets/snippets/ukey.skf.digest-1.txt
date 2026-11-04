@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.digest · 来源 SkfApi.cpp:80-101
+
+void closeLib(void* h) {
+    if (!h) return;
+#ifdef _WIN32
+    FreeLibrary((HMODULE)h);
+#else
+    dlclose(h);
+#endif
+}
+
+}  // namespace
+
+// BIND: 解析函数指针; 未解析到的记入 api.missing, 由上层决定是否降级为"不支持"。
+#define UK_BIND(field)                                                  \
+    do {                                                                \
+        api.field = (decltype(api.field))sym(api.libHandle, "SKF_" #field); \
+        if (!api.field) api.missing.push_back("SKF_" #field);           \
+    } while (0)
+
+bool loadSkfApi(SkfApi& api, const std::string& path, const std::string& backendName, std::string& err) {
+    unloadSkfApi(api);
+
+    std::string p = path;

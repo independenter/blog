@@ -1,0 +1,20 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.ssl.server · 来源 AlgTls.cpp:477-493
+
+bool TlsChannel::available() { return false; }
+bool TlsChannel::setup(int) { tlsUnavailable("setup"); return false; }
+bool TlsChannel::isReady() const { return false; }
+int TlsChannel::kind() const { return TlsKindTlcp; }
+bool TlsChannel::startServer(int) { tlsUnavailable("startServer"); return false; }
+bool TlsChannel::serverRunning() const { return false; }
+int TlsChannel::serverPort() const { return 0; }
+void TlsChannel::stopServer() {}
+Bytes TlsChannel::exchange(const std::string&, int, const Bytes&, std::string& info) {
+    tlsUnavailable("exchange");
+    info = "GmSSL 未编译, TLS 不可用";
+    return {};
+}
+
+#endif
+
+} // namespace alg

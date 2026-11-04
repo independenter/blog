@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.sequential-k · 来源 Sm2EssenceTest.java:1890-1911
+
+    private static KeyPair sm2KeyPair()
+        throws Exception
+    {
+        long startNanos = System.nanoTime();
+        SecureRandom random = new SecureRandom();
+
+        // ① 私钥：均匀随机 ∈ [1, n−1]，越界整枚重抽（d=0 会让 P=O 无信息；d≥n 会被 n·G=O 的周期性折回）
+        BigInteger d;
+        do
+        {
+            d = new BigInteger(N.bitLength(), random);
+        }
+        while (d.signum() < 1 || d.compareTo(N) >= 0);
+
+        // ② 公钥：P = d·G
+        BigInteger[] pub = mul(d, G);
+
+        long duration = System.nanoTime() - startNanos;
+        KeyPair kp = toJceKeyPair(d, pub);
+
+        if (helperTraceEnabled())
+        {

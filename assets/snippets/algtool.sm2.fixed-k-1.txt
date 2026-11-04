@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm2.fixed-k · 来源 AlgSm2.cpp:223-244
+
+    return signDigest(priv, eB, fixedK);
+}
+
+bool Sm2::verifyDigest(const Bytes& pub, const Bytes& eB, const Bytes& sig) {
+    if (pub.size() != 2 * FE || sig.size() != 2 * FE || eB.size() != FE) return false;
+    EC_GROUP* g = newGroup(); if (!g) return false;
+    BN_CTX* ctx = BN_CTX_new();
+    const BIGNUM* n = EC_GROUP_get0_order(g);
+    EC_POINT* P = xyToPoint(g, pub, ctx);
+    bool ok = false;
+    if (P) {
+        BIGNUM* e = BN_bin2bn(eB.data(), (int)eB.size(), nullptr);
+        BIGNUM* r = BN_bin2bn(sig.data(), FE, nullptr);
+        BIGNUM* s = BN_bin2bn(sig.data() + FE, FE, nullptr);
+        // 1 <= r,s < n
+        if (BN_is_zero(r) || BN_is_zero(s) || BN_cmp(r, n) >= 0 || BN_cmp(s, n) >= 0) {
+            ok = false;
+        } else {
+            BIGNUM* t = BN_new(); BN_mod_add(t, r, s, n, ctx);
+            if (!BN_is_zero(t)) {
+                EC_POINT* pt = EC_POINT_new(g);
+                // (x1,y1) = [s]G + [t]P

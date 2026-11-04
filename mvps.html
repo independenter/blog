@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MVP · 一休</title>
+  <meta name="description" content="一休的小项目成品，点开即可体验。">
+  <meta name="theme-color" content="#0b0d0e">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0e'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%233ee0c8'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23e7ecec' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="site.css">
+  <style>
+    .mvps-hero { padding: 48px 0 32px; border-bottom: 1px solid var(--line); }
+    .mvps-hero .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; margin-bottom: 16px; }
+    .mvps-hero h1 { font-size: 34px; font-weight: 700; margin: 0 0 12px; }
+    .mvps-hero p { color: var(--ink-2); font-size: 15px; max-width: 60ch; }
+    .mvps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding: 32px 0; }
+    .mvp-card { background: var(--panel); border: 1px solid var(--line); display: flex; flex-direction: column; transition: border-color 0.15s; }
+    .mvp-card:hover { border-color: var(--accent); }
+    .mvp-thumb { aspect-ratio: 16/9; background: var(--panel-2); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+    .mvp-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .mvp-thumb-placeholder { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+    .mvp-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .mvp-title { font-size: 18px; font-weight: 600; margin: 0 0 8px; color: var(--ink); }
+    .mvp-excerpt { font-size: 14px; color: var(--ink-2); line-height: 1.6; margin: 0 0 16px; flex: 1; }
+    .mvp-description { font-size: 13px; color: var(--ink-2); line-height: 1.7; margin: 0 0 16px; }
+    .mvp-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: auto; }
+    .mvp-tech { display: flex; gap: 6px; flex-wrap: wrap; }
+    .mvp-tech span { font-family: var(--mono); font-size: 11px; color: var(--amber); background: rgba(226,163,90,0.1); padding: 2px 8px; }
+    .mvp-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .mvp-btn { font-family: var(--mono); font-size: 12px; padding: 8px 16px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; letter-spacing: 0.05em; }
+    .mvp-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .mvp-btn-primary { border-color: var(--accent); color: var(--accent); }
+    .mvp-btn-primary:hover { background: var(--accent); color: var(--bg); }
+    .mvps-empty { text-align: center; padding: 60px 20px; color: var(--muted); grid-column: 1/-1; }
+    @media (max-width: 768px) {
+      .mvps-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-head" id="site-head">
+    <a class="wordmark" href="index.html" aria-label="一休，回到作品集">一休<span class="wordmark-dot" aria-hidden="true"></span></a>
+    <nav class="site-nav" id="site-nav" aria-label="主导航">
+      <a href="index.html#about"><span>01</span>关于</a>
+      <a href="index.html#work"><span>02</span>作品</a>
+      <a href="blog.html"><span>03</span>笔记</a>
+      <a href="thoughts.html"><span>04</span>想法</a>
+      <a href="mvps.html" aria-current="page"><span>05</span>MVP</a>
+      <a href="index.html#contact"><span>06</span>联系</a>
+    </nav>
+    <div class="head-end">
+      <span class="head-meta">MVP — 2026</span>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">目录</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="mvps-hero">
+      <p class="eyebrow">MVP / 小项目</p>
+      <h1>可体验的成品</h1>
+      <p>想法落地后的最小可行产品。点开链接即可使用，代码开源或提供技术要点。</p>
+    </section>
+
+    <section class="mvps-grid" id="mvps-grid" aria-label="MVP 列表">
+      <div class="mvps-empty">正在加载…</div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <span>© 2026 一休</span>
+    <span class="foot-links"><a href="blog.html">笔记</a> · <a href="thoughts.html">想法</a> · <a href="mvps.html">MVP</a></span>
+    <span class="foot-time">北京时间 <time id="clock">--:--:--</time></span>
+    <a class="to-top" href="#top">回到顶部 ↑</a>
+  </footer>
+
+  <script type="module">
+    import { initShell } from "./shell.js";
+    import { formatDate } from "./api.js";
+    initShell();
+
+    const gridEl = document.getElementById("mvps-grid");
+    const SUPABASE_URL = "https://zedpuboljbzkdpbzzlxl.supabase.co";
+    const BASE = `${SUPABASE_URL}/functions/v1/api`;
+
+    async function loadMVPs() {
+      try {
+        const res = await fetch(`${BASE}/mvps`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const mvps = data.items || [];
+        
+        if (mvps.length === 0) {
+          gridEl.innerHTML = '<div class="mvps-empty">暂无 MVP 项目</div>';
+          return;
+        }
+
+        gridEl.innerHTML = "";
+        for (const mvp of mvps) {
+          gridEl.appendChild(renderCard(mvp));
+        }
+      } catch (err) {
+        console.error("加载 MVP 失败:", err);
+        gridEl.innerHTML = '<div class="mvps-empty">加载失败，请稍后重试</div>';
+      }
+    }
+
+    function renderCard(mvp) {
+      const card = document.createElement("article");
+      card.className = "mvp-card";
+
+      const thumb = document.createElement("div");
+      thumb.className = "mvp-thumb";
+      if (mvp.thumbnail) {
+        const img = document.createElement("img");
+        img.src = mvp.thumbnail;
+        img.alt = mvp.title;
+        img.loading = "lazy";
+        thumb.appendChild(img);
+      } else {
+        const placeholder = document.createElement("span");
+        placeholder.className = "mvp-thumb-placeholder";
+        placeholder.textContent = "NO THUMBNAIL";
+        thumb.appendChild(placeholder);
+      }
+
+      const body = document.createElement("div");
+      body.className = "mvp-body";
+
+      const title = document.createElement("h3");
+      title.className = "mvp-title";
+      title.textContent = mvp.title;
+
+      const excerpt = document.createElement("p");
+      excerpt.className = "mvp-excerpt";
+      excerpt.textContent = mvp.excerpt || "";
+
+      const description = document.createElement("p");
+      description.className = "mvp-description";
+      description.textContent = mvp.description || "";
+
+      const meta = document.createElement("div");
+      meta.className = "mvp-meta";
+
+      if (mvp.tech_stack && mvp.tech_stack.length > 0) {
+        const tech = document.createElement("div");
+        tech.className = "mvp-tech";
+        for (const t of mvp.tech_stack) {
+          const span = document.createElement("span");
+          span.textContent = t;
+          tech.appendChild(span);
+        }
+        meta.appendChild(tech);
+      }
+
+      const actions = document.createElement("div");
+      actions.className = "mvp-actions";
+
+      if (mvp.url) {
+        const tryBtn = document.createElement("a");
+        tryBtn.className = "mvp-btn mvp-btn-primary";
+        tryBtn.href = mvp.url;
+        tryBtn.target = "_blank";
+        tryBtn.rel = "noopener noreferrer";
+        tryBtn.textContent = "体验 →";
+        actions.appendChild(tryBtn);
+      }
+
+      if (mvp.source_url) {
+        const srcBtn = document.createElement("a");
+        srcBtn.className = "mvp-btn";
+        srcBtn.href = mvp.source_url;
+        srcBtn.target = "_blank";
+        srcBtn.rel = "noopener noreferrer";
+        srcBtn.textContent = "源码";
+        actions.appendChild(srcBtn);
+      }
+
+      body.appendChild(title);
+      body.appendChild(excerpt);
+      if (mvp.description) body.appendChild(description);
+      body.appendChild(meta);
+      if (actions.children.length > 0) body.appendChild(actions);
+
+      card.appendChild(thumb);
+      card.appendChild(body);
+
+      return card;
+    }
+
+    loadMVPs();
+  </script>
+</body>
+</html>

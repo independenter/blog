@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.key-import · 来源 ukeyctl.cpp:386-407
+
+    std::string app = g_cli.get("app", g_cfg.appName());
+    if (!mgr.appOpened() || mgr.appName() != app) {
+        if (!mgr.openApp(app, err)) die("打开应用失败: " + err);
+    }
+    uint32_t retry = 0;
+    if (pinTypeArg() == "admin") needAdminPin();
+    bool ok = mgr.verifyPin(pinType(), g_cli.get("pin", g_cfg.userPin()), &retry, err);
+    std::printf("%s (剩余重试 %u)\n", ok ? "PIN 校验通过" : "PIN 校验失败", retry);
+    if (!ok) std::printf("  %s\n", err.c_str());
+    return ok ? 0 : 1;
+}
+
+int cmd_pinChange() {
+    std::string err;
+    openIdentity(false);
+    std::string oldp = g_cli.get("old");
+    std::string newp = g_cli.get("new");
+    if (oldp.empty() || newp.empty()) die("请指定 --old OLD --new NEW");
+    // 改用户 PIN 需要用户 PIN 先通过, 改管理员 PIN 需要管理员 PIN
+    uint32_t t = pinType();
+    if (t == ADMIN_PIN) needAdminPin();
+    if (!mgr.verifyPin(t, oldp, nullptr, err)) die("原 PIN 校验失败: " + err);

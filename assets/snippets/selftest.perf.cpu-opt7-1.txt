@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt7 · 来源 cpu_optimize7.py:40-61
+
+    print("【优化前状态】")
+    print("=" * 60)
+    run("top -b -n 1 | head -8", "CPU 概览")
+    run("vmstat 3 2 | tail -3", "vmstat")
+
+    # === 1. containerd-shim 排查 ===
+    print("\n" + "=" * 60)
+    print("【排查 1】containerd-shim")
+    print("=" * 60)
+    run("ps -eo pid,comm | grep containerd-shim | wc -l", "containerd-shim 总数")
+    run("crictl ps 2>/dev/null | wc -l", "crictl 运行中容器")
+    run("crictl ps -a --state EXITED 2>/dev/null | wc -l", "crictl 已退出容器")
+
+    # === 2. pgpool 进程 ===
+    print("\n" + "=" * 60)
+    print("【排查 2】pgpool 进程")
+    print("=" * 60)
+    run("ps -eo pid,comm | grep pgpool | wc -l", "pgpool 进程总数")
+    run("ps -eo pid,stat,comm | grep pgpool | awk '{print $2}' | sort | uniq -c | sort -rn", "pgpool 状态分布")
+
+    # === 3. hsm 进程 ===
+    print("\n" + "=" * 60)

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.pss · 来源 RsaEssenceTest.java:2237-2258
+
+    @TraceExecution(value = "九种填充与模幂正交", algorithm = "RSA", flow = "RSA-PADDING")
+    @Test
+    public void everyPaddingSchemeIsAPureFunctionOrthogonalToTheModExp()
+        throws Exception
+    {
+        Calc.useBc();
+        byte[] body = Calc.concat("one body, eight paddings".getBytes("UTF-8"), randomBytes(8));
+        Tracer.trace("start", new Object[]{
+            "bodyLen", body.length, "schemes", SCHEMES.length
+        }, null, "start");
+
+        String[] names = new String[]
+            {
+                "NoPadding", "PKCS#1 v1.5 type 1", "PKCS#1 v1.5 type 2",
+                "OAEP/SHA-1", "OAEP/SHA-256", "OAEP/SM3", "OAEP/SHA-256+MGF1/SHA-1",
+                "PSS/sLen=0", "PSS/sLen=hLen"
+            };
+
+        for (int row = 0; row < SCHEMES.length; row++)
+        {
+            int scheme = SCHEMES[row];
+            String name = names[scheme];

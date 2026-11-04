@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.key-der · 来源 Sm9KeyEssenceTest.java:229-250
+
+    @TraceExecution(value = "主公钥曲线与标准样例核对", algorithm = "SM9", flow = "SM9-KEY")
+    @Test
+    public void masterPublicKeysLieOnTheRightCurves()
+    {
+        Tracer.trace("start", new Object[]{"ks_bits", HEX_KS.bitLength(), "kex_bits", HEX_KEX.bitLength()},
+            null, "start");
+        Tracer.trace("setup", new Object[]{"ks", HEX_KS, "kex", HEX_KEX}, "SM9 主密钥对", "setup");
+
+        BigInteger[][] ppubs = Sm9Math.signMasterPublicKey(HEX_KS);
+        Tracer.trace("signMasterPublicKey", new Object[]{"ks", HEX_KS}, ppubs, "keygen");
+        // 射影坐标下的曲线方程是 Y²Z = X³ + 5u·Z³（把仿射式 X = x/Z²、Y = y/Z³ 通分得到的），
+        // 好处是加法全程不用求逆，Z 只在最后序列化时除掉
+        Assert.assertTrue("Ppubs 必须在扭曲曲线上", Sm9Math.twistIsOnCurve(ppubs));
+        // n·Ppubs = O ⇔ Ppubs 的阶整除 n；n 素数且 Ppubs ≠ O ⇒ 阶正好是 n
+        Assert.assertTrue(Sm9Math.twistIsInfinity(Sm9Math.twistMul(Sm9Math.N, ppubs)));
+        // 129 = 1 字节前缀 0x04 + x₁(32) + x₀(32) + y₁(32) + y₀(32)
+        Assert.assertEquals(129, Sm9Math.twistToOctets(ppubs).length);
+
+        BigInteger[] ppube = Sm9Math.encMasterPublicKey(HEX_KEX);
+        Tracer.trace("encMasterPublicKey", new Object[]{"kex", HEX_KEX}, ppube, "keygen");
+        // 仿射判定 y² = x³ + 5（G₁ 的 a = 0，所以式子里没有 x 项）
+        Assert.assertTrue("Ppube 必须在 E(Fp) 上", Sm9Math.pointIsOnCurve(ppube));

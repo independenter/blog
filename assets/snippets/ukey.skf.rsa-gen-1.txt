@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.rsa-gen · 来源 SkfApi.cpp:7-28
+
+  #include <windows.h>
+#else
+  #include <dlfcn.h>
+#endif
+
+#include "core/SkfApi.h"
+#include "core/Util.h"
+
+#include <cstdio>
+#include <unordered_map>
+
+#ifdef _WIN32
+  // windows.h 里的宏会撞 SKF_* 函数名.
+  #undef DeleteFile
+  #undef CreateFile
+  #undef ReadFile
+  #undef WriteFile
+  #undef GetObject
+  #undef GetCurrentDirectory
+  #undef GetCommandLine
+  #undef GetLastError
+  #undef SendMessage

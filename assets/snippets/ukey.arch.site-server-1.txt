@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.site-server · 来源 SiteServer.cpp:35-56
+
+std::string toLowerAscii(std::string s) {
+    for (char& c : s) c = (char)std::tolower((unsigned char)c);
+    return s;
+}
+
+// ---- 路径安全: 逐段扫描, 出现 "." 丢弃, 空段丢弃, 出现 ".."(大小写不敏感)判非法 ----
+// 返回归一化后的相对路径 (段以 '/' 连接)。unsafe 为 true 表示存在越权段。
+std::string normalizeRel(const std::string& raw, bool& unsafe) {
+    unsafe = false;
+    std::string seg;
+    std::vector<std::string> parts;
+    auto flush = [&]() {
+        if (seg.empty()) return;
+        std::string low = toLowerAscii(seg);
+        if (low == "..") {
+            unsafe = true;
+        } else if (low != ".") {
+            parts.push_back(seg);
+        }
+        seg.clear();
+    };
+    for (char c : raw) {

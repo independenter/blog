@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.logs · 来源 ukeyctl.cpp:956-976
+
+std::string svcHost() { return g_cli.get("host", g_cfg.serviceHost()); }
+int svcPort() { return g_cli.getInt("port", g_cfg.servicePort()); }
+
+int cmd_serviceInfo() {
+    HttpClient c;
+    c.setServer(svcHost(), svcPort());
+    HttpResponse r;
+    std::string err;
+    if (!c.get("/health", r, err)) die("连接失败: " + err);
+    std::string body((const char*)r.body.data(), r.body.size());
+    bool okj = false;
+    Json j = Json::parse(body, &okj, &err);
+    if (!okj) {
+        std::printf("HTTP %d\n%s\n", r.status, body.c_str());
+        return 1;
+    }
+    showJson(j);
+    return 0;
+}
+
+// ---- ukey 提供地址 (flk UKey 助手 /skf/oper) ----

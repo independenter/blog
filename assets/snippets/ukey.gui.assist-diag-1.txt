@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.assist-diag · 来源 AssistPanel.cpp:177-198
+
+    std::function<void()> refreshCertInfo = [=, &ctx] {
+        bool isSign = rbSign->isChecked();
+        Bytes der;
+        std::string err;
+        if (!ctx.mgr->exportCert(isSign, der, err)) {
+            Bytes alt;
+            std::string err2;
+            if (!ctx.mgr->exportCert(!isSign, alt, err2)) {
+                clearFields();
+                ctx.say("导出证书失败: " + s2q(err));
+                return;
+            }
+            // 令牌里只装了另一槽的证书 (软 Ukey 常只签签名证书): 就地切过去显示。
+            // 阻断两个单选框的信号, 否则 setChecked 会再触发一次本函数。
+            der = std::move(alt);
+            isSign = !isSign;
+            QSignalBlocker bkSign(rbSign), bkEnc(rbEnc);
+            rbSign->setChecked(isSign);
+            rbEnc->setChecked(!isSign);
+        }
+        *lastDer = der;
+        lblPurpose->setText(isSign ? "签名" : "加密");

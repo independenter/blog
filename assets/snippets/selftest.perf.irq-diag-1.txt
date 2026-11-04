@@ -1,0 +1,13 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.irq-diag · 来源 cpu_irq_diag.py:537-546
+
+        with open(report_path, 'w', encoding='utf-8') as f:
+            f.write(report)
+        print("\n报告已保存: {}".format(report_path))
+
+    remote.close()
+    print("\n诊断完成!")
+
+
+if __name__ == '__main__':
+    main()

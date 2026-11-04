@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.api-asy-decrypt · 来源 test_data.py:216-237
+
+def build_asy_decrypt_key_num(did=None):
+    """非对称解密（密钥号）"""
+    body = {
+        "privateKey": str(DECRYPT_KEY_INDEX),
+        "algorithmType": ALGORITHM_TYPE,
+        "encryptData": SAMPLE_ENCRYPT_DATA or _current_data_b64,
+        "plainIsEncode": False,
+    }
+    return "/api/crypto/asyDecryptKeyNum", body
+
+
+def build_sys_encrypt(did=None):
+    """对称加密（外部密钥）"""
+    body = {
+        "algorithmType": SYM_ALGORITHM,
+        "data": _current_data_hex,
+        "encMode": SYM_ENC_MODE,
+        "iv": SYM_IV,
+        "key": SYM_KEY,
+        "padMode": SYM_PAD_MODE,
+        "plainIsEncode": False,
+    }

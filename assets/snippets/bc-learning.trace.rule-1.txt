@@ -1,0 +1,17 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.rule · 来源 TraceExecutionRule.java:53-66
+
+            finally
+            {
+                Tracer.disable();
+            }
+        }
+    }
+
+    @Override
+    protected void failed(Throwable e, Description description)
+    {
+        // 测试失败时也生成追踪（用于调试）
+        finished(description);
+    }
+}

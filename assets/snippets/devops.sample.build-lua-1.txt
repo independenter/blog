@@ -1,0 +1,21 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.build-lua · 来源 build-lua.sh:60-77
+
+    echo "To run the application, use: lua $PROJECT_DIR/target/lua/main.lua"
+    
+    # 如果安装了 LuaJIT，提供额外信息
+    if [ "$LUAJIT_AVAILABLE" = true ]; then
+        echo ""
+        echo "Note: LuaJIT is available on this system ($LUAIJIT_CMD)"
+        echo "To use FFI to call C libraries directly, you can run:"
+        echo "  luajit $PROJECT_DIR/target/lua/main-ffi.lua"
+    else
+        echo ""
+        echo "Note: LuaJIT is not installed on this system."
+        echo "To use FFI to call C libraries directly, please install LuaJIT and then run:"
+        echo "  luajit $PROJECT_DIR/target/lua/main-ffi.lua"
+    fi
+else
+    echo "Error: Failed to build Lua application"
+    exit 1
+fi

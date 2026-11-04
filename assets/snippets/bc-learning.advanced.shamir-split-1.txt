@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.shamir-split · 来源 ThresholdEssenceTest.java:109-130
+
+        int t = 3; // 门限值
+        int n = 5; // 总份额数
+        Tracer.trace("start", new Object[]{"t", t, "n", n}, "Shamir split", "start");
+
+        // 秘密 s：一个 256-bit 随机数
+        BigInteger secret = new BigInteger(256, new SecureRandom()).mod(P);
+        log.info("[SSS 切割] 秘密 s = {}...", secret.toString(16).substring(0, 16));
+
+        // 1. 构造 t−1 次多项式：f(x) = s + a₁x + a₂x² (mod p)
+        BigInteger[] coeffs = new BigInteger[t];
+        coeffs[0] = secret; // 常数项 = 秘密
+        for (int i = 1; i < t; i++)
+        {
+            coeffs[i] = new BigInteger(256, new SecureRandom()).mod(P);
+        }
+        log.info("[SSS 切割] 多项式次数 = {}（需要 {} 份恢复）", t - 1, t);
+        Tracer.trace("split", new Object[]{"t", t, "coeffs", coeffs, "modulus", P}, coeffs, "split");
+
+        // 2. 在 x = 1, 2, …, n 处求值，得到 n 个份额
+        BigInteger[] shares = new BigInteger[n];
+        for (int i = 0; i < n; i++)
+        {

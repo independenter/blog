@@ -1,0 +1,20 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.build-native · 来源 build-native.sh:43-59
+
+fi
+
+# Build native library
+echo "Building native library..."
+cd "$PROJECT_DIR/src/main/c"
+make clean PROJECT_DIR="$PROJECT_DIR"
+make all PROJECT_DIR="$PROJECT_DIR"
+
+if [ $? -eq 0 ]; then
+    echo "Native library built successfully!"
+    echo "Library location: $PROJECT_DIR/target/lib/libnativeutils.so"
+else
+    echo "Error: Failed to build native library"
+    exit 1
+fi
+
+cd "$PROJECT_DIR"

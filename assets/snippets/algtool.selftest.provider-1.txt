@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.selftest.provider · 来源 ProviderBar.h:66-87
+
+    prov::SymmProvider* current() const {
+        const int idx = combo_->currentData().isValid() ? combo_->currentData().toInt() : -1;
+        if (idx < 0 || idx >= static_cast<int>(providers_.size())) return nullptr;
+        return providers_[static_cast<size_t>(idx)].get();
+    }
+
+    // 后端列表或选择发生变化时回调 (面板据此重建模式下拉/校验)。
+    void setOnChanged(std::function<void()> cb) { onChanged_ = std::move(cb); }
+    // 点击"管理…"时回调 (宿主窗口切到 Agent 管理页)。
+    void setOnManage(std::function<void()> cb) { onManage_ = std::move(cb); }
+
+    // 重新枚举后端 (探测后或首次构造)。尽量保持之前的选择。
+    void populate() {
+        const QString keep = currentId();   // 记录旧选择 id
+        providers_ = prov::providersFor(alg_);
+
+        const int prev = combo_->currentIndex();
+        combo_->blockSignals(true);
+        combo_->clear();
+        for (size_t i = 0; i < providers_.size(); ++i) {
+            const prov::SymmProvider& p = *providers_[i];
+            QString mark;   // 硬件后端追加在线/离线标记 (避免 QStringLiteral 嵌套三元)

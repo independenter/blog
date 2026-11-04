@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm4.stream-modes · 来源 Sm4EssenceTest.java:315-336
+
+    private static long[] keySchedule(byte[] key, boolean forEncryption)
+    {
+        long[] rk = expandKey(key);
+        if (forEncryption)
+        {
+            return rk;
+        }
+        long[] reversed = new long[32];
+        for (int i = 0; i < 32; i++)
+        {
+            reversed[i] = rk[31 - i];
+        }
+        return reversed;
+    }
+
+    /**
+     * 单块函数：{@code byte[16] -> byte[16]}。传入轮密钥表，32 轮扩散就是一个 for 循环，
+     * 状态就地滚动在局部数组 x 上。
+     * <pre>
+     *   轮函数（国标原式）  X_{i+4} = Xᵢ ⊕ T( X_{i+1} ⊕ X_{i+2} ⊕ X_{i+3} ⊕ rkᵢ )，i = 0..31
+     *   符号逐个说明：
+     *     X₀..X₃    进轮的 4 个 32-bit 字 = Calc.words32(block)，大端：X₀ = block[0..3]（最高 32 位）

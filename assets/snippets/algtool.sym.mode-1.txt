@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sym.mode · 来源 AlgSymm.cpp:12-33
+
+    explicit CipherRef(const std::string& name) {
+        c = EVP_CIPHER_fetch(nullptr, name.c_str(), nullptr);
+    }
+    ~CipherRef() { if (c) EVP_CIPHER_free(c); }
+    CipherRef(const CipherRef&) = delete;
+    CipherRef& operator=(const CipherRef&) = delete;
+    operator const EVP_CIPHER*() const { return c; }
+    explicit operator bool() const { return c != nullptr; }
+};
+
+bool SymmAlg::isAvailable(const std::string& cipherName) {
+    CipherRef cf(cipherName);
+    return static_cast<bool>(cf);
+}
+
+int SymmAlg::keySize() const {
+    CipherRef cf(name_);
+    return cf ? EVP_CIPHER_key_length(cf) : 0;
+}
+int SymmAlg::ivSize() const {
+    CipherRef cf(name_);
+    return cf ? EVP_CIPHER_iv_length(cf) : 0;

@@ -1,0 +1,17 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.yixiu.tool-base · 来源 ToolBase.cs:8-21
+
+    public abstract class ToolBase : ITool
+    {
+        public abstract string Id { get; }
+        public abstract string Name { get; }
+        public abstract string Description { get; }
+        public abstract string Category { get; }
+        public abstract string Icon { get; }
+        public abstract string IconBackground { get; }
+        public abstract FrameworkElement CreateUI();
+
+        public virtual void Initialize() { }
+        public virtual void Dispose() { }
+    }
+}

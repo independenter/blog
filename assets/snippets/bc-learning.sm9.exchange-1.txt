@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.exchange · 来源 Sm9ExchangeEssenceTest.java:422-443
+
+    @TraceExecution(value = "SM9 替换临时点使会话密钥分叉", algorithm = "SM9", flow = "SM9-EXCHANGE")
+    @Test
+    public void substitutedEphemeralPointSplitsTheSessionKey()
+        throws Exception
+    {
+        Tracer.trace("start", new Object[]{"ID_A", "Alice", "ID_B", "Bob", "rA", R_A, "rB", R_B,
+            "rB_other", R_B_OTHER}, null, "start");
+
+        BigInteger[] ra = Sm9Math.exchEphemeral(HEX_KEX, ID_BOB, R_A);
+        BigInteger[] rbHonest = Sm9Math.exchEphemeral(HEX_KEX, ID_ALICE, R_B);
+        // 攻击者用自己的 rB' 造一枚"看起来一样合法"的点：它在 G₁ 上、编码也正确，
+        // 所以任何只做格式检查的实现都发现不了 —— 只有密码学会发现。
+        BigInteger[] rbEvil = Sm9Math.exchEphemeral(HEX_KEX, ID_ALICE, R_B_OTHER);
+        Tracer.trace("exchEphemeral.rbEvil", new Object[]{"kex", HEX_KEX, "peerId", "Alice", "rB_other", R_B_OTHER},
+            Sm9Math.pointToOctets(rbEvil), "derive");
+        Assert.assertFalse(Arrays.equals(Sm9Math.pointToOctets(rbHonest), Sm9Math.pointToOctets(rbEvil)));
+
+        byte[][] gHonest = new byte[3][];
+        byte[][] rHonest = new byte[2][];
+        byte[] skHonest = Sm9Math.exchSessionKey(true, HEX_KEX, ID_ALICE, ID_BOB, R_A, ra, rbHonest, KLEN, gHonest, rHonest);
+        Tracer.trace("exchSessionKey.honest", new Object[]{"kex", HEX_KEX, "ownId", "Alice", "peerId", "Bob",
+            "rA", R_A, "RA", ra, "RB", rbHonest, "klen", KLEN},

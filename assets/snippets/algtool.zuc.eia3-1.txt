@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.zuc.eia3 · 来源 ZucPanel.h:45-66
+
+        auto is256 = [modeCb]() { return modeCb->currentIndex() == 2; };
+
+        // IV 未改动(空或全零)时, 切换模式自动补全该模式的全零默认 IV
+        auto untouchedIv = [ivEd]() {
+            QString s;
+            for (QChar c : ivEd->text()) if (!c.isSpace()) s.append(c);
+            if (s.isEmpty()) return true;
+            for (QChar c : s) if (c != QChar('0')) return false;
+            return true;
+        };
+        auto refresh = [=]() {
+            const bool z256 = is256();
+            keyEd->setPlaceholderText(z256 ? "32 字节 hex (ZUC-256 密钥)" : "16 字节 hex");
+            ivEd->setPlaceholderText(z256 ? "23 字节 hex (ZUC-256 IV, 默认全零)" : "16 字节 hex (默认全零)");
+            const int ivLen = z256 ? 23 : 16;
+            if (untouchedIv()) ivEd->setText(QString(ivLen * 2, QChar('0')));
+            const bool integrity = (modeCb->currentIndex() == 1);
+            encBtn->setEnabled(!integrity);
+            decBtn->setEnabled(!integrity);
+            macBtn->setEnabled(integrity);
+        };
+        connect(modeCb, &QComboBox::currentTextChanged, this, [refresh]() { refresh(); });

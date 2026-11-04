@@ -1,0 +1,17 @@
+{
+ "platforms": 8,
+ "modules": 49,
+ "tools": 614,
+ "public": 353,
+ "notice": 261,
+ "hidden": 6,
+ "period": [
+  "2022-08-09",
+  "2026-11-03"
+ ],
+ "years": {
+  "2025": 28,
+  "2026": 586
+ },
+ "generated": "build_catalog_dist.py"
+}

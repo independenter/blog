@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.deep4 · 来源 deep_dive4.py:104-125
+
+    for d in /proc/$h/task/*/; do
+      c=$(cat $d/comm 2>/dev/null)
+      case "$c" in C0-*)
+        tid=$(basename $d)
+        nr=$(grep 'nr_switches' $d/sched 2>/dev/null | awk '{print $3}')
+        echo "$tid $nr"
+      ;; esac
+    done
+  done
+}
+snap > /tmp/c0_1
+cnt=$(wc -l < /tmp/c0_1)
+echo "C0 线程总数: $cnt"
+sum1=$(awk '{s+=$2} END {print s+0}' /tmp/c0_1)
+sleep 4
+snap > /tmp/c0_2
+sum2=$(awk '{s+=$2} END {print s+0}' /tmp/c0_2)
+if [ "$cnt" -gt 0 ]; then
+  echo "总切换速率: $(( (sum2 - sum1) / 4 )) /s （$cnt 个线程）"
+  echo "单线程平均: $(( (sum2 - sum1) / 4 / cnt )) /s"
+fi
+echo "--- 8 个样本线程（名字/终身切换/终身迁移/运行ms）---"

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.ukeyserv · 来源 ukeyserv.cpp:32-53
+
+#include <cstring>
+#include <memory>
+#include <string>
+#include <thread>
+
+using namespace uk;
+
+namespace {
+
+std::atomic<bool> g_stop{false};
+void onSignal(int) { g_stop = true; }
+
+void usage() {
+    std::printf(
+        "Ukey 服务 —— 小 CA + 加密通道密码服务 (协议 %s)\n"
+        "\n"
+        "  --config FILE        配置文件 (默认自动定位 config/ukey.ini)\n"
+        "  --backend soft|skf   覆盖 [ukey] backend\n"
+        "  --skf-lib PATH       覆盖 [ukey] skf_lib (硬件厂商 SKF 库或软库路径)\n"
+        "  --device NAME        连接的设备名 (默认枚举到的第一台)\n"
+        "  --app NAME           应用名\n"
+        "  --container NAME     容器名 (服务端身份所在)\n"

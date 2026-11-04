@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.mode-gradation · 来源 gradation_runner.py:87-108
+
+def run_one(mode, nbytes):
+    """单档测试：对 (mode, nbytes) 发请求，采集统计"""
+    set_payload_bytes(nbytes)
+    builder = API_MODE_BUILDERS[mode]
+    path, body = builder()
+    full_url = HOST + path
+
+    end_time = time.time() + DURATION_SEC
+    latencies = []
+    fails = 0
+    reqs = 0
+
+    while time.time() < end_time:
+        t0 = time.time()
+        try:
+            resp = requests.post(full_url, json=body, timeout=TIMEOUT, verify=VERIFY_SSL)
+            dt = (time.time() - t0) * 1000
+            if resp.status_code != 200:
+                fails += 1
+            else:
+                try:
+                    if resp.json().get("code", 200) != 200:

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.pkey.load-pem · 来源 PkeyPanel.h:130-151
+
+            bool ok = alg->checkKeyPair();
+            status(ok ? "密钥一致性检测: 私钥/公钥配对且可用 ✓"
+                      : "密钥一致性检测: 不匹配或不可用 ✗");
+        });
+        connect(btnSign, &QPushButton::clicked, this, [this, alg]() {
+            if (!ensureKey(true)) return;
+            alg::Bytes sig = alg->sign(messageBytes());
+            if (sig.empty()) { status("签名失败 (私钥无效或消息为空)"); return; }
+            sigEd_->setPlainText(QString::fromStdString(alg::toHex(sig)));
+            status("签名完成 ✓");
+        });
+        connect(btnVer, &QPushButton::clicked, this, [this, alg]() {
+            if (!ensureKey(false)) return;  // 验签有公钥即可
+            alg::Bytes sig;
+            try { sig = alg::fromHex(sigEd_->toPlainText().toStdString()); } catch (...) {}
+            if (sig.empty()) { status("验签失败: 签名值为空或非合法 hex"); return; }
+            bool ok = alg->verify(messageBytes(), sig);
+            status(ok ? "验签通过 ✓" : "验签失败 ✗");
+        });
+        connect(btnEnc, &QPushButton::clicked, this, [this, alg]() {
+            if (!ensureKey(false)) return;  // 加密有公钥即可
+            alg::Bytes pt = messageBytes();

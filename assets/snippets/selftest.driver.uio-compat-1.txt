@@ -1,0 +1,10 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.driver.uio-compat · 来源 compat.h:162-168
+
+#if __has_attribute(__fallthrough__)
+#define fallthrough	__attribute__((__fallthrough__))
+#else
+#define fallthrough	do {} while (0)  /* fallthrough */
+#endif
+
+#endif

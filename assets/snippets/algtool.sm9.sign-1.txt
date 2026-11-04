@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm9.sign · 来源 Sm9Panel.h:197-218
+
+private:
+    alg::Sm9* alg = nullptr;
+    std::unique_ptr<alg::Sm9> holder;
+    QTabWidget* tabs_ = nullptr;
+    QPlainTextEdit* stOut_;
+
+    struct IdBox { QLineEdit* text = nullptr; QLineEdit* hex = nullptr; std::string bytes; bool syncing = false; };
+    IdBox idExch_, idIdB_, idWrap_, idSign_, idEnc_;
+
+    // ① 交换
+    QLineEdit *keExch_, *ppubExch_, *exchRA_, *exchRB_;
+    QSpinBox* spExchKlen_;
+    QPlainTextEdit* outExch_;
+    QPushButton *btnGenEnc1_, *btnExchange_;
+
+    // ② 封装
+    QLineEdit *keWrap_, *ppubWrap_, *deWrap_, *wrapR_, *wrapK_;
+    QSpinBox* spWrapKlen_;
+    QPlainTextEdit* wrapC_;
+    QPushButton *btnGenEnc2_, *btnEncap_, *btnDecap_;
+
+    // ③ 签名

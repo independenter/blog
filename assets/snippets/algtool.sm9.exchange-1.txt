@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm9.exchange · 来源 Sm9Panel.h:49-69
+
+            idExch_.text = new QLineEdit(page); idExch_.text->setPlaceholderText("本地身份 IDA (文本, 如 Alice; 与右侧 HEX 联动)");
+            idExch_.hex  = algui::mono(new QLineEdit(page)); idExch_.hex->setPlaceholderText("IDA (HEX)");
+            { auto* r = new QHBoxLayout(); r->addWidget(idExch_.text, 1); r->addWidget(idExch_.hex, 1); pl->addLayout(r); wireId(idExch_); }
+            idIdB_.text = new QLineEdit(page); idIdB_.text->setPlaceholderText("对端身份 IDB (文本, 如 Bob; 与右侧 HEX 联动)");
+            idIdB_.hex  = algui::mono(new QLineEdit(page)); idIdB_.hex->setPlaceholderText("IDB (HEX)");
+            { auto* r = new QHBoxLayout(); r->addWidget(idIdB_.text, 1); r->addWidget(idIdB_.hex, 1); pl->addLayout(r); wireId(idIdB_); }
+            spExchKlen_ = new QSpinBox(page); spExchKlen_->setRange(1, 255); spExchKlen_->setValue(16); spExchKlen_->setSuffix(" 字节");
+            addLabeled(pl, "密钥长度", spExchKlen_);
+            exchRA_ = mkKey(&pl, "固定 rA", "固定临时私钥 rA (hex, 32B, 留空则随机) — 可选", avail);
+            exchRB_ = mkKey(&pl, "固定 rB", "固定临时私钥 rB (hex, 32B, 留空则随机) — 可选", avail);
+            outExch_ = algui::mono(new QPlainTextEdit(page)); outExch_->setReadOnly(true);
+            outExch_->setPlaceholderText("点\"密钥交换\"后: rA, rB, RA, RB, KeyA, KeyB (并校验 KeyA==KeyB)");
+            outExch_->setFixedHeight(150);
+            pl->addWidget(outExch_, 1);
+            auto* row = new QHBoxLayout();
+            btnGenEnc1_ = mkBtn("随机加密主密钥 ke", avail);
+            btnExchange_ = mkBtn("密钥交换", avail);
+            row->addWidget(btnGenEnc1_); row->addWidget(btnExchange_); row->addStretch();
+            pl->addLayout(row);
+            tabs_ = reparentTabs(page, "① 密钥交换", tabs_);
+        }

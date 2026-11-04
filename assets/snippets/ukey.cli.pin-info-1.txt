@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.pin-info · 来源 ukeyctl.cpp:1229-1250
+
+int run(const std::string& cmd) {
+    if (cmd == "list") return cmd_list();
+    if (cmd == "init") return cmd_init();
+    if (cmd == "destroy") return cmd_destroy();
+    if (cmd == "reset") return cmd_reset();
+    if (cmd == "label") return cmd_label();
+    if (cmd == "info") return cmd_info();
+    if (cmd == "apps") return cmd_apps();
+    if (cmd == "app-create") return cmd_appCreate();
+    if (cmd == "app-delete") return cmd_appDelete();
+    if (cmd == "pin-info") return cmd_pinInfo();
+    if (cmd == "verify-pin") return cmd_verifyPin();
+    if (cmd == "pin-change") return cmd_pinChange();
+    if (cmd == "pin-unblock") return cmd_pinUnblock();
+    if (cmd == "containers") return cmd_containers();
+    if (cmd == "container-create") return cmd_contCreate();
+    if (cmd == "container-delete") return cmd_contDelete();
+    if (cmd == "keygen") return cmd_keygen();
+    if (cmd == "key-import") return cmd_keyImport();
+    if (cmd == "pub") return cmd_pub();
+    if (cmd == "cert") return cmd_cert();
+    if (cmd == "cert-import") return cmd_certImport();

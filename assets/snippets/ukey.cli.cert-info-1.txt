@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.cert-info · 来源 ukeyctl.cpp:467-487
+
+        std::fprintf(stderr, "生成签名密钥对: %s\n", e2.c_str());
+    if (mgr.genKeyPair(true, pub, e2))
+        show("加密公钥 (令牌内生成)", toHex(pub));
+    else
+        std::fprintf(stderr, "生成加密密钥对: %s (数字信封与导入外部私钥需要它)\n", e2.c_str());
+    std::printf("接着签证书并写回: ukeyctl ca-issue --device --use-device-key --cn 你的名字\n");
+    return 0;
+}
+
+int cmd_contDelete() {
+    std::string err;
+    openIdentity(false);
+    std::string c = g_cli.get("container");
+    if (c.empty()) die("请指定 --container NAME");
+    needAdminPin();
+    if (!mgr.verifyPin(ADMIN_PIN, g_cfg.adminPin(), nullptr, err))
+        die("管理员 PIN 校验失败: " + err);
+    if (!mgr.deleteContainer(c, err)) die("删除容器失败: " + err);
+    std::printf("容器 %s 已删除。\n", c.c_str());
+    return 0;
+}

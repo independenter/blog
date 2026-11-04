@@ -1,0 +1,8 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.build-rust · 来源 build-rust.sh:107-111
+
+    echo "To run with arguments, use: $TARGET_DIR/rust-app [command] [args]"
+else
+    echo "Error: Failed to build Rust application"
+    exit 1
+fi

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.deep7 · 来源 deep_dive7.py:88-109
+
+#include <dlfcn.h>
+#include <pthread.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+typedef int (*usleep_fn)(useconds_t);
+static usleep_fn real_usleep = NULL;
+
+int usleep(useconds_t usec) {
+    usleep_fn fn = real_usleep;
+    if (!fn) {
+        fn = (usleep_fn)dlsym(RTLD_NEXT, "usleep");
+        if (!fn) return -1;
+        real_usleep = fn;
+    }
+    if (usec > 0 && usec <= 1000) {
+        char name[32];
+        memset(name, 0, sizeof(name));
+        if (pthread_getname_np(pthread_self(), name, sizeof(name)) == 0) {
+            if (strncmp(name, "C0-", 3) == 0) {
+                const char *e = getenv("C0_USLEEP_MULT");

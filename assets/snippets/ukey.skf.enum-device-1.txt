@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.enum-device · 来源 SkfApi.cpp:230-251
+
+void unloadSkfApi(SkfApi& api) {
+    closeLib(api.libHandle);
+    api = SkfApi{};
+}
+
+// ---------------- SAR 错误码文案 ----------------
+static const std::unordered_map<ULONG, const char*>& sarTable() {
+    static const std::unordered_map<ULONG, const char*> t = {
+        {SAR_OK, "操作成功"},
+        {SAR_FAIL, "操作失败"},
+        {SAR_UNKNOWNERR, "未知错误"},
+        {SAR_NOTSUPPORTYETERR, "功能不支持"},
+        {SAR_FILEERR, "文件操作错误"},
+        {SAR_INVALIDHANDLEERR, "非法句柄"},
+        {SAR_INVALIDPARAMERR, "非法参数"},
+        {SAR_READFILEERR, "读文件错误"},
+        {SAR_WRITEFILEERR, "写文件错误"},
+        {SAR_NAMELENERR, "名称长度错误"},
+        {SAR_KEYUSAGEERR, "密钥用途错误"},
+        {SAR_MODULUSLENERR, "模数长度错误"},
+        {SAR_NOTINITIALIZEERR, "未初始化"},
+        {SAR_OBJERR, "对象错误"},

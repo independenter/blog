@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.audit · 来源 trace-audit.js:123-144
+
+// 只审计 essence 测试的 HTML（文件名以 essence 类名开头）
+const essenceClasses = [
+  'InteractiveCollaborativeSignatureEssenceTest',
+  'MlDsaQuantumAnalysisTest',
+  'MlKemQuantumAnalysisTest',
+  'MultisigEssenceTest',
+  'PqcEssenceTest',
+  'QuantumResistanceAnalysisTest',
+  'RsaEssenceTest',
+  'SlhDsaEssenceTest',
+  'Sm2EssenceTest',
+  'Sm3EssenceTest',
+  'Sm4EssenceTest',
+  'Sm9EncryptEssenceTest',
+  'Sm9ExchangeEssenceTest',
+  'Sm9KeyEssenceTest',
+  'Sm9PairingEssenceTest',
+  'Sm9SignEssenceTest',
+  'ThresholdEssenceTest',
+];
+
+const allFiles = fs.readdirSync(traceDir).filter(f => f.endsWith('.html'));

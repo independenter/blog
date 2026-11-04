@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.pqc.encapsulate · 来源 PqcPanel.h:237-258
+
+private:
+    std::unique_ptr<alg::SphincsSig> holder;
+};
+
+// ---------------------------------------------------------------------------
+// LMS 面板: 有状态哈希签名 (RFC 8554)。签名会消耗叶子序号, 面板实时显示剩余次数;
+// 耗尽后 [签名] 失败 (不可复用同一叶子)。
+// ---------------------------------------------------------------------------
+class LmsPanel : public QWidget {
+public:
+    explicit LmsPanel(QWidget* parent = nullptr) : QWidget(parent) {
+        holder = std::make_unique<alg::LmsSig>();
+        alg::LmsSig* sig = holder.get();
+
+        // 与 core::LmsTreeHeight 对应 (index 0..4 → H5..H25), 于点击时映射
+        auto* heightCb = new QComboBox(this);
+        heightCb->addItems({
+            "H5  (可签 32 次, 签名 1292B)",
+            "H10 (可签 1024 次, 签名 1452B)",
+            "H15 (可签 32768 次, 签名 1612B)",
+            "H20 (可签 ~105 万次, 签名 1772B)",
+            "H25 (可签 ~3355 万次, 签名 1932B, 生成较慢)",

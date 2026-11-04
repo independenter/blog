@@ -1,0 +1,16 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt8 · 来源 cpu_optimize8.py:139-151
+
+    # === 最终状态 ===
+    print("\n" + "=" * 60)
+    print("【最终状态】")
+    print("=" * 60)
+    run("top -b -n 1 | head -8", "CPU 概览")
+    run("mpstat 3 1", "mpstat")
+    run("vmstat 3 2 | tail -3", "vmstat")
+
+    remote.close()
+    print("\n优化完成!")
+
+if __name__ == '__main__':
+    main()

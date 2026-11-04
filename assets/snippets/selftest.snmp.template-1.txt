@@ -1,0 +1,11 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.snmp.template · 来源 snmpd.conf.template:33-40
+
+# ---- 负载监控 (1/5/15分钟阈值) ----
+load 12 14 14
+
+# ---- 日志 ----
+dontLogTCPWrappersConnects yes
+
+# ---- 监听地址 ----
+agentAddress udp:161,udp6:[::1]:161

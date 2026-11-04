@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>想法 · 一休</title>
+  <meta name="description" content="一休的想法与反思。">
+  <meta name="theme-color" content="#0b0d0e">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0e'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%233ee0c8'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23e7ecec' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="site.css">
+  <style>
+    .thoughts-hero { padding: 48px 0 32px; border-bottom: 1px solid var(--line); }
+    .thoughts-hero .eyebrow { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; margin-bottom: 16px; }
+    .thoughts-hero h1 { font-size: 34px; font-weight: 700; margin: 0 0 12px; }
+    .thoughts-hero p { color: var(--ink-2); font-size: 15px; max-width: 60ch; }
+    .thoughts-filters { display: flex; gap: 8px; flex-wrap: wrap; padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .thought-tag { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border: 1px solid var(--line); background: var(--panel); color: var(--ink-2); cursor: pointer; letter-spacing: 0.05em; }
+    .thought-tag:hover, .thought-tag.is-active { border-color: var(--accent); color: var(--accent); }
+    .thoughts-list { padding: 24px 0; }
+    .thought-item { padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .thought-item:last-child { border-bottom: none; }
+    .thought-content { font-size: 15px; line-height: 1.8; color: var(--ink); white-space: pre-wrap; word-break: break-word; }
+    .thought-meta { display: flex; gap: 12px; align-items: center; margin-top: 12px; flex-wrap: wrap; }
+    .thought-time { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .thought-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .thought-tags span { font-family: var(--mono); font-size: 11px; color: var(--amber); background: rgba(226,163,90,0.1); padding: 2px 8px; }
+    .thoughts-empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  </style>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <header class="site-head" id="site-head">
+    <a class="wordmark" href="index.html" aria-label="一休，回到作品集">一休<span class="wordmark-dot" aria-hidden="true"></span></a>
+    <nav class="site-nav" id="site-nav" aria-label="主导航">
+      <a href="index.html#about"><span>01</span>关于</a>
+      <a href="index.html#work"><span>02</span>作品</a>
+      <a href="blog.html"><span>03</span>笔记</a>
+      <a href="thoughts.html" aria-current="page"><span>04</span>想法</a>
+      <a href="mvps.html"><span>05</span>MVP</a>
+      <a href="index.html#contact"><span>06</span>联系</a>
+    </nav>
+    <div class="head-end">
+      <span class="head-meta">THOUGHTS — 2026</span>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">目录</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="thoughts-hero">
+      <p class="eyebrow">THOUGHTS / 想法</p>
+      <h1>碎片与反思</h1>
+      <p>未成文的念头、踩坑后的总结、还没想清楚的问题。比笔记更随意，比推特更长。</p>
+    </section>
+
+    <div class="thoughts-filters" id="tag-filters" role="group" aria-label="标签筛选"></div>
+
+    <section class="thoughts-list" id="thoughts-list" aria-label="想法列表">
+      <div class="thoughts-empty">正在加载…</div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <span>© 2026 一休</span>
+    <span class="foot-links"><a href="blog.html">笔记</a> · <a href="thoughts.html">想法</a> · <a href="mvps.html">MVP</a></span>
+    <span class="foot-time">北京时间 <time id="clock">--:--:--</time></span>
+    <a class="to-top" href="#top">回到顶部 ↑</a>
+  </footer>
+
+  <script type="module">
+    import { initShell } from "./shell.js";
+    import { formatDate } from "./api.js";
+    initShell();
+
+    const listEl = document.getElementById("thoughts-list");
+    const filtersEl = document.getElementById("tag-filters");
+    const SUPABASE_URL = "https://zedpuboljbzkdpbzzlxl.supabase.co";
+    let allThoughts = [];
+    let activeTag = null;
+
+    async function load() {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/api/thoughts`);
+        const data = await res.json();
+        if (!res.ok || !data.items) throw new Error("load_failed");
+        allThoughts = data.items;
+        renderTags();
+        renderThoughts();
+      } catch {
+        listEl.innerHTML = '<div class="thoughts-empty">加载失败，请刷新重试。</div>';
+      }
+    }
+
+    function getAllTags() {
+      const tags = new Set();
+      allThoughts.forEach(t => (t.tags || []).forEach(tag => tags.add(tag)));
+      return Array.from(tags).sort();
+    }
+
+    function renderTags() {
+      const tags = getAllTags();
+      if (!tags.length) { filtersEl.hidden = true; return; }
+      filtersEl.innerHTML = `<button class="thought-tag ${!activeTag ? 'is-active' : ''}" data-tag="">全部</button>` +
+        tags.map(t => `<button class="thought-tag ${activeTag === t ? 'is-active' : ''}" data-tag="${t}">${t}</button>`).join("");
+      filtersEl.querySelectorAll(".thought-tag").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeTag = btn.dataset.tag || null;
+          renderTags();
+          renderThoughts();
+        });
+      });
+    }
+
+    function renderThoughts() {
+      const filtered = activeTag
+        ? allThoughts.filter(t => (t.tags || []).includes(activeTag))
+        : allThoughts;
+      if (!filtered.length) {
+        listEl.innerHTML = '<div class="thoughts-empty">暂无想法。</div>';
+        return;
+      }
+      listEl.innerHTML = filtered.map(t => `
+        <article class="thought-item">
+          <div class="thought-content">${escapeHtml(t.content)}</div>
+          <div class="thought-meta">
+            <span class="thought-time">${formatDate(t.created_at)}</span>
+            ${t.tags?.length ? `<div class="thought-tags">${t.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    load();
+  </script>
+</body>
+</html>

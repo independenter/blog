@@ -1,0 +1,18 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.edge · 来源 FlowEdge.java:36-50
+
+    public String getToId()
+    {
+        return toId;
+    }
+
+    public String getLabel()
+    {
+        return label;
+    }
+
+    public boolean isBranch()
+    {
+        return isBranch;
+    }
+}

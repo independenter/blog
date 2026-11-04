@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.biased-k · 来源 Sm2EssenceTest.java:1273-1294
+
+        BigInteger e1 = eValue(za, "message one".getBytes("UTF-8"));
+        BigInteger e2 = eValue(za, "message two".getBytes("UTF-8"));
+        BigInteger[] sig1 = sm2Sign(d, e1, k);
+        BigInteger[] sig2 = sm2Sign(d, e2, k);
+
+        Tracer.trace("collect", new Object[]{
+            "e1", e1, "e2", e2, "sig1", sig1, "sig2", sig2, "sameR", sig1[0].equals(sig2[0])
+        }, new BigInteger[]{ sig1[0], sig2[0] }, "collect");
+
+        // s = (1+d)⁻¹(k - r d)  =>  s₁-s₂ = (1+d)⁻¹(-(e₁-e₂)d)  =>  d = -s₁-s₂ / (s₁-s₂+e₁-e₂)
+        BigInteger ds = sig1[1].subtract(sig2[1]);
+        BigInteger de = e1.subtract(e2);
+        Tracer.trace("solve", new Object[]{"s1-s2", ds, "e1-e2", de, "coefficient", ds.add(de)},
+            ds.add(de), "solve");
+        BigInteger recovered = ds.negate().multiply(ds.add(de).modInverse(N)).mod(N);
+        Tracer.trace("recover", new Object[]{"r", sig1[0], "s1", sig1[1], "s2", sig2[1]},
+            recovered, "recover");
+
+        Assert.assertEquals("两条 k 复用的签名足以反推出私钥 d", d, recovered);
+        BigInteger[] recoveredPub = mul(recovered, G);
+        Assert.assertArrayEquals("反推出的 d 必须能重算出同一个公钥", pub, recoveredPub);
+        Tracer.traceDecision("verify", new Object[]{"recovered", recovered, "pub", pub,

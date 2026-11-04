@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.soft-exports · 来源 SKFExports.cpp:212-233
+
+UK_EXPORT ULONG DEVAPI SKF_DeleteContainer(HAPPLICATION hApplication, LPSTR szContainerName) {
+    return E().deleteCont(hApplication, szContainerName);
+}
+
+UK_EXPORT ULONG DEVAPI SKF_OpenContainer(HAPPLICATION hApplication, LPSTR szContainerName,
+                                         HCONTAINER* phContainer) {
+    return E().openCont(hApplication, szContainerName, phContainer);
+}
+
+UK_EXPORT ULONG DEVAPI SKF_CloseContainer(HCONTAINER hContainer) { return E().closeCont(hContainer); }
+
+UK_EXPORT ULONG DEVAPI SKF_EnumContainer(HAPPLICATION hApplication, LPSTR szContainerName,
+                                         ULONG* pulSize) {
+    std::vector<std::string> names;
+    ULONG rc = E().enumConts(hApplication, names);
+    if (rc != SAR_OK) return rc;
+    return fillNameList(names, szContainerName, pulSize);
+}
+
+UK_EXPORT ULONG DEVAPI SKF_GetContainerType(HCONTAINER hContainer, ULONG* pulContainerType) {
+    return E().getContType(hContainer, pulContainerType);
+}

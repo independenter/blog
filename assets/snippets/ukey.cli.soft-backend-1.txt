@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.soft-backend · 来源 ukeyctl.cpp:863-884
+
+int cmd_caIssue() {
+    std::string err;
+    SmallCa ca = openCa(true);
+    std::string cn = g_cli.get("cn");
+    if (cn.empty()) die("请指定 --cn NAME");
+    std::string type = g_cli.get("type", certtype::kClient);
+    int days = g_cli.getInt("days", 365);
+    std::string uid = g_cli.get("uid");
+    // 公钥从哪来: 显式 --pub, 或者干脆在令牌里解决 (--use-device-key / --keygen)。
+    // 后者是"申请证书"真正的常用姿势: 私钥从头到尾没离开过设备。
+    bool useDevice = g_cli.flag("keygen") || g_cli.flag("use-device-key");
+    Bytes pub = fromHex(g_cli.get("pub"));
+    if (useDevice) {
+        openIdentity();
+        bool enc = g_cli.flag("enc");
+        if (g_cli.flag("keygen") && !mgr.genKeyPair(enc, pub, err))
+            die("令牌内生成密钥对失败: " + err);
+        if (!g_cli.flag("keygen") && !mgr.exportPublicKey(!enc, pub, err))
+            die("取容器公钥失败: " + err);
+        std::printf("%s公钥 (令牌内): %s\n", enc ? "加密" : "签名", toHex(pub).c_str());
+    }
+    if (pub.size() != 64) die("请指定 --pub HEX (64 字节 SM2 公钥), 或改用 --keygen / --use-device-key");

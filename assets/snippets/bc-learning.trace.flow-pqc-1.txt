@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-pqc · 来源 Flows.java:663-683
+
+    private static FlowDefinition pqcPublicKey()
+    {
+        FlowDefinition flow = new FlowDefinition("ML-DSA 公钥 = ρ ‖ 高位 t1");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "keygen", "BC 生成 ML-DSA 密钥 (ρ, t1, t0)", FlowNodeType.OPERATION, "种子决定");
+        node(flow, "t1-pack", "pack(t1): 每系数 10 bit", FlowNodeType.OPERATION, "320 字节/项");
+        node(flow, "unpack-t1", "unpack(t1) 后重新打包", FlowNodeType.OPERATION, "逐字节往返");
+        node(flow, "t0-bias", "t0 = 2^12 − a0 的偏置编码", FlowNodeType.OPERATION, "13 bit/项");
+        node(flow, "reconstruct-t", "t = t1·2^13 + t0 (mod q)", FlowNodeType.OPERATION, "分解恒等式");
+        node(flow, "highBits", "power2Round(t) 还原 (t1, t0)", FlowNodeType.DECISION, "全 256 系数可逆");
+        node(flow, "pk-encoded", "pk = ρ ‖ pack(t1)", FlowNodeType.OPERATION, "32 + k·320");
+        node(flow, "compare", "编码长度 / 内容一致?", FlowNodeType.DECISION, "交叉验证");
+        node(flow, "end", "结束", FlowNodeType.TERMINAL, "");
+
+        chain(flow, "start", "keygen", "t1-pack", "unpack-t1", "t0-bias", "reconstruct-t",
+            "highBits", "pk-encoded", "compare", "end");
+        flow.addEdge("compare", "end", "一致");
+        flow.setStartNodeId("start");
+        return flow;
+    }

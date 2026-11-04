@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.zuc.conf-128 · 来源 AlgZuc.cpp:50-71
+
+    Bytes ks(nwords * 4);
+    for (size_t w = 0; w < nwords; ++w) {
+        ZUC_UINT32 word = zuc256_generate_keyword(&st);
+        ks[w * 4 + 0] = static_cast<uint8_t>(word & 0xFF);
+        ks[w * 4 + 1] = static_cast<uint8_t>((word >> 8) & 0xFF);
+        ks[w * 4 + 2] = static_cast<uint8_t>((word >> 16) & 0xFF);
+        ks[w * 4 + 3] = static_cast<uint8_t>((word >> 24) & 0xFF);
+    }
+    Bytes out(data.size());
+    for (size_t i = 0; i < data.size(); ++i) out[i] = static_cast<uint8_t>(data[i] ^ ks[i]);
+    logOp("crypt256", Rc::Ok, t.ms(), "len=" + std::to_string(out.size()));
+    return out;
+}
+
+#else
+
+ZucAlg::ZucAlg() : AlgBase("ZUC") {}
+bool ZucAlg::available() { return false; }
+Bytes ZucAlg::crypt(const Bytes&, const Bytes&, const Bytes&) {
+    Chrono t; logOp("crypt", Rc::NotSupported, t.ms(), "ZUC unavailable (GmSSL not built)"); return {};
+}
+Bytes ZucAlg::mac(const Bytes&, const Bytes&, const Bytes&) {

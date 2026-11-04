@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.selftest.vectors · 来源 selftest.cpp:811-832
+
+                std::string id(idb.begin(), idb.end());  // ID 为十六进制解码后的原始字节 (如 "wduxue")
+                Bytes got = devd.decryptDeviceFormat(de, id, ct);
+                check(got == want, std::string("SM9 设备格式解密(仅 de) ID=") + v.id);
+            }
+            for (const auto& v : kDevEnc) {
+                Bytes pub = fromHex(v.pub), pt = fromHex(v.pt), r = fromHex(v.r), want = fromHex(v.ct);
+                Bytes idb = fromHex(v.id);
+                std::string id(idb.begin(), idb.end());
+                Bytes got = devd.encryptDeviceFormat(pub, id, pt, r);
+                check(got == want, std::string("SM9 设备格式加密(仅 Ppube+固定r) ID=") + v.id);
+            }
+            // 负例: 篡改 C3 (位于密文第 64..96 字节) → 解密必须失败
+            {
+                Bytes de = fromHex(kDevDec[0].de), ct = fromHex(kDevDec[0].ct);
+                Bytes idb = fromHex(kDevDec[0].id);
+                std::string id(idb.begin(), idb.end());
+                ct[70] ^= 0x01;
+                check(devd.decryptDeviceFormat(de, id, ct).empty(),
+                      "SM9 设备格式解密: 篡改 C3 后校验失败");
+            }
+        }
+    } else {

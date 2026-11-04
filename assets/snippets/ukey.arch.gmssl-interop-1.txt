@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.gmssl-interop · 来源 gmssl-interop.sh:69-89
+
+export UKEY_SOFT_STORE="$WORK/store"
+CFG="$WORK/interop.ini"
+cat >"$CFG" <<EOF
+[ukey]
+backend = soft
+device =
+app_name = ukeytest
+container = sm2cont
+admin_pin = 12345678
+user_pin = 12345678
+log_level = WARN
+log_to_file = false
+
+[soft]
+store_dir = $UKEY_SOFT_STORE
+EOF
+
+LIB="$SOFTLIB"
+# 设备认证密钥 (GM/T 0016 的"第一级认证": 固定长度的对称密钥)。软 Ukey 的默认值是
+# ASCII "1234567812345678", gmssl skfutil 的 -authkey 收的是 hex。
+AUTHKEY="$(printf '%s' '1234567812345678' | od -An -tx1 | tr -d ' \n')"

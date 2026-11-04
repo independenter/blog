@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.app-create · 来源 ukeyctl.cpp:969-990
+
+        std::printf("HTTP %d\n%s\n", r.status, body.c_str());
+        return 1;
+    }
+    showJson(j);
+    return 0;
+}
+
+// ---- ukey 提供地址 (flk UKey 助手 /skf/oper) ----
+
+struct ProviderUrl {
+    std::string scheme, host, path;
+    int port = 80;
+};
+
+// 只拆明文 URL 用得上的四段, 与 sec/Http.h 客户端的能力对齐
+bool splitProviderUrl(const std::string& url, ProviderUrl& o) {
+    size_t p = url.find("://");
+    if (p == std::string::npos) return false;
+    o.scheme = url.substr(0, p);
+    std::string rest = url.substr(p + 3);
+    size_t slash = rest.find('/');
+    std::string authority = slash == std::string::npos ? rest : rest.substr(0, slash);

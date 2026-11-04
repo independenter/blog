@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.cipher-dec · 来源 ukeyctl.cpp:1216-1237
+
+            std::printf("   %c %-16s %-7s %s\n", e.at("status").asString().empty() ? '?'
+                                                                                   : e.at("status").asString()[0],
+                        e.at("serial").asString().c_str(), e.at("type").asString().c_str(),
+                        e.at("cn").asString().c_str());
+        }
+    }
+    std::printf("\n演示结束。吊销该证书后再握手应当被拒绝: ukeyctl ca-revoke --serial %s\n",
+                serial.empty() ? "<serial>" : serial.c_str());
+    return 0;
+}
+
+// ---------------------------------------------------------------- 分发
+
+int run(const std::string& cmd) {
+    if (cmd == "list") return cmd_list();
+    if (cmd == "init") return cmd_init();
+    if (cmd == "destroy") return cmd_destroy();
+    if (cmd == "reset") return cmd_reset();
+    if (cmd == "label") return cmd_label();
+    if (cmd == "info") return cmd_info();
+    if (cmd == "apps") return cmd_apps();
+    if (cmd == "app-create") return cmd_appCreate();

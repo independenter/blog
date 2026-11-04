@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm2.consistency · 来源 AlgSm2.cpp:200-221
+
+        bool ok = inv && !BN_is_zero(s);
+        BN_free(d1); BN_free(inv); BN_free(rd); BN_free(krd);
+        if (!ok) { if (fixed) break; continue; }
+
+        Bytes br = bn_pad(r), bs = bn_pad(s);
+        out.insert(out.end(), br.begin(), br.end());
+        out.insert(out.end(), bs.begin(), bs.end());
+        done = true;
+    }
+    BN_free(e); BN_free(k); BN_free(r); BN_free(s);
+    BN_free(d); BN_CTX_free(ctx); EC_GROUP_free(g);
+    if (out.empty()) ALGLOG_ERROR("SM2") << "sign failed";
+    return out;
+}
+
+Bytes Sm2::sign(const Bytes& priv, const Bytes& pub, const Bytes& msg,
+               const Bytes& id, bool hashMode, const Bytes& fixedK) {
+    if (priv.size() != FE) return {};
+    Bytes pubXY = pub;
+    if (pubXY.size() != 2 * FE) pubXY = pubFromPriv(priv);  // 未提供公钥则推导 (ZA 需要)
+    if (pubXY.empty()) return {};
+    Bytes eB = digest(pubXY, msg, id, hashMode);

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.snmp.install · 来源 install_snmp.sh:257-278
+
+        return 0
+    fi
+
+    # ufw (Ubuntu)
+    if command -v ufw >/dev/null 2>&1; then
+        ufw allow ${SNMP_PORT}/udp 2>&1 | tee -a "${LOG_FILE}"
+        log_ok "ufw: 已开放 UDP ${SNMP_PORT} 端口"
+        return 0
+    fi
+
+    log_warn "未检测到防火墙工具，请手动开放 UDP ${SNMP_PORT} 端口"
+}
+
+# ======================== 启动服务 ========================
+start_service() {
+    log "===== 第5步: 启动 SNMP 服务 ====="
+
+    # 确定服务名
+    local svc_name="snmpd"
+    if ! systemctl list-unit-files | grep -q "^${svc_name}.service"; then
+        svc_name="snmpd"
+    fi

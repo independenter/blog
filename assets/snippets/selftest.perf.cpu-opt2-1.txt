@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt2 · 来源 cpu_optimize2.py:84-105
+
+echo "..."
+echo "总计: $(ip -d link show type veth 2>/dev/null | grep -c '@')"
+""", "veth peer 关系")
+
+    # 查看 docker 网络（dockerd 可能也创建了 veth）
+    run("docker network ls 2>/dev/null", "docker 网络列表")
+    run("docker network inspect bridge 2>/dev/null | grep -c 'EndpointID'", "docker bridge 上的 endpoint 数")
+
+    # 查看 cni 网络
+    run("ls /var/lib/cni/networks/ 2>/dev/null", "CNI 网络目录")
+    run("ls /var/lib/cni/results/ 2>/dev/null | wc -l", "CNI 结果文件数")
+
+    # k3s 的 containerd 是否有残留的沙箱
+    run("crictl sandboxes 2>/dev/null | wc -l", "containerd 沙箱数（含非 Running）")
+    run("crictl sandboxes --state ready 2>/dev/null | wc -l", "Ready 状态沙箱数")
+    run("crictl sandboxes --state notready 2>/dev/null | wc -l", "NotReady 状态沙箱数")
+
+    # === 3. 当前 CPU 状态 ===
+    print("\n" + "=" * 60)
+    print("【当前状态】CPU 概览")
+    print("=" * 60)
+    run("top -b -n 1 | head -8", "top 概览")

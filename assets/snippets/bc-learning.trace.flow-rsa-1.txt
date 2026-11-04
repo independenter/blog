@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-rsa · 来源 Flows.java:620-641
+
+    private static FlowDefinition sm9Exchange()
+    {
+        FlowDefinition flow = new FlowDefinition("SM9 密钥交换");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "params", "双方私钥与公开参数", FlowNodeType.OPERATION, "初始化");
+        node(flow, "genR", "临时随机 rA / rB", FlowNodeType.OPERATION, "一次性");
+        node(flow, "pointMul", "RA = rA·P, RB = rB·P", FlowNodeType.OPERATION, "临时公钥");
+        node(flow, "derive", "共享密钥 K = KDF(…) ", FlowNodeType.OPERATION, "双线性对消去");
+        node(flow, "confirm", "S1 / S2 确认标签", FlowNodeType.DECISION, "密钥确认");
+        node(flow, "tamper", "篡改点后密钥分裂", FlowNodeType.OPERATION, "攻击演示");
+        node(flow, "end", "结束", FlowNodeType.TERMINAL, "");
+
+        chain(flow, "start", "params", "genR", "pointMul", "derive", "confirm", "tamper", "end");
+        flow.addEdge("confirm", "tamper", "一致");
+        flow.setStartNodeId("start");
+        return flow;
+    }
+
+    // ------------------------------------------------------------------ PQC
+
+    private static FlowDefinition pqcMlKem()

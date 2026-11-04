@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.container-create · 来源 ukeyctl.cpp:1183-1204
+
+    bool okv = SmallCa::verifyProof(pub, "1234567812345678", msg, sig);
+    std::printf("\n[ukey.sign] 服务端 Ukey 签名 r||s=%s\n", toHex(sig).c_str());
+    std::printf("             客户端本地验签: %s\n", okv ? "通过" : "失败");
+
+    // 5) 数字信封往返 (封给服务端容器的**加密公钥**, 令牌内打开 —— 缺陷清单第 3 条:
+    //    握手身份公钥是签名对的, 封给它容器解不开; open 也必须给齐 5 个字段, 缺 mac* 直接失败)
+    std::string secretText = "机密数据 confidential";
+    Bytes secret(secretText.begin(), secretText.end());
+    Json apub = Json::object();
+    apub.set("sign", Json(false));  // 要加密公钥, 不是签名公钥
+    Json rpub;
+    if (!cli2.call("ukey.export_pub", apub, rpub, err)) die("取服务端加密公钥失败: " + err);
+    Json a3 = Json::object();
+    a3.set("pub_hex", Json(rpub.at("pub_hex").asString()));
+    a3.set("data_hex", Json(toHex(secret)));
+    Json r3;
+    if (!cli2.call("ukey.envelope_seal", a3, r3, err)) die("封装失败: " + err);
+    Json a4 = Json::object();
+    a4.set("key_cipher", Json(r3.at("key_cipher").asString()));
+    a4.set("mac_key_cipher", Json(r3.at("mac_key_cipher").asString()));
+    a4.set("iv", Json(r3.at("iv").asString()));
+    a4.set("cipher", Json(r3.at("cipher").asString()));

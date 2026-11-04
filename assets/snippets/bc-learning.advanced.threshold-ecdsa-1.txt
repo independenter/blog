@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.threshold-ecdsa · 来源 ThresholdEssenceTest.java:459-480
+
+            int i = signers[idx];
+            reconstructed = reconstructed.add(lambdas[idx].multiply(dShares[i])).mod(N);
+            Tracer.traceLoop("lagrangeTerm", new Object[]{"participant", i + 1,
+                "share", dShares[i], "lambda", lambdas[idx]},
+                lambdas[idx].multiply(dShares[i]).mod(N), "partialSign",
+                idx + 1, signers.length, "partialSign");
+        }
+        log.info("[安全归约] Σ λ_i · d_i = {}...", reconstructed.toString(16).substring(0, 16));
+        log.info("[安全归约] d = {}...", d.toString(16).substring(0, 16));
+        Assert.assertEquals("拉格朗日合成恢复私钥", d, reconstructed);
+        Tracer.trace("combine", new Object[]{"d", d, "reconstructed", reconstructed},
+            reconstructed, "combine");
+
+        // 4. 结论：门限签名的安全性归约到 ECDSA —— 如果 ECDSA 安全，门限 ECDSA 也安全
+        log.info("[安全归约] 结论：门限签名 ≡ 完整签名 ⇒ 安全性归约到 ECDSA ✓");
+        Tracer.trace("end", new Object[]{"d", d, "reconstructed", reconstructed}, null, "end");
+    }
+
+    /**
+     * <b>门限签名的协同性</b>：少于 t 方签不出合法签名。
+     *
+     * <p>本测试演示：2 方（< t=3）尝试签名，验签失败。

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.cipher-modes · 来源 Sm2EssenceTest.java:1816-1837
+
+        int collisionA = -1;
+        int collisionB = -1;
+        for (int i = 0; i < samples && collisionB < 0; i++)
+        {
+            for (int j = i + 1; j < samples; j++)
+            {
+                if (ks[i].equals(ks[j]))
+                {
+                    collisionA = i;
+                    collisionB = j;
+                    break;
+                }
+            }
+        }
+        Assert.assertTrue("必须能找到一对复用同一个 k 的签名", collisionB > collisionA);
+        BigInteger viaCollision = privateKeyFromKnownDelta(BigInteger.ZERO,
+            sigs[collisionA][0], sigs[collisionA][1], sigs[collisionB][0], sigs[collisionB][1]);
+        Assert.assertEquals("撞车的那两枚签名直接给出 d", d, viaCollision);
+        BigInteger[] collisionPub = mul(viaCollision, G);
+        Assert.assertArrayEquals("公钥核对", pub, collisionPub);
+        assertRecoveredKeyCanForge(kp, viaCollision, za);
+        Tracer.trace("exploit", new Object[]{"collisionA", collisionA, "collisionB", collisionB,

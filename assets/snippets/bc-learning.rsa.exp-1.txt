@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.exp · 来源 RsaEssenceTest.java:786-807
+
+                    throw new IllegalArgumentException("PKCS#1 v1.5 type 1：填充体必须全是 FF");
+                }
+            }
+        }
+        return Arrays.copyOfRange(em, sep + 1, em.length);
+    }
+
+    /**
+     * 从 from 起找第一个等于 v 的下标，找不到返回 -1 —— 一个最朴素的 for 循环。
+     * 它就是"分隔符 (separator) 在哪里"的求法。注意取的是第一个匹配位置，所以协议要求
+     * 它之前的字节一律不能等于分隔符（v1.5 的 PS 必须非零、OAEP 要求 0x01 之前全是 0x00），
+     * 否则同一块字节会有两种合法切法，明文长度就有歧义。
+     */
+    private static int indexOf(byte[] a, int from, byte v)
+    {
+        for (int i = from; i < a.length; i++)
+        {
+            if (a[i] == v)
+            {
+                return i;
+            }
+        }

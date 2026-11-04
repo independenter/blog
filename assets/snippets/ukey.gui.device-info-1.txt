@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.device-info · 来源 DevicePanel.cpp:120-141
+
+            int pb = uk::VendorCatalog::processBits();
+            for (const uk::SKFVendor& v : cat.vendors()) {
+                QString fn = v.present() ? s2q(uk::baseNameOf(v.curPath)) : s2q(v.winName);
+                QString tail;
+                if (!v.present()) {
+                    tail = "未搬入库文件";
+                } else {
+                    tail = QString("%1 位 %2").arg(v.bits).arg(s2q(v.arch));
+                    if (v.bits != 0 && v.bits != pb) tail += " (本进程用不了)";
+                }
+                QString label = QString("%1  %2  %3  —  %4")
+                                    .arg(v.index, 2, 10, QChar('0'))
+                                    .arg(s2q(v.cn))
+                                    .arg(fn)
+                                    .arg(tail);
+                QString data = s2q(v.curPath);
+                lib->addItem(label, data);
+                QString tip = s2q(v.dir) + " ← " + s2q(v.root) +
+                              (v.notes.empty() ? QString() : QString("\n已知偏差: ") + s2q(v.notes));
+                lib->setItemData(lib->count() - 1, tip, Qt::ToolTipRole);
+            }
+        }

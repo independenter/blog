@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.deploy-remote · 来源 deploy.sh:10-31
+
+REMOVE_CONTAINER=false
+BASE_IMAGE="ubuntu"  # ubuntu 或 rockylinux
+ARCH_TYPE="x86"      # x86 或 arm
+ENTRYPOINT=""        # 自定义entrypoint
+
+# debug
+SOURCE_DOCKER_BUILD_ARGS="--progress=plain"
+# SOURCE_DOCKER_BUILD_ARGS="--progress=plain --no-cache"
+
+# 获取项目根目录
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+PROJECT_DIR=$(cd "$SCRIPT_DIR/../.." && pwd)
+
+# 从 scripts/env/check_env.sh 获取配置参数
+source "$PROJECT_DIR/scripts/env/check_env.sh"
+
+# 显示使用说明
+show_usage() {
+    echo "用法: $0 [选项]"
+    echo ""
+    echo "选项:"
+    echo "  -p, --package <file>     指定要部署的包文件"

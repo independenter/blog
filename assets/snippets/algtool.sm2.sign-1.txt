@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm2.sign · 来源 Sm2Panel.h:227-248
+
+    void status(const QString& s) {
+        stOut_->setPlainText(s);
+        // 面板较高时"输出/状态"框可能在滚动区可视范围之外, 同步镜像到始终可见的运行日志停靠窗。
+        ALGLOG_INFO("SM2") << s.toStdString();
+    }
+
+    // 明文来源: 明文HEX 优先, 否则明文文本的 UTF-8 字节
+    alg::Bytes plainBytes() {
+        QString h = edPtHex_->text().trimmed();
+        if (!h.isEmpty()) { try { return alg::fromHex(h.toStdString()); } catch (...) {} }
+        return algui::textBytes(ptText_);
+    }
+
+    alg::Bytes idBytes() {
+        alg::Bytes id = algui::hexBytes(edId_);
+        if (id.empty()) id = alg::bytesFromString("1234567812345678");
+        return id;
+    }
+
+    // 取公钥; 若公钥框为空但有私钥, 则推导
+    alg::Bytes pubOrDerive() {
+        alg::Bytes pub = algui::hexBytes(edPub_);

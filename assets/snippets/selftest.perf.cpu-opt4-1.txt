@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt4 · 来源 cpu_optimize4.py:32-53
+
+    def run(cmd, desc=""):
+        if desc:
+            print("\n>> {}".format(desc))
+        print("$ {}".format(cmd))
+        try:
+            _, out, err = r.exec(cmd, timeout=30)
+            out = out.strip()
+            if err.strip():
+                print("[stderr] {}".format(err.strip()[:200]))
+            if out:
+                print(out[:3000])
+            return out
+        except Exception as e:
+            print("[ERROR] {}".format(e))
+            return ""
+
+    # === 当前状态 ===
+    print("=" * 60)
+    print("【当前 CPU 状态】")
+    print("=" * 60)
+    run("top -b -n 1 | head -8", "CPU 概览")
+    run("mpstat 3 1", "mpstat 总览")

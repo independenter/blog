@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm2.verify · 来源 Sm2Panel.h:41-61
+
+        // ---- 密钥 ----
+        edPriv_ = algui::mono(new QLineEdit(this)); edPriv_->setPlaceholderText("私钥 d (hex, 32 字节)");
+        edPub_  = algui::mono(new QLineEdit(this)); edPub_->setPlaceholderText("公钥 X||Y (hex, 64 字节)");
+        auto* btnGen = new QPushButton("生成密钥对", this);
+        auto* btnCalc = new QPushButton("已知私钥计算公钥", this);
+        auto* btnChk = new QPushButton("密钥一致性检测", this);
+        {
+            auto g = algui::addGroup(lay, "密钥");
+            addLabeled(g.lay, "私钥", edPriv_);
+            addLabeled(g.lay, "公钥", edPub_);
+            auto* row = new QHBoxLayout();
+            row->addWidget(btnGen); row->addWidget(btnCalc); row->addWidget(btnChk); row->addStretch();
+            g.lay->addLayout(row);
+        }
+
+        // ---- 参数 (IDA / 随机数 / 模式) ----
+        edId_ = algui::mono(new QLineEdit(this));
+        edId_->setText("31323334353637383132333435363738");   // "1234567812345678" 的 ASCII HEX (GM/T 默认)
+        edId_->setPlaceholderText("用户标识 IDA (hex), 用于 ZA=SM3(ENTL||ID||...)");
+        edRand_ = algui::mono(new QLineEdit(this));
+        edRand_->setPlaceholderText("固定随机数 k / r (hex, 32 字节) — 仅“固定随机数”按钮使用");

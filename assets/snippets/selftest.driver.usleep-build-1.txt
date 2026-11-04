@@ -1,0 +1,14 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.driver.usleep-build · 来源 build.sh:12-22
+
+cd "$(dirname "$0")"
+
+if [ -f usleep_mult.so ] && [ ! -f usleep_mult.so.online-baseline ]; then
+  cp usleep_mult.so usleep_mult.so.online-baseline
+  echo "已保留线上版基准 -> usleep_mult.so.online-baseline"
+fi
+
+gcc -shared -fPIC -O2 -o usleep_mult.so usleep_mult.c -ldl -pthread
+
+echo "编译完成: $(pwd)/usleep_mult.so"
+md5sum usleep_mult.so

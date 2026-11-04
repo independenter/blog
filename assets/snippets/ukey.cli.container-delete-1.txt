@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.container-delete · 来源 ukeyctl.cpp:1208-1229
+
+    std::printf("\n[envelope] 封装->打开 还原明文: %s\n", r4.at("text").asString().c_str());
+
+    // 6) 证书列表与吊销状态
+    Json r5;
+    if (cli2.call("ca.list", Json::object(), r5, err)) {
+        std::printf("\n[ca.list] 可通信的证书 (%d 张):\n", (int)r5.at("certs").size());
+        for (size_t i = 0; i < r5.at("certs").size(); i++) {
+            const Json& e = r5.at("certs").at(i);
+            std::printf("   %c %-16s %-7s %s\n", e.at("status").asString().empty() ? '?'
+                                                                                   : e.at("status").asString()[0],
+                        e.at("serial").asString().c_str(), e.at("type").asString().c_str(),
+                        e.at("cn").asString().c_str());
+        }
+    }
+    std::printf("\n演示结束。吊销该证书后再握手应当被拒绝: ukeyctl ca-revoke --serial %s\n",
+                serial.empty() ? "<serial>" : serial.c_str());
+    return 0;
+}
+
+// ---------------------------------------------------------------- 分发
+
+int run(const std::string& cmd) {

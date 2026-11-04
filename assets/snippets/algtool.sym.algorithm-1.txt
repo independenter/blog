@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sym.algorithm · 来源 SymmPanel.h:164-184
+
+            else if (modes.contains("CBC")) modeCb_->setCurrentText("CBC");
+            else modeCb_->setCurrentText(modes.first());
+        }
+        modeCb_->blockSignals(false);
+        refreshUi();
+    }
+
+    void refreshUi() {
+        prov::SymmProvider* p = provider();
+        const bool have = (p != nullptr);
+        const QString m = mode();
+        const int ksz = have ? p->keySize(base_, m) : 0;
+        const bool noIv = (m == "ECB");
+        const int vsz = (have && !noIv) ? p->ivSize(base_, m) : 0;
+
+        const bool blockMode = (m == "ECB" || m == "CBC");
+        padCb_->setEnabled(have && blockMode);
+        macBtn_->setEnabled(have && p->supportsMac(base_));
+        encBtn_->setEnabled(have);
+        decBtn_->setEnabled(have);
+        ivEd_->setEnabled(have && !noIv);

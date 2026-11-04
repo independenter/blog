@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.cluster-install · 来源 install.py:78-99
+
+def fatal(msg: str, code: int = 1):
+    error(msg)
+    sys.exit(code)
+
+
+def run_cmd(
+    cmd: List[str],
+    cwd: Optional[Path] = None,
+    env: Optional[Dict[str, str]] = None,
+    check: bool = True,
+    capture: bool = True,
+) -> subprocess.CompletedProcess:
+    """Run a shell command, optionally capturing output."""
+    merged_env = os.environ.copy()
+    if env:
+        merged_env.update(env)
+
+    info(f"Running: {' '.join(str(c) for c in cmd)}")
+    try:
+        result = subprocess.run(
+            cmd,
+            cwd=str(cwd) if cwd else None,

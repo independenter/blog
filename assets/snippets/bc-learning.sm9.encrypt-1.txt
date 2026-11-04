@@ -1,0 +1,13 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.encrypt · 来源 Sm9EncryptEssenceTest.java:472-481
+
+            Sm9Math.decrypt(ke, id, c1, c2, c3);
+            return false;
+        }
+        catch (IllegalArgumentException e)
+        {
+            log.info("按预期拒绝：{}", e.getMessage());
+            return true;
+        }
+    }
+}

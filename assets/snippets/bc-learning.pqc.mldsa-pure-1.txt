@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.mldsa-pure · 来源 PqcEssenceTest.java:782-803
+
+    private static byte[] pack(int bits, int[] coeffs)
+    {
+        int nBytes = coeffs.length * bits / 8;
+        int[] out = new int[nBytes];
+        for (int i = 0; i < nBytes; i++)
+        {
+            int sum = 0;
+            for (int k = 0; k < 8; k++)
+            {
+                sum += ((coeffs[(8 * i + k) / bits] >>> ((8 * i + k) % bits)) & 1) << k;
+            }
+            out[i] = sum;
+        }
+        return bytesOf(out);
+    }
+
+    /** 逆操作：从字节流里按 bits 位一段地读出系数 —— out[i] = Σ_k bitAt(data, i·bits + k)·2^k。 */
+    private static int[] unpack(int bits, int count, byte[] data)
+    {
+        int[] out = new int[count];
+        for (int i = 0; i < count; i++)
+        {

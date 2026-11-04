@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.crypto-digest · 来源 CryptoPanel.cpp:154-175
+
+        std::string err;
+        Bytes sig, pub;
+        bool ok = ctx.mgr->signMessage(dataOf(din2.text, din2.asHex), q2s(sigId->text()), sig, err);
+        if (ok) ok = ctx.mgr->exportPublicKey(true, pub, err);
+        if (ok) {
+            *lastSig = sig;
+            *lastPub = pub;
+            sigOut->setPlainText("签名 r||s (hex):\n" + s2q(uk::toHex(sig)) +
+                                 "\n公钥 (hex):\n" + s2q(uk::toHex(pub)));
+        } else {
+            showError(sigOut, err);
+        }
+        show("签名", ok, err);
+        ctx.done("签名", ok, err);
+    });
+    btnVerify->connect(btnVerify, &QPushButton::clicked, [=, &ctx] {
+        std::string err;
+        bool ok = ctx.mgr->verifyMessage(*lastPub, q2s(sigId->text()),
+                                         dataOf(din2.text, din2.asHex), *lastSig, err);
+        show("验签", ok, err, ok ? "签名有效 (公钥 " + s2q(uk::toHex(*lastPub)).left(32) + "…)"
+                                 : QString());
+    });

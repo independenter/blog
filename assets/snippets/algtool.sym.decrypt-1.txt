@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sym.decrypt · 来源 SymmPanel.h:249-270
+
+    void runOp(int op) {
+        prov::SymmProvider* p = provider();
+        if (!p) {
+            algui::setOutput(out_, QStringLiteral("无可用的执行后端: 请点执行后端右侧\u201c⟳ 探测\u201d, 或到\u201c管理…\u201d页配置/启动 Agent。"));
+            return;
+        }
+        prov::SymmRequest req;
+        req.alg = base_;
+        req.mode = mode();
+        req.op = op;
+        req.padding = padOn();
+        req.key = algui::hexBytes(keyEd_);
+        req.iv = algui::hexBytes(ivEd_);
+        req.aad = algui::hexBytes(aadEd_);
+        req.tag = algui::hexBytes(tagEd_);
+
+        if (op == 1) {
+            // enc→dec 链式: 若输入框自上次加密后未改动, 直接接过上一步产出的密文来解密 (免手工复制)。
+            // 一旦填入, 输入文本即改变, 下次不再链式 (按输入框内容正常解密), 行为可预期。
+            if (hasChain && !chainCipherHex.isEmpty() && src_->toPlainText() == chainSrcSnapshot) {
+                rbInHex_->setChecked(true);
+                src_->setPlainText(chainCipherHex);

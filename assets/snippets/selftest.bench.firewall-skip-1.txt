@@ -1,0 +1,9 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.firewall-skip · 来源 firewall_tool.py:181-186
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # 无论成功还是失败，都关闭端口
+        self.close_all_opened()
+        if exc_type:
+            log.warning("测试异常，端口已自动关闭: {}".format(exc_val))
+        return False

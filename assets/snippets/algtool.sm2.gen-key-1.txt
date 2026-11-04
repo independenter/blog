@@ -1,0 +1,22 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm2.gen-key · 来源 Sm2Panel.h:275-293
+
+    void doEnc(QLineEdit* randField) {
+        alg::Bytes pub = pubOrDerive();
+        if (pub.empty()) { status("加密失败: 无有效公钥"); return; }
+        alg::Bytes r = randField ? algui::hexBytes(randField) : alg::Bytes{};
+        if (randField && r.size() != 32) { status("加密失败: 固定随机数需 32 字节"); return; }
+        alg::Bytes pt = plainBytes();
+        if (pt.empty()) { status("加密失败: 明文为空"); return; }
+        prov::PkeyProvider* p = provider();
+        if (!p) { status("加密失败: 无可用的执行后端 (点\"⟳ 探测\"或到\"管理…\"配置 Agent)"); return; }
+        prov::PkeyRequest req;
+        req.op = 0; req.pub = pub; req.plain = pt; req.fixedRand = r;
+        prov::PkeyResult res = p->run(req);
+        if (!res.ok || res.out.empty()) { status(QString("加密失败: ") + (res.error.isEmpty() ? QStringLiteral("公钥非曲线有效点") : res.error)); return; }
+        edCt_->setPlainText(QString::fromStdString(alg::toHex(res.out)));
+        QString note = randField ? QStringLiteral("固定随机数加密完成 ✓") : QStringLiteral("加密完成 ✓");
+        if (randField && !bar_->currentIsSoftware()) note += QStringLiteral(" (硬件忽略固定随机数, r 由设备产生)");
+        status(QString("[%1] ").arg(p->name()) + note);
+}
+};

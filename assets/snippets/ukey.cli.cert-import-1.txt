@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.cert-import · 来源 ukeyctl.cpp:1009-1030
+
+int cmd_provider() {
+    std::string setv = g_cli.get("set");
+    if (!setv.empty()) {
+        ProviderUrl u;
+        if (!splitProviderUrl(setv, u) || (u.scheme != "http" && u.scheme != "https"))
+            die("ukey 提供地址必须是 http(s) URL: " + setv);
+        g_cfg.set("service", "provider_url", setv);
+        if (!g_cfg.save(g_cfg.path())) die("写回配置失败: " + g_cfg.path());
+        std::printf("ukey 提供地址 = %s\n已写入 %s 的 [service] provider_url\n",
+                    setv.c_str(), g_cfg.path().c_str());
+        return 0;
+    }
+    std::string url = g_cfg.providerUrl();
+    std::printf("ukey 提供地址 = %s\n", url.c_str());
+    std::printf("  鉴权: 参数字母序 -> HMAC-SM3(大写hex) -> SM4-CBC(全零IV, 补零) -> base64\n");
+    if (!g_cli.has("probe")) return 0;
+    ProviderUrl u;
+    if (!splitProviderUrl(url, u)) die("地址无法解析: " + url);
+    if (u.scheme != "http") {
+        std::printf("  探测跳过: 内置 HTTP 客户端只走明文, %s 地址请手工验证\n", u.scheme.c_str());
+        return 0;
+    }

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm9.verify · 来源 Sm9Panel.h:64-85
+
+            btnGenEnc1_ = mkBtn("随机加密主密钥 ke", avail);
+            btnExchange_ = mkBtn("密钥交换", avail);
+            row->addWidget(btnGenEnc1_); row->addWidget(btnExchange_); row->addStretch();
+            pl->addLayout(row);
+            tabs_ = reparentTabs(page, "① 密钥交换", tabs_);
+        }
+
+        // ================= ② 封装 / 解封装 =================
+        {
+            auto* page = new QWidget;
+            auto* pl = new QVBoxLayout(page); pl->setContentsMargins(10, 8, 10, 8); pl->setSpacing(6);
+            pl->addWidget(new QLabel("原始 KEM(设备格式): 封装用 主公钥 Ppube(或 ke) + ID + 固定r → K 与 64B 原始密文 C; 解封装用 用户私钥 de(或 ke+ID 派生) + ID + C 还原 K。可直接录入预置数据逐字节验证。", page));
+            keWrap_   = mkKey(&pl, "主私钥ke", "加密主私钥 ke (hex, 32 字节) — 可留空, 用于派生 Ppube/de", avail);
+            ppubWrap_ = mkKey(&pl, "主公钥",   "加密主公钥 Ppube (64B 原始 或 65B) — 封装用, 可输入或随机 ke 回填");
+            idWrap_.text = new QLineEdit(page); idWrap_.text->setPlaceholderText("身份 ID (文本; 收件人)");
+            idWrap_.hex  = algui::mono(new QLineEdit(page)); idWrap_.hex->setPlaceholderText("ID (HEX)");
+            { auto* r = new QHBoxLayout(); r->addWidget(idWrap_.text, 1); r->addWidget(idWrap_.hex, 1); pl->addLayout(r); wireId(idWrap_); }
+            deWrap_   = mkKey(&pl, "用户私钥de", "用户加密私钥 de (128B 原始 或 129B) — 解封装用, 可由 ke+ID 派生或直接粘贴");
+            spWrapKlen_ = new QSpinBox(page); spWrapKlen_->setRange(1, 255); spWrapKlen_->setValue(32); spWrapKlen_->setSuffix(" 字节");
+            addLabeled(pl, "密钥长度", spWrapKlen_);
+            wrapR_    = mkKey(&pl, "固定随机数r", "固定随机数 r (hex, 32B) — 留空则随机; 复现预置 C/K 需填入", avail);
+            wrapK_    = mkKey(&pl, "密钥值K", "密钥值 K (封装输出 / 解封装比对基准)", avail);

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.mgf1 · 来源 RsaEssenceTest.java:833-854
+
+    private static boolean allNonZero(byte[] a, int from, int to)
+    {
+        for (int i = from; i < to; i++)
+        {
+            if (a[i] == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * MGF1 —— "掩码生成函数"只是"摘要 + 计数器模式"：一个 for 循环把
+     * {@code T = H(seed‖0) ‖ H(seed‖1) ‖ …} 逐块拼起来，最后截到 length 字节。
+     * OAEP 和 PSS 的安全性都建立在这一个方法上，看懂它就看懂了两种填充的 80%。
+     * <pre>
+     *   符号表（本条公式的每个字母）：
+     *     mgf1(hashName, seed, length) = MGF1(seed, length) —— 从任意长的 seed 造出任意长的伪随机流
+     *     seed        输入种子：OAEP 里是 hLen 字节随机数，PSS 里是 hLen 字节的 H；长度不受限制
+     *     length (l)  要产出的字节数，例如 OAEP 需要 l = emLen − hLen − 1，PSS 需要 l = emLen − hLen − 1
+     *     hLen        所选摘要的输出长度（SHA-1 20 / SHA-256、SM3 32）—— 一块掩码正好 hLen 字节

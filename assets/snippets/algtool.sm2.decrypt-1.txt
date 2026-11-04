@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm2.decrypt · 来源 AlgSm2.cpp:104-125
+
+Bytes kdf(const uint8_t* xb, const uint8_t* yb, size_t len) {
+    Bytes t; uint32_t ctr = 1;
+    while (t.size() < len) {
+        uint8_t cb[4] = {uint8_t(ctr >> 24), uint8_t(ctr >> 16), uint8_t(ctr >> 8), uint8_t(ctr)};
+        EVP_MD_CTX* mc = EVP_MD_CTX_new();
+        EVP_DigestInit(mc, EVP_sm3());
+        EVP_DigestUpdate(mc, xb, FE); EVP_DigestUpdate(mc, yb, FE); EVP_DigestUpdate(mc, cb, 4);
+        uint8_t dig[32]; unsigned dl = 0; EVP_DigestFinal(mc, dig, &dl);
+        EVP_MD_CTX_free(mc);
+        t.insert(t.end(), dig, dig + dl); ++ctr;
+    }
+    t.resize(len);
+    return t;
+}
+
+bool isAllZero(const Bytes& b) { for (uint8_t x : b) if (x) return false; return true; }
+
+} // namespace
+
+Sm2::Key Sm2::generate() {
+    Key k;
+    EC_GROUP* g = newGroup(); if (!g) return k;

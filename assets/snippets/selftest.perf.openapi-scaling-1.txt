@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.openapi-scaling · 来源 openapi_scaling_test.py:82-103
+
+    # === 1. 基线：全部运行 ===
+    print("\n" + "=" * 60)
+    print("【阶段 1】基线 - 全部 openapi 运行")
+    print("=" * 60)
+    results.append(measure("基线（全部 ~96 openapi）"))
+
+    # === 2. 缩减到 72 ===
+    print("\n" + "=" * 60)
+    print("【阶段 2】缩减到 ~72 openapi（关闭最后 24 个）")
+    print("=" * 60)
+    # 关闭 cjw73-cjw96 对应的 deployment
+    scale_down = deploy_list[72:] if len(deploy_list) > 72 else []
+    for dep in scale_down:
+        run("k3s kubectl scale deploy {} -n saas --replicas=0 2>/dev/null".format(dep), "")
+    print("已缩容 {} 个 deployment".format(len(scale_down)))
+    results.append(measure("72 openapi"))
+
+    # === 3. 缩减到 48 ===
+    print("\n" + "=" * 60)
+    print("【阶段 3】缩减到 ~48 openapi")
+    print("=" * 60)
+    scale_down = deploy_list[48:72] if len(deploy_list) > 48 else []

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.prng-seed · 来源 Sm2EssenceTest.java:1626-1647
+
+    @TraceExecution(value = "SM2 等差 k 攻击", algorithm = "SM2", flow = "SM2-KREUSE")
+    @Test
+    public void sequentialKIsSolvedByLinearEquationsWithoutAnySearch()
+        throws Exception
+    {
+        setHelperTrace(false);
+        Calc.useBc();
+        Tracer.trace("start", new Object[]{"attack", "sequential k", "curve", "sm2p256v1"}, null, "start");
+
+        KeyPair kp = sm2KeyPair();
+        BigInteger d = ((ECPrivateKey) kp.getPrivate()).getD();
+        BigInteger[] pub = publicKeyOf(kp);
+        byte[] za = za(DEFAULT_ID, pub);
+
+        BigInteger delta = BigInteger.valueOf(1000003L);           // 公差：设备的计数器步长
+        BigInteger k1 = counterK(7L, delta.longValue());
+        BigInteger k2 = counterK(8L, delta.longValue());
+        Assert.assertEquals("两枚签名的 k 之差必须正好是规律本身", delta, k2.subtract(k1));
+
+        BigInteger e1 = eValue(za, "first message".getBytes("UTF-8"));
+        BigInteger e2 = eValue(za, "second message".getBytes("UTF-8"));
+        BigInteger[] sig1 = sm2Sign(d, e1, k1);

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.sign · 来源 Sm9SignEssenceTest.java:16-37
+
+import org.bouncycastle.learning.trace.Tracer;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+
+/**
+ * SM9 签名（GB/T 32915.2）的本质计算 —— 面向过程版。
+ *
+ * <p><b>符号表 —— 本文件每条公式里的字母/记号</b>
+ * <pre>
+ *   KGC         密钥生成中心 (Key Generation Center)：唯一知道 ks 的一方，负责"私钥提取"
+ *   ks          签名主私钥 (master private key)，Z_n 里的标量（[1, n−1] 的随机数）
+ *   Ppubs       签名主公钥 = ks·P2 ∈ G₂，序列化成 129 字节；全网公开
+ *   ID          签名者 (signer) 的标识字节串："Alice" = 41 6C 69 63 65（5 字节）、"Bob" = 42 6F 62（3 字节）
+ *   hid         用途分隔符：签名固定 0x01（Sm9Math.HID_SIGN）；0x02 交换、0x03 加密
+ *   H1(ID,hid)  把任意字符串折成 Z_n* 里的数：SM3(0x01‖ID‖hid‖00000001) ‖ SM3(0x01‖ID‖hid‖00000002)
+ *               共 64 字节，取前 40 字节当整数 z，返回 z mod (n−1) + 1 ⇒ 值域 [1, n−1]（永远不会是 0）
+ *   H2(M‖w)     同一条套路、前缀换成 0x02，把消息与 384 字节的 w 拼进摘要，再走 mod (n−1) + 1
+ *   M           消息原文（本文件是 "Chinese IBS standard"，20 字节，不预哈希、直接进 H2）
+ *   r           签名的临时随机数 (nonce / 一次性随机标量)，Z_n 里取，一条签名用一次，绝不能复用
+ *   ds          签名用户私钥 = ks·(ks + H1(ID,0x01))⁻¹·P1 ∈ G₁（65 字节的点，签名方唯一持有的秘密）
+ *   S           签名里的点 = l·ds ∈ G₁（65 字节）

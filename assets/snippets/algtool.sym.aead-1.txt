@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sym.aead · 来源 SymmPanel.h:135-156
+
+    void setManageHandler(std::function<void()> cb) { bar_->setOnManage(std::move(cb)); }
+
+private:
+    prov::SymmProvider* provider() const { return bar_->current(); }
+    QString mode() const { return modeCb_->currentText(); }
+    bool isAead() const { const QString m = mode(); return m == "GCM" || m == "CCM"; }
+    bool padOn() const { return padCb_->currentText() != QStringLiteral("NoPadding"); }
+
+    alg::Bytes dataBytes() const {
+        if (rbInHex_->isChecked()) {
+            try { return alg::fromHex(src_->toPlainText().toStdString()); } catch (...) { return {}; }
+        }
+        return algui::textBytes(src_);
+    }
+
+    // 后端变化: 用其支持的模式重建下拉 (尽量保留当前模式), 再刷新。
+    void onProviderChanged() {
+        hasChain = false;   // 后端切换后旧密文不再适用, 清除 enc→dec 链式记忆
+        const QString prev = modeCb_->currentText();
+        prov::SymmProvider* p = provider();
+        const QStringList modes = p ? p->modes(base_) : QStringList{};
+        modeCb_->blockSignals(true);

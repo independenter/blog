@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.connect · 来源 SkfApi.cpp:101-122
+
+    std::string p = path;
+    if (p.empty()) {
+#ifdef _WIN32
+        p = "SKF.dll";
+#else
+        p = "libSKF.so";
+#endif
+    }
+    api.libHandle = openLib(p, err);
+    if (!api.libHandle) {
+        err = "无法加载 SKF 动态库 [" + p + "]: " + err;
+        return false;
+    }
+    api.libPath = p;
+    api.backendName = backendName.empty() ? baseNameOf(p) : backendName;
+
+    UK_BIND(EnumDev);
+    UK_BIND(WaitForDevEvent);
+    UK_BIND(CancelWaitForDevEvent);
+    UK_BIND(ConnectDev);
+    UK_BIND(DisConnectDev);
+    UK_BIND(GetDevState);

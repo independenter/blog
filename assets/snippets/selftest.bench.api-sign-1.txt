@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.api-sign · 来源 test_data.py:61-82
+
+def parse_size(value):
+    """解析人类可读的大小为字节数"""
+    if value is None:
+        return None
+    s = str(value).strip().upper().replace("B", "")
+    m = re.match(r"^([0-9]+(?:\.[0-9]+)?)\s*([KMG]?)$", s)
+    if not m:
+        raise ValueError("无法解析 PAYLOAD_SIZE: {!r}".format(value))
+    num = float(m.group(1))
+    mult = {"": 1, "K": 1024, "M": 1024 ** 2, "G": 1024 ** 3}[m.group(2)]
+    return int(num * mult)
+
+
+_raw = os.environ.get("PAYLOAD_SIZE")
+if _raw:
+    PAYLOAD_BYTES = parse_size(_raw)
+else:
+    PAYLOAD_BYTES = 1024  # 默认 1K
+
+# 梯度档位
+PAYLOAD_GRADATION = [
+    256,

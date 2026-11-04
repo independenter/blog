@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.ca-verify · 来源 ukeyctl.cpp:1074-1095
+
+std::string clientCertPath() { return joinPath(clientKeyPath(), "client.der"); }
+
+// useUkey=true: 签名/协商都在本地 Ukey 里做; 否则用 data/sdk/client.key 里的软件密钥
+std::unique_ptr<SecClient> makeClient(bool useUkey, std::string& keyPath) {
+    std::unique_ptr<SecClient> p(new SecClient(svcHost(), svcPort(), useUkey ? &mgr : nullptr));
+    if (useUkey) {
+        openIdentity();
+        keyPath = "(本地 Ukey: " + mgr.deviceName() + "/" + mgr.appName() + "/" +
+                  mgr.containerName() + ")";
+        Bytes der, e;
+        std::string err;
+        if (mgr.exportCert(true, der, err) && !der.empty()) p->setClientCert(der);
+        (void)e;
+    } else {
+        cry::KeyPair kp;
+        loadOrCreateSwKey(kp, keyPath);
+        p->setSoftwareKey(kp.priv, kp.pub);
+        Bytes der;
+        std::string e2;
+        if (readFileAll(clientCertPath(), der, &e2) && !der.empty()) p->setClientCert(der);
+    }
+    return p;

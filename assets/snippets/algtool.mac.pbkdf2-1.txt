@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.mac.pbkdf2 · 来源 AlgKdf.cpp:36-57
+
+    Bytes out(oklen);
+    if (ctx) {
+        char mdBuf[32]; std::strncpy(mdBuf, md_.c_str(), sizeof(mdBuf) - 1); mdBuf[sizeof(mdBuf) - 1] = '\0';
+        char modeBuf[32] = "EXTRACT_AND_EXPAND";
+        Bytes ikmC = ikm, saltC = salt, infoC = info;
+        OSSL_PARAM params[6];
+        int i = 0;
+        params[i++] = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_DIGEST, mdBuf, 0);
+        params[i++] = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_MODE, modeBuf, 0);
+        params[i++] = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_KEY, ikmC.data(), ikmC.size());
+        params[i++] = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_SALT,
+                                 saltC.empty() ? (void*)"" : saltC.data(), saltC.size());
+        params[i++] = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_INFO,
+                                 infoC.empty() ? (void*)"" : infoC.data(), infoC.size());
+        params[i] = OSSL_PARAM_construct_end();
+        if (EVP_KDF_derive(ctx, out.data(), oklen, params) <= 0) {
+            ALGLOG_ERROR(name_) << "HKDF failed: " << ERR_error_string(ERR_get_error(), nullptr);
+            out.clear();
+        } else {
+            ALGLOG_INFO(name_) << "hkdf ok md=" << md_ << " oklen=" << oklen << " cost=" << t.ms() << "ms";
+        }
+        EVP_KDF_CTX_free(ctx);

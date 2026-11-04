@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.cert.parse · 来源 AlgCert.cpp:407-428
+
+    return logOp("issueFromRequest", Rc::Ok, t.ms(), "CSR 签发完成") == Rc::Ok;
+}
+
+std::string CertEnv::parse(const Bytes& der) {
+    Chrono t;
+    const Bytes& data = der.empty() ? impl_->cert : der;
+    if (data.empty()) { logOp("parse", Rc::InvalidArg, t.ms(), "无证书"); return {}; }
+    int version = 0, innerSig = 0, sigAlgor = 0;
+    const uint8_t* serial = nullptr;
+    size_t serialLen = 0;
+    const uint8_t* issuer = nullptr;
+    size_t issuerLen = 0;
+    time_t notBefore = 0, notAfter = 0;
+    const uint8_t* subject = nullptr;
+    size_t subjectLen = 0;
+    X509_KEY pubKey;
+    const uint8_t* iuid = nullptr;
+    size_t iuidLen = 0;
+    const uint8_t* suid = nullptr;
+    size_t suidLen = 0;
+    const uint8_t* exts = nullptr;
+    size_t extsLen = 0;

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm4.rounds · 来源 Sm4EssenceTest.java:1808-1829
+
+    private static void assertMatchesJce(String transformation, SecretKeySpec ks, byte[] iv,
+                                        byte[] plain, byte[] ours)
+        throws Exception
+    {
+        Cipher c = Cipher.getInstance(transformation, "BC");
+        c.init(Cipher.ENCRYPT_MODE, ks, new IvParameterSpec(iv));
+        Assert.assertArrayEquals(transformation + " 与 BC 不一致", c.doFinal(plain), ours);
+    }
+
+    /** X9.23 的填充体由随机数填充（JCE 会给 padding 传 SecureRandom），密文不可逐字节对照，只能验互操作。
+     * <pre>
+     *   "互操作 (interop)"的意思  不比密文长什么样，只问一句：BC 用同一密钥/IV 解开<b>我们</b>生成的密文，
+     *         得到的明文是否等于原始明文（expectedPlain）。等于就说明我们的填充与它的解填充规则兼容
+     *   为什么这样也够  随机填充体的正确性无法用相等断言表达，但"能被对方解出"是更强的实际要求
+     * </pre>
+     */
+    private static void assertJceDecrypts(String transformation, SecretKeySpec ks, byte[] iv,
+                                          byte[] ours, byte[] expectedPlain)
+        throws Exception
+    {
+        Cipher c = Cipher.getInstance(transformation, "BC");
+        c.init(Cipher.DECRYPT_MODE, ks, new IvParameterSpec(iv));

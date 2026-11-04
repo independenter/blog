@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.ring · 来源 PqcEssenceTest.java:1837-1858
+
+                    new MLDSAPublicKeyParameters(p, ((MLDSAPublicKey)kp.getPublic()).getPublicData());
+                Assert.assertTrue(names[i] + "：手写验证器必须认 JCE 的签名",
+                    dsaVerify(raw, msg, sig));
+                Tracer.trace("compare", new Object[]{"mode", names[i], "direction", "JCE->crypto"},
+                    dsaVerify(raw, msg, sig), "compare");
+
+                // 反向：我们只用 32 字节种子展开密钥，JCE 的 KeyFactory 必须接受这份原始编码
+                byte[] seed = shakeBytes(names[i], MLDSAEngine.SeedBytes);
+                MLDSAPrivateKeyParameters ours = dsaPriv(p, seed);
+                PublicKey viaJce = KeyFactory.getInstance("ML-DSA", "BC").generatePublic(
+                    new MLDSAPublicKeySpec(specs[i], ours.getPublicKeyParameters().getEncoded()));
+                Signature crossCheck = Signature.getInstance(names[i], "BC");
+                crossCheck.initVerify(viaJce);
+                crossCheck.update(msg);
+                Assert.assertTrue(names[i] + "：JCE 必须认我们（从种子展开的）公钥签出的签名",
+                    crossCheck.verify(dsaSign(ours, msg)));
+                Tracer.trace("compare", new Object[]{"mode", names[i], "direction", "crypto->JCE"},
+                    crossCheck.verify(dsaSign(ours, msg)), "compare");
+
+                // 私钥只是 32 字节种子：JCE 的密钥类型也直接暴露这一点
+                Assert.assertEquals("JCE 私钥必须能回到种子形态",
+                    MLDSAEngine.SeedBytes, ((MLDSAPrivateKey)kp.getPrivate()).getSeed().length);

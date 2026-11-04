@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt1 · 来源 cpu_optimize.py:265-285
+
+    def generate_report(self):
+        """生成 Markdown 报告"""
+        lines = []
+        lines.append("# CPU 优化执行报告")
+        lines.append("")
+        lines.append("**主机**: {} ({})".format(
+            self.remote.host_name, self.remote.host_ip))
+        lines.append("**时间**: {}".format(
+            datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+        lines.append("**模式**: {}".format("DRY-RUN" if self.dry_run else "实际执行"))
+        lines.append("")
+        lines.append("## 执行日志")
+        lines.append("```")
+        for line in self.log_lines:
+            lines.append(line)
+        lines.append("```")
+        return '\n'.join(lines)
+
+
+def main():
+    args = parse_args()

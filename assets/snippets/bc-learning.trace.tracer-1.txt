@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.tracer · 来源 Tracer.java:128-148
+
+    public static void trace(String operation, Object[] inputs, Object output, String group)
+    {
+        trace(operation, inputs, output, group, (Map<String, Object>)null);
+    }
+
+    /**
+     * 记录一步运算（带分组和元数据）。
+     *
+     * @param operation 运算名称
+     * @param inputs    输入参数
+     * @param output    输出结果
+     * @param group     业务逻辑分组
+     * @param metadata  额外信息（如循环迭代次数、判断结果等）
+     */
+    public static void trace(String operation, Object[] inputs, Object output, String group,
+        Map<String, Object> metadata)
+    {
+        if (!isEnabled())
+        {
+            return;
+        }

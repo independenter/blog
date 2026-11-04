@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>平台 · 一休密码工程工作台</title>
+<meta name="description" content="平台详情：模块导航与高密度工具列表。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0e'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%233ee0c8'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23e7ecec' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="catalog.css">
+</head>
+<body data-density="comfortable">
+<div class="shell">
+
+  <aside class="rail" id="rail" data-open="false"></aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="rail-toggle" type="button" aria-label="打开导航">≡</button>
+      <nav class="crumbs" aria-label="面包屑">
+        <a href="index.html">一休</a><span class="sep">/</span>
+        <a href="work.html">全部工具目录</a><span class="sep">/</span><span id="crumb-platform">…</span>
+      </nav>
+      <div class="topbar-right">
+        <span class="result-count"><b id="result-n">0</b> 个工具</span>
+        <div class="density" role="group" aria-label="列表密度">
+          <button type="button" data-density-set="comfortable" aria-pressed="true">54px</button>
+          <button type="button" data-density-set="compact" aria-pressed="false">42px</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page" id="page">
+      <div class="empty-state" id="loading">加载平台数据…</div>
+    </main>
+  </div>
+</div>
+
+<script src="catalog-core.js"></script>
+<script>
+(function () {
+  "use strict";
+  const C = window.Catalog;
+  const $ = (id) => document.getElementById(id);
+
+  const pid = new URLSearchParams(location.search).get("p") || "";
+
+  function fmtPeriod(p) {
+    const s = (p[0] || "").slice(0, 7).replace("-", "·");
+    const e = (p[1] || "").slice(0, 7).replace("-", "·");
+    return s && e ? s + " → " + e : (s || e || "—");
+  }
+
+  function toolRow(t, i) {
+    const thumb = t.thumbnail && t.thumbnail.src ? t.thumbnail.src : "";
+    return "<tr>" +
+      '<td class="col-idx">' + String(i + 1).padStart(3, "0") + "</td>" +
+      '<td class="col-name"><span class="tool-name">' +
+        C.rowThumb(thumb, t.title) +
+        '<a href="tool.html?t=' + encodeURIComponent(t.id) + '">' + C.esc(t.title) + "</a></span></td>" +
+      '<td class="col-sum">' + C.esc(t.summary) + "</td>" +
+      '<td class="col-tech">' + C.esc(t.techStack.join(";")) + "</td>" +
+      '<td class="col-time">' + C.esc(t.time.end || t.time.start || "—") + "</td>" +
+      '<td class="col-vis">' + C.badge(t.visibility) + "</td></tr>";
+  }
+
+  function render(platform, tools, stats, platforms) {
+    document.title = platform.title + " · 一休密码工程工作台";
+    $("crumb-platform").textContent = platform.title;
+
+    const byModule = {};
+    tools.forEach((t) => { (byModule[t.moduleId] = byModule[t.moduleId] || []).push(t); });
+
+    const sortState = { key: "order" };
+
+    const moduleBlocks = platform.modules.map((m, mi) => {
+      const list = (byModule[m.id] || []).slice();
+      if (sortState.key === "time") list.sort((a, b) => (b.time.end || "").localeCompare(a.time.end || "") || a.id.localeCompare(b.id));
+      else if (sortState.key === "name") list.sort((a, b) => a.title.localeCompare(b.title, "zh"));
+      const rows = list.map(toolRow).join("");
+      return '<section class="module-section" id="mod-' + C.esc(m.id) + '">' +
+        '<div class="ms-head"><h2>' + C.esc(m.title) + '</h2>' +
+        '<span class="mono">' + C.esc(m.id) + " · " + list.length + " 条</span></div>" +
+        '<div class="table-wrap"><table class="tbl">' +
+        "<colgroup><col class=\"col-idx\"><col class=\"col-name\"><col class=\"col-sum\"><col class=\"col-tech\"><col class=\"col-time\"><col class=\"col-vis\"></colgroup>" +
+        "<thead><tr><th>#</th><th>工具</th><th>一句话</th><th>技术栈</th><th>时间</th><th>可见性</th></tr></thead>" +
+        '<tbody data-module="' + C.esc(m.id) + '">' + rows + "</tbody></table></div></section>";
+    }).join("");
+
+    const chips = platform.modules.map((m) =>
+      '<button class="chip" type="button" data-jump="mod-' + C.esc(m.id) + '">' +
+      C.esc(m.title) + " · " + m.count + "</button>").join("");
+
+    const pkgBtn = platform.package
+      ? '<a class="btn btn-primary" href="' + C.esc(platform.package) + '" download>下载平台代码包</a>'
+      : "";
+
+    $("page").innerHTML =
+      '<section class="platform-head">' +
+        "<div>" +
+          '<div class="eyebrow">PLATFORM / ' + C.esc(platform.en) + " · " + C.esc(platform.visibility.toUpperCase()) + "</div>" +
+          "<h1>" + C.esc(platform.title) + "</h1>" +
+          '<p class="lede">' + C.esc(platform.summary) + "</p>" +
+          '<div class="pc-tech">' + platform.tech.map((t) => '<span class="tag">' + C.esc(t) + "</span>").join("") + "</div>" +
+          '<div class="kpis">' +
+            '<div class="kpi"><b>' + platform.tools + '</b><span>TOOLS</span></div>' +
+            '<div class="kpi"><b>' + platform.modules.length + '</b><span>MODULES</span></div>' +
+            '<div class="kpi"><b>' + platform.counts.public + '</b><span>PUBLIC</span></div>' +
+            '<div class="kpi"><b>' + platform.counts.notice + '</b><span>NOTICE</span></div>' +
+          "</div>" +
+          '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">' +
+            '<span class="chip">' + fmtPeriod(platform.period) + "</span>" +
+            (platform.thumbType === "screenshot"
+              ? '<span class="chip" data-active="true">含真实界面截图</span>'
+              : '<span class="chip">示意缩略图 · 非真实界面</span>') +
+            pkgBtn +
+          "</div>" +
+        "</div>" +
+        '<figure class="thumb-frame" style="margin:0">' +
+          '<img src="' + C.esc(platform.thumb) + '" alt="' + C.esc(platform.title) + ' 缩略图" loading="eager">' +
+          '<figcaption class="thumb-cap"><span>' +
+            (platform.thumbType === "screenshot" ? "真实截图 · 已脱敏" : '<span class="schem">示意图 · 非真实界面</span>') +
+          "</span><span>" + C.esc(platform.en) + "</span></figcaption>" +
+        "</figure>" +
+      "</section>" +
+
+      '<nav class="module-nav" aria-label="模块导航">' + chips +
+        '<span style="margin-left:auto;display:flex;gap:6px;align-items:center">' +
+          '<span class="eyebrow">排序</span>' +
+          '<select class="sort-select" id="module-sort" aria-label="模块内排序">' +
+            '<option value="order">目录顺序</option>' +
+            '<option value="time">时间 · 新→旧</option>' +
+            '<option value="name">名称 · A→Z</option>' +
+          "</select></span>" +
+      "</nav>" +
+      moduleBlocks +
+
+      '<footer class="site-foot">' +
+        '<span>一休 · 密码工程工作台</span><span class="sep">/</span>' +
+        '<a href="work.html">返回全部目录</a>' +
+        '<span class="right">m15501951002@163.com</span>' +
+      "</footer>";
+
+    $("result-n").textContent = tools.length;
+
+    document.querySelectorAll("[data-jump]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const el = document.getElementById(btn.dataset.jump);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+    $("module-sort").addEventListener("change", () => {
+      sortState.key = $("module-sort").value;
+      render(platform, tools, stats, platforms);
+      $("module-sort").value = sortState.key;
+    });
+
+    C.initShell({ stats, platforms, activePlatform: pid, activeNav: "" });
+  }
+
+  Promise.all([C.loadPlatforms(), C.loadPlatform(pid), C.loadStats()]).then(([pl, data, stats]) => {
+    render(data.platform, data.tools, stats, pl.platforms);
+  }).catch(() => {
+    $("loading").textContent = "平台不存在或数据加载失败 · 返回全部目录";
+    const a = document.createElement("a");
+    a.href = "work.html";
+    a.textContent = "work.html";
+    a.style.marginLeft = "8px";
+    $("loading").appendChild(a);
+  });
+})();
+</script>
+</body>
+</html>

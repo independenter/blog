@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文章 · 一休</title>
+  <meta name="description" content="一休的札记文章。">
+  <meta name="theme-color" content="#0b0d0e">
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2315130f'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%23dd4a18'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23f5f0e7' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body id="top" class="post-page">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="site-head" id="site-head">
+    <a class="wordmark" href="index.html" aria-label="一休，回到作品集">一休<span class="wordmark-dot" aria-hidden="true"></span></a>
+
+    <nav class="site-nav" id="site-nav" aria-label="主导航">
+      <a href="index.html#about"><span>01</span>关于</a>
+      <a href="index.html#work"><span>02</span>作品</a>
+      <a href="blog.html" aria-current="page"><span>03</span>笔记</a>
+      <a href="thoughts.html"><span>04</span>想法</a>
+      <a href="mvps.html"><span>05</span>MVP</a>
+      <a href="index.html#contact"><span>06</span>联系</a>
+    </nav>
+
+    <div class="head-end">
+      <span class="head-meta">NOTES — 2026</span>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">目录</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="post">
+      <header class="post-head">
+        <a class="back-link" href="blog.html"><span aria-hidden="true">←</span> 返回札记</a>
+        <p class="post-kicker" id="post-kicker">笔记 / NOTE</p>
+        <h1 class="post-title" id="post-title">正在读取文章…</h1>
+        <p class="post-excerpt" id="post-excerpt"></p>
+        <div class="post-meta" id="post-meta"></div>
+      </header>
+
+      <figure class="post-cover media" id="post-cover" data-media hidden>
+        <img id="post-cover-img" alt="" width="1600" height="900">
+        <div class="media-fallback" aria-hidden="true">
+          <span class="mf-mark" id="post-cover-mark">文</span>
+          <span class="mf-text">封面暂时无法加载</span>
+        </div>
+      </figure>
+
+      <div class="post-body markdown" id="post-body">
+        <p class="post-loading">正在读取文章…</p>
+      </div>
+
+      <div class="post-state" id="post-state" hidden></div>
+
+      <footer class="post-foot">
+        <div class="post-foot-line" aria-hidden="true"></div>
+        <a href="blog.html"><span aria-hidden="true">←</span> 全部笔记</a>
+        <a id="post-edit" href="admin.html" hidden>编辑这篇 <span aria-hidden="true">↗</span></a>
+      </footer>
+    </article>
+  </main>
+
+  <footer class="site-foot">
+    <span>© 2026 一休 · 真实作品</span>
+    <span>配图来自 <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a></span>
+    <span class="foot-links"><a href="blog.html">笔记</a> · <a href="thoughts.html">想法</a> · <a href="mvps.html">MVP</a> · <a href="admin.html">管理</a></span>
+    <span class="foot-time">北京时间 <time id="clock">--:--:--</time></span>
+    <a class="to-top" href="#top">回到顶部 ↑</a>
+  </footer>
+
+  <script type="module" src="post.js"></script>
+</body>
+</html>

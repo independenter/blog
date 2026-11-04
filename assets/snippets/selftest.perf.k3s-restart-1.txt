@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.k3s-restart · 来源 restart_k3s.py:22-43
+
+    def run(cmd, desc="", timeout=60):
+        if desc:
+            print("\n>> {}".format(desc))
+        try:
+            _, out, err = r.exec(cmd, timeout=timeout)
+            out = out.strip()
+            err = err.strip()
+            if err:
+                print("[stderr] {}".format(err[:300]))
+            if out:
+                print(out[:5000])
+            return out
+        except Exception as e:
+            print("[ERROR] {}".format(e))
+            return ""
+
+    # === 重启前状态 ===
+    print("=" * 60)
+    print("【重启前状态】")
+    print("=" * 60)
+    run("top -b -n 1 | head -5", "CPU")
+    run("crictl ps 2>/dev/null | wc -l", "运行中容器")

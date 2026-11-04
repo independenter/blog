@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.tower · 来源 Sm9PairingEssenceTest.java:459-479
+
+    @TraceExecution(value = "配对结果对照 GmSSL 样例", algorithm = "SM9", flow = "SM9-PAIRING")
+    @Test
+    public void pairingMatchesGmsslKnownAnswers()
+    {
+        Tracer.trace("start", new Object[]{"cases", 3, "source", "GmSSL tests/sm9test.c"}, null, "start");
+
+        BigInteger[] g = Sm9Math.pairing(Sm9Math.twistMul(HEX_KS, Sm9Math.P2), Sm9Math.P1);
+        Tracer.trace("pairingP1KsP2", new Object[]{"ks", HEX_KS, "P1", Sm9Math.P1,
+            "Q", Sm9Math.twistMul(HEX_KS, Sm9Math.P2)}, Calc.hex(Sm9Math.fp12ToBytes(g)), "pairing");
+        Assert.assertEquals("e(P1, ks·P2) 必须逐字节等于标准样例",
+            Calc.hex(Sm9Math.fp12ToBytes(g)), PAIRING1.toLowerCase());
+
+        // 第二个入参是 G₁ 的仿射点（BigInteger[2]），第一个是 G₂ 的射影点：
+        // twistFromOctets 把 x₁ ‖ x₀ 还原成 Fp2 元素 a₀ + a₁u（注意它按"高次在前"读），
+        // 再补 Z = (1,0) 变成射影三元组，配对内部才走的是射影那套切线/割线公式
+        BigInteger[] g2 = Sm9Math.pairing(Sm9Math.twistFromOctets(Calc.concat(new byte[]{ 0x04 }, Calc.unhex(DE_B))),
+            Sm9Math.pointFromOctets(Calc.concat(new byte[]{ 0x04 }, Calc.unhex(RA_POINT))));
+        Tracer.trace("pairingRaDeB", new Object[]{"RA", RA_POINT, "deB", DE_B},
+            Calc.hex(Sm9Math.fp12ToBytes(g2)), "pairing");
+        Assert.assertEquals("e(RA, deB) 必须逐字节等于标准样例",
+            Calc.hex(Sm9Math.fp12ToBytes(g2)), PAIRING2.toLowerCase());

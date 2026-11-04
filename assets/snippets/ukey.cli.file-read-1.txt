@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.file-read · 来源 ukeyctl.cpp:438-459
+
+    std::string err;
+    // 这条命令不能走 openIdentity(): 它按 --container 传进来的名字去"打开"容器, 而本命令
+    // 的语义恰恰是这个容器还不存在 —— 于是 container-create 永远在创建之前就被"打开失败"
+    // 拦住 (先有鸡还是先有蛋)。只把设备与应用打开就够: createContainer 成功后已经把新容器
+    // 作为当前容器带好了, 下面的令牌内生成密钥才能落进去。
+    backendOrDie();
+    if (!mgr.connected() && !mgr.connect(g_cfg.deviceName(), err)) die("连接设备失败: " + err);
+    std::string app = g_cli.get("app", g_cfg.appName());
+    if (!mgr.appOpened() || mgr.appName() != app) {
+        if (!mgr.openApp(app, err)) die("打开应用 " + app + " 失败: " + err + "  (先执行 ukeyctl app-create)");
+    }
+    needAdminPin();
+    if (!mgr.verifyPin(ADMIN_PIN, g_cfg.adminPin(), nullptr, err))
+        die("管理员 PIN 校验失败: " + err);
+    std::string c = g_cli.get("container", g_cfg.containerName());
+    if (!mgr.createContainer(c, err)) die("创建容器失败: " + err);
+    std::printf("容器 %s 已创建。\n", c.c_str());
+    // 默认就在令牌内生成两对密钥 —— "建容器"与"生成密钥"是一件事, 不用调用方再跑 keygen。
+    // 硬件令牌若由发卡方预置了密钥, 生成会失败, 那时只提示不动作 (--no-key 也走这条)。
+    if (g_cli.flag("no-key")) {
+        std::printf("按 --no-key 跳过生成密钥对。接着: ukeyctl keygen --app %s --container %s\n",
+                    mgr.appName().c_str(), c.c_str());

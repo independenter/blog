@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.padding-pure · 来源 RsaEssenceTest.java:2112-2133
+
+    private static final int[] SCHEMES = new int[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+
+    /**
+     * 按编号给 body 做填充 —— "策略模式"在这里就退化成一个带 switch 的普通静态方法：
+     * 没有 interface，没有 new，编号与 names 表逐行对应。
+     * <pre>
+     *   编号 → 方案 → 结构（body = 待填充的字节，K = k = 256，EMPTY = 空 label，SHA256/SHA1/SM3 是摘要名）：
+     *     0 NoPadding              I2OSP(body, K)：定宽大端，没有结构、没有随机
+     *     1 PKCS#1 v1.5 type 1     00 ‖ 01 ‖ FF…FF ‖ 00 ‖ body（确定性，签名用）
+     *     2 PKCS#1 v1.5 type 2     00 ‖ 02 ‖ 非零随机 ‖ 00 ‖ body（随机，加密用；上限 K−11）
+     *     3 OAEP/SHA-1             EM = 00 ‖ maskedSeed ‖ maskedDb，hLen = 20，上限 K−42
+     *     4 OAEP/SHA-256           同上，hLen = 32，上限 K−66
+     *     5 OAEP/SM3               同上，hLen = 32（国密摘要顶替 SHA-256，结构不变）
+     *     6 OAEP label=SHA-256 / MGF1=SHA-1   两个哈希参数独立的最直白演示
+     *     7 PSS/sLen=0             EM = maskedDB ‖ H ‖ 0xBC，salt 空 ⇒ 确定性
+     *     8 PSS/sLen=hLen=32       同上但 salt 随机 ⇒ 同一 body 每次得到不同 EM
+     *   3~6 的 label 都传 EMPTY，所以 lHash = Hash(空串) —— 它仍然是固定的 hLen 字节，占长度。
+     * </pre>
+     */
+    private static byte[] padByScheme(int scheme, byte[] body)
+    {
+        switch (scheme)

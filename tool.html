@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工具详情 · 一休密码工程工作台</title>
+<meta name="description" content="工具详情：使用场景、技术要点、界面示意与脱敏代码片段。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0e'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%233ee0c8'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23e7ecec' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="catalog.css">
+</head>
+<body data-density="comfortable">
+<div class="shell">
+
+  <aside class="rail" id="rail" data-open="false"></aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="rail-toggle" type="button" aria-label="打开导航">≡</button>
+      <nav class="crumbs" aria-label="面包屑">
+        <a href="index.html">一休</a><span class="sep">/</span>
+        <a href="work.html">全部工具目录</a><span class="sep">/</span>
+        <a href="#" id="crumb-platform">平台</a><span class="sep">/</span>
+        <span id="crumb-tool">…</span>
+      </nav>
+    </header>
+
+    <main class="page" id="page">
+      <div class="empty-state" id="loading">加载工具数据…</div>
+    </main>
+  </div>
+</div>
+
+<script src="catalog-core.js"></script>
+<script>
+(function () {
+  "use strict";
+  const C = window.Catalog;
+  const $ = (id) => document.getElementById(id);
+
+  const tid = new URLSearchParams(location.search).get("t") || "";
+  const pid = tid.split(".")[0];
+
+  function snippetBlock(snippet, tool) {
+    return '<div class="codebox" data-snippet="' + C.esc(snippet.html) + '">' +
+      '<div class="code-head">' +
+        '<span class="path">' + C.esc(snippet.filePath) + "</span>" +
+        '<span class="spacer"></span>' +
+        '<button class="btn" type="button" data-copy>复制</button>' +
+        '<a class="btn" href="' + C.esc(snippet.txt) + '" download="' + C.esc(snippet.downloadName) + '">下载</a>' +
+      "</div>" +
+      '<div class="code-scroll" data-code-host></div></div>';
+  }
+
+  function render(platform, tools, tool, stats, platforms) {
+    document.title = tool.title + " · 一休密码工程工作台";
+    $("crumb-platform").textContent = platform.title;
+    $("crumb-platform").href = "platform.html?p=" + encodeURIComponent(pid);
+    $("crumb-tool").textContent = tool.title;
+
+    const idx = tools.findIndex((t) => t.id === tool.id);
+    const prev = idx > 0 ? tools[idx - 1] : null;
+    const next = idx >= 0 && idx < tools.length - 1 ? tools[idx + 1] : null;
+
+    const isSchem = tool.thumbnail && tool.thumbnail.type === "generated";
+    const thumbBlock = tool.thumbnail
+      ? '<figure class="thumb-frame" style="margin:0">' +
+          '<img src="' + C.esc(tool.thumbnail.src) + '" alt="' + C.esc(tool.thumbnail.alt || tool.title) + '" loading="lazy">' +
+          '<figcaption class="thumb-cap"><span>' +
+            (isSchem ? '<span class="schem">示意图 · 非真实界面</span>' : "真实截图 · 已脱敏") +
+          "</span><span>" + C.esc(tool.id) + "</span></figcaption></figure>"
+      : "";
+
+    const codeBlocks = tool.codeSnippets && tool.codeSnippets.length
+      ? tool.codeSnippets.map((s) => snippetBlock(s, tool)).join("")
+      : '<div class="codebox"><div class="code-head"><span class="path">code</span><span class="spacer"></span></div>' +
+        '<div class="code-body note">' +
+          (tool.visibility === "notice"
+            ? "公司项目条目：按脱敏口径仅公开功能说明、技术要点与示意图，不提供源代码片段。"
+            : "该条目暂无可公开代码片段。") +
+        "</div></div>";
+
+    $("page").innerHTML =
+      '<div class="detail">' +
+        "<div>" +
+          '<div class="detail-head">' +
+            '<div class="eyebrow">TOOL / ' + C.esc(tool.id.toUpperCase()) + " · " + C.esc(tool.visibility.toUpperCase()) + "</div>" +
+            "<h1>" + C.esc(tool.title) + "</h1>" +
+            '<p class="lede">' + C.esc(tool.summary) + "</p>" +
+            '<div class="tool-meta-line">' +
+              '<a class="chip" href="platform.html?p=' + encodeURIComponent(pid) + '">' + C.esc(platform.title) + "</a>" +
+              '<span class="chip">' + C.esc(tool.moduleTitle) + "</span>" +
+              '<span class="chip">' + C.esc(tool.kindLabel) + " · " + C.esc(tool.status) + "</span>" +
+              C.badge(tool.visibility) +
+            "</div>" +
+          "</div>" +
+          '<div class="detail-body">' +
+            '<div class="detail-block"><h2>使用场景</h2><p>' + C.esc(tool.scenario) + "</p></div>" +
+            '<div class="detail-block"><h2>技术要点</h2><ul class="points">' +
+              tool.techPoints.map((p) => "<li>" + C.esc(p) + "</li>").join("") + "</ul></div>" +
+            (thumbBlock ? '<div class="detail-block"><h2>界面 / 示意</h2>' + thumbBlock + "</div>" : "") +
+            '<div class="detail-block"><h2>核心代码</h2>' + codeBlocks + "</div>" +
+          "</div>" +
+        "</div>" +
+
+        '<aside class="meta" aria-label="元数据">' +
+          "<h2>Metadata</h2><dl>" +
+          '<div class="row"><dt>平台</dt><dd><a href="platform.html?p=' + encodeURIComponent(pid) + '">' + C.esc(platform.title) + "</a></dd></div>" +
+          '<div class="row"><dt>模块</dt><dd>' + C.esc(tool.moduleTitle) + "</dd></div>" +
+          '<div class="row"><dt>时间</dt><dd>' + C.esc((tool.time.start || "—") + " → " + (tool.time.end || "—")) +
+            " · " + C.esc(tool.time.source) + "</dd></div>" +
+          '<div class="row"><dt>技术栈</dt><dd>' + C.esc(tool.techStack.join(" · ")) + "</dd></div>" +
+          '<div class="row"><dt>可见性</dt><dd style="color:' +
+            (tool.visibility === "public" ? "var(--accent)" : "var(--amber)") + '">' + C.esc(tool.visibilityLabel) + "</dd></div>" +
+          '<div class="row"><dt>证据</dt><dd>' +
+            (tool.evidenceMasked ? "已脱敏 · 路径不公开" : C.esc(tool.evidencePath || "—")) + "</dd></div>" +
+          '<div class="row"><dt>类型</dt><dd>' + C.esc(tool.kindLabel) + " · " + C.esc(tool.status) + "</dd></div>" +
+          "</dl>" +
+          '<nav class="meta-nav">' +
+            (prev
+              ? '<a href="tool.html?t=' + encodeURIComponent(prev.id) + '"><small>上一条</small>' + C.esc(prev.id) + "</a>"
+              : '<a href="platform.html?p=' + encodeURIComponent(pid) + '"><small>上一条</small>返回平台</a>') +
+            (next
+              ? '<a href="tool.html?t=' + encodeURIComponent(next.id) + '" style="text-align:right"><small>下一条</small>' + C.esc(next.id) + "</a>"
+              : '<a href="work.html" style="text-align:right"><small>下一条</small>返回目录</a>') +
+          "</nav>" +
+        "</aside>" +
+      "</div>" +
+      '<footer class="site-foot">' +
+        '<span>一休 · 密码工程工作台</span><span class="sep">/</span>' +
+        '<a href="work.html">全部目录</a><span class="sep">/</span>' +
+        '<a href="platform.html?p=' + encodeURIComponent(pid) + '">' + C.esc(platform.title) + "</a>" +
+        '<span class="right">m15501951002@163.com</span>' +
+      "</footer>";
+
+    // 懒加载片段高亮 HTML，绑定复制
+    document.querySelectorAll("[data-snippet]").forEach((box) => {
+      const host = box.querySelector("[data-code-host]");
+      fetch(box.dataset.snippet).then((res) => {
+        if (!res.ok) throw new Error(String(res.status));
+        return res.text();
+      }).then((html) => {
+        host.innerHTML = html;
+      }).catch(() => {
+        host.innerHTML = '<div class="code-body note">片段加载失败</div>';
+      });
+      box.querySelector("[data-copy]").addEventListener("click", (e) => {
+        const btn = e.currentTarget;
+        const txt = box.querySelector("a[download]");
+        fetch(txt.getAttribute("href")).then((r) => r.text()).then((text) => {
+          return navigator.clipboard.writeText(text);
+        }).then(() => {
+          btn.textContent = "已复制";
+          setTimeout(() => { btn.textContent = "复制"; }, 1500);
+        }).catch(() => {
+          btn.textContent = "复制失败";
+          setTimeout(() => { btn.textContent = "复制"; }, 1500);
+        });
+      });
+    });
+
+    C.initShell({ stats, platforms, activePlatform: pid, activeNav: "" });
+  }
+
+  Promise.all([C.loadPlatforms(), C.loadPlatform(pid), C.loadStats()]).then(([pl, data, stats]) => {
+    const tool = data.tools.find((t) => t.id === tid);
+    if (!tool) {
+      $("loading").textContent = "工具不存在：" + tid;
+      return;
+    }
+    render(data.platform, data.tools, tool, stats, pl.platforms);
+  }).catch(() => {
+    $("loading").textContent = "工具不存在或数据加载失败";
+  });
+})();
+</script>
+</body>
+</html>

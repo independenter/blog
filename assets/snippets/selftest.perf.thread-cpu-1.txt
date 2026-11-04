@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.thread-cpu · 来源 thread_cpu_capture.py:7-28
+
+import os, sys
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from utils.remote_tool import RemoteTool
+
+remote = RemoteTool(config_path=os.path.join(HERE, 'config.yaml'))
+remote.connect()
+print("SSH OK\n")
+
+def run(cmd, desc="", timeout=120):
+    if desc:
+        print("\n" + "=" * 60)
+        print("【{}】".format(desc))
+        print("=" * 60)
+    code, out, err = remote.exec(cmd, timeout=timeout)
+    out = (out or '').strip()
+    err = (err or '').strip()
+    if err and 'warning' not in err.lower():
+        print("[stderr] {}".format(err[:300]))
+    if out:
+        print(out[:8000])
+    return out

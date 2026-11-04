@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.hash.input-mode · 来源 HashPanel.h:72-93
+
+            alg::HashAlg h(mdCb->currentText().toStdString());
+            std::string hex = h.hashHex(data);
+            algui::setOutput(out, hex.empty() ? "(失败, 详见日志)" : QString::fromStdString(hex));
+        });
+
+        auto* lay = new QVBoxLayout(this);
+        lay->setContentsMargins(14, 12, 14, 12);
+        lay->setSpacing(10);
+        lay->addWidget(algui::header("哈希 / 杂凑算法"));
+        {
+            auto g = algui::addGroup(lay, "算法选择");
+            auto* row = new QHBoxLayout();
+            row->addWidget(new QLabel("哈希算法:"));
+            row->addWidget(mdCb, 1);
+            g.lay->addLayout(row);
+        }
+        {
+            auto g = algui::addGroup(lay, "输入");
+            auto* row = new QHBoxLayout();
+            row->addWidget(rbText);
+            row->addWidget(rbHex);
+            row->addStretch();

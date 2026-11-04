@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.yixiu.registry · 来源 ToolRegistry.cs:21-42
+
+        public ReadOnlyCollection<ITool> Tools
+        {
+            get { return new ReadOnlyCollection<ITool>(_tools); }
+        }
+
+        /// <summary>获取所有工具分类</summary>
+        public string[] GetCategories()
+        {
+            var categories = new List<string>();
+            foreach (var tool in _tools)
+            {
+                if (!categories.Contains(tool.Category))
+                    categories.Add(tool.Category);
+            }
+            return categories.ToArray();
+        }
+
+        /// <summary>根据分类获取工具列表</summary>
+        public ITool[] GetToolsByCategory(string category)
+        {
+            var result = new List<ITool>();
+            foreach (var tool in _tools)

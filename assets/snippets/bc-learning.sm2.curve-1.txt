@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.curve · 来源 Sm2EssenceTest.java:1787-1808
+
+        int adds = 0;
+        for (int k = 1; k <= K_POOL; k++)
+        {
+            // 递推 [k]G = [(k−1)G] + G：一次点加（一个 λ、一次模逆）代替一整轮 double-and-add（约 255 次 double）
+            if (k > 1)
+            {
+                walked = add(walked, G);                           // [k]G = [(k-1)G] + G
+                adds++;
+            }
+            if (modN(walked[0]).equals(firstTarget))
+            {
+                enumeratedK = BigInteger.valueOf(k);
+                break;
+            }
+        }
+        Tracer.trace("solve", new Object[]{"pool", K_POOL, "firstTarget", firstTarget, "adds", adds},
+            enumeratedK, "solve");
+        Assert.assertNotNull("枚举 2^10 个候选必须命中第一枚签名的 k", enumeratedK);
+        Assert.assertEquals("命中值应与弱池实际用的 k 相同", ks[0], enumeratedK);
+        BigInteger recoveredFromEnum = privateKeyFromKnownK(enumeratedK, sigs[0][0], sigs[0][1]);
+        Tracer.trace("recover", new Object[]{"k", enumeratedK, "r", sigs[0][0], "s", sigs[0][1]},
+            recoveredFromEnum, "recover");

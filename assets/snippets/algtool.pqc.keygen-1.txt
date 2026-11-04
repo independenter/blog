@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.pqc.keygen · 来源 AlgPqc.cpp:359-380
+
+        return logOp("verify", Rc::VerifyFailed, t.ms(), "签名解析失败") == Rc::Ok;
+    }
+    int rc = 1;
+    if (!msg.empty()) rc = lms_verify_update(&ctx, msg.data(), msg.size());
+    if (rc == 1) rc = lms_verify_finish(&ctx);
+    bool ok = (rc == 1);
+    return logOp("verify", ok ? Rc::Ok : Rc::VerifyFailed, t.ms(),
+                 ok ? "签名有效" : "签名无效") == Rc::Ok;
+}
+
+size_t LmsSig::remainingSigns() const {
+    if (!impl_->hasPriv) return 0;
+    size_t n = 0;
+    if (lms_key_remaining_signs(&impl_->key, &n) != 1) return 0;
+    return n;
+}
+
+const char* LmsSig::typeName(int treeHeight) {
+    switch (treeHeight) {
+        case LmsH5:  return "LMS_SM3_M32_H5";
+        case LmsH10: return "LMS_SM3_M32_H10";
+        case LmsH15: return "LMS_SM3_M32_H15";

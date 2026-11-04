@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.app-list · 来源 ukeyctl.cpp:323-344
+
+                    std::string cn;
+                    SmallCa::certSubjectCn(cert, cn);
+                    show("签名证书", "CN=" + cn + "  (" + std::to_string(cert.size()) + " 字节 DER)");
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+// ---------------------------------------------------------------- 应用 / PIN
+
+int cmd_apps() {
+    std::string err;
+    openIdentity(false);
+    auto v = mgr.listApps();
+    std::printf("应用 (%d):\n", (int)v.size());
+    for (auto& s : v) std::printf("  %s\n", s.c_str());
+    return 0;
+}
+
+int cmd_appCreate() {

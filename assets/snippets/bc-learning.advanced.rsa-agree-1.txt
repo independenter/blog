@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.rsa-agree · 来源 RsaKeyAgreementTest.java:230-250
+
+    @Test
+    public void ecdheRsaWithP256DerivesSameKeysOnBothSides()
+        throws Exception
+    {
+        useBc();
+
+        // 0) 服务器长期身份密钥（证书里的那把），以及双方的 client_random / server_random
+        KeyPair serverIdentity = rsaKeyPair();
+        byte[] clientRandom = randomBytes(32);
+        byte[] serverRandom = randomBytes(32);
+
+        // 1) 双方各抛一对"临时" ECDH 密钥（用完即丢，这就是前向安全的来源）
+        KeyPair clientEphemeral = ephemeralKeyPair("EC");
+        KeyPair serverEphemeral = ephemeralKeyPair("EC");
+        byte[] clientPub = clientEphemeral.getPublic().getEncoded();
+        byte[] serverPub = serverEphemeral.getPublic().getEncoded();
+
+        // 2) 服务器对参数签名（这一步是 RSA 唯一的职责）
+        byte[] curveParams = encodeCurveParams(CURVE_SECP256R1, serverPub);
+        byte[] toSign = signatureInput(clientRandom, serverRandom, curveParams);
+        byte[] serverKeyExchangeSignature = signRsa(serverIdentity.getPrivate(), toSign);

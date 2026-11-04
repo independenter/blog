@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.device-enum · 来源 DevicePanel.cpp:98-119
+
+    std::string catErr;
+    const bool haveCat = uk::vendorCatalog(cat, catErr);
+
+    // 下拉显示的标签不等于要落配置的值: 选中某条时取它的 data。
+    auto libValue = [lib]() -> QString {
+        QString t = lib->currentText().trimmed();
+        int i = lib->findText(t);
+        if (i >= 0) {
+            QString d = lib->itemData(i).toString();
+            if (!d.isEmpty()) return d;
+        }
+        return t;
+    };
+
+    auto fillVendors = [lib, libHint, haveCat, &cat, &catErr, libValue] {
+        QString keep = lib->currentText().trimmed();
+        lib->blockSignals(true);
+        lib->clear();
+        if (!haveCat) {
+            libHint->setText("没找到厂商清单或 deps/UkeyDll (" + s2q(catErr) +
+                             ") —— 只能手工填 SKF 库路径。");
+        } else {

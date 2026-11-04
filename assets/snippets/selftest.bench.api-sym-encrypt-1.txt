@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.api-sym-encrypt · 来源 test_data.py:241-262
+
+def build_sys_decrypt(did=None):
+    """对称解密（外部密钥）"""
+    body = {
+        "algorithmType": SYM_ALGORITHM,
+        "encryptData": SAMPLE_CIPHER or _current_data_b64,
+        "encMode": SYM_ENC_MODE,
+        "iv": SYM_IV,
+        "key": SYM_KEY,
+        "padMode": SYM_PAD_MODE,
+        "plainIsEncode": False,
+    }
+    return "/api/crypto/sysDecrypt", body
+
+
+def build_sym_key(did=None):
+    """对称密钥生成"""
+    body = {"algorithmType": SYM_ALGORITHM}
+    return "/api/crypto/getSymmetricKey", body
+
+
+# =========================================================================
+# 模式注册表

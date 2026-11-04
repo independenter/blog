@@ -1,0 +1,27 @@
+# 一休作品集 · 脱敏接口说明
+# 条目 devops.jenkins.hsm-web · 公司项目不公开源代码
+
+// 密码机管理端流水线
+// 公司项目 · 脱敏接口说明
+// 技术栈: 
+
+/**
+ * 核心功能接口
+ */
+public interface HsmWebService {
+    
+    /**
+     * 执行业务逻辑
+     */
+    Result execute(Request request);
+    
+    /**
+     * 参数校验
+     */
+    boolean validate(Input input);
+    
+    /**
+     * 审计记录
+     */
+    void audit(Action action, Result result);
+}

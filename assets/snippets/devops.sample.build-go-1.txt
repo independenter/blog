@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.build-go · 来源 build-go.sh:28-49
+
+# 检查 Go 环境
+GO_CMD=$(find_go)
+if [ $? -ne 0 ]; then
+    echo "Error: Go environment not found. Please install Go first."
+    echo "You can run './scripts/env/check_env.sh setup' to automatically install Go."
+    exit 1
+fi
+
+# 检查 Go 项目目录
+if [ ! -d "$PROJECT_DIR/src/main/golang" ]; then
+    echo "Error: Go source directory not found: $PROJECT_DIR/src/main/golang"
+    exit 1
+fi
+
+# 检查 go.mod 文件
+if [ ! -f "$PROJECT_DIR/src/main/golang/go.mod" ]; then
+    echo "Error: go.mod file not found in $PROJECT_DIR/src/main/golang"
+    exit 1
+fi
+
+# 进入 Go 项目目录
+cd "$PROJECT_DIR/src/main/golang"

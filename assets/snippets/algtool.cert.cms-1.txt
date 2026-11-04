@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.cert.cms · 来源 AlgCert.cpp:342-363
+
+bool CertEnv::verifyRequest(const Bytes& req) {
+    Chrono t;
+    bool ok = !req.empty() && x509_req_verify(req.data(), req.size(),
+                                              kSm2CertId, kSm2CertIdLen) == 1;
+    return logOp("verifyRequest", ok ? Rc::Ok : Rc::VerifyFailed, t.ms(),
+                 ok ? "请求自验通过" : "请求签名无效") == Rc::Ok;
+}
+
+bool CertEnv::issueFromRequest(const Bytes& req, int days, bool ca,
+                               const std::string& dnsName) {
+    Chrono t;
+    if (!impl_->hasCa || impl_->caCert.empty() || req.empty() || days < 1 || days > 3653) {
+        logOp("issueFromRequest", Rc::InvalidArg, t.ms(), "需要 CSR + CA 槽");
+        return false;
+    }
+    int version = 0, sigAlgor = 0;
+    const uint8_t* subject = nullptr;
+    size_t subjectLen = 0;
+    X509_KEY pubKey;
+    const uint8_t* attrs = nullptr;
+    size_t attrsLen = 0;
+    const uint8_t* sig = nullptr;

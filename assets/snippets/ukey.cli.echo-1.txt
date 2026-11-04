@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.echo · 来源 ukeyctl.cpp:942-963
+
+    std::string f = g_cli.get("in");
+    if (f.empty()) die("请指定 --in FILE");
+    Bytes der;
+    if (!readFileAll(f, der, &err)) die("读取失败: " + err);
+    std::string reason;
+    if (!ca.verify(der, reason)) die("校验不通过: " + reason);
+    if (!ca.verifyNotRevoked(der, reason)) die(reason);
+    std::printf("校验通过 (本 CA 签发, 在有效期内, 未吊销)\n");
+    std::printf("%s\n", SmallCa::describe(der).c_str());
+    return 0;
+}
+
+// ---------------------------------------------------------------- 安全通道 / 服务
+
+std::string svcHost() { return g_cli.get("host", g_cfg.serviceHost()); }
+int svcPort() { return g_cli.getInt("port", g_cfg.servicePort()); }
+
+int cmd_serviceInfo() {
+    HttpClient c;
+    c.setServer(svcHost(), svcPort());
+    HttpResponse r;
+    std::string err;

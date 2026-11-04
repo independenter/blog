@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.file · 来源 SkfApi.cpp:293-314
+
+static const char* sarName(ULONG sar) {
+    switch (sar) {
+        case SAR_OK: return "SAR_OK";
+        case SAR_FAIL: return "SAR_FAIL";
+        case SAR_UNKNOWNERR: return "SAR_UNKNOWNERR";
+        case SAR_NOTSUPPORTYETERR: return "SAR_NOTSUPPORTYETERR";
+        case SAR_FILEERR: return "SAR_FILEERR";
+        case SAR_INVALIDHANDLEERR: return "SAR_INVALIDHANDLEERR";
+        case SAR_INVALIDPARAMERR: return "SAR_INVALIDPARAMERR";
+        case SAR_READFILEERR: return "SAR_READFILEERR";
+        case SAR_WRITEFILEERR: return "SAR_WRITEFILEERR";
+        case SAR_NAMELENERR: return "SAR_NAMELENERR";
+        case SAR_KEYUSAGEERR: return "SAR_KEYUSAGEERR";
+        case SAR_MODULUSLENERR: return "SAR_MODULUSLENERR";
+        case SAR_NOTINITIALIZEERR: return "SAR_NOTINITIALIZEERR";
+        case SAR_OBJERR: return "SAR_OBJERR";
+        case SAR_MEMORYERR: return "SAR_MEMORYERR";
+        case SAR_TIMEOUTERR: return "SAR_TIMEOUTERR";
+        case SAR_INDATALENERR: return "SAR_INDATALENERR";
+        case SAR_INDATAERR: return "SAR_INDATAERR";
+        case SAR_GENRANDERR: return "SAR_GENRANDERR";
+        case SAR_HASHOBJERR: return "SAR_HASHOBJERR";

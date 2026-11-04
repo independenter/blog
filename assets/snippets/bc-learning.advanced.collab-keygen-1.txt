@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.collab-keygen · 来源 InteractiveCollaborativeSignatureEssenceTest.java:407-427
+
+    private static BigInteger computeChallenge(BigInteger[] R, BigInteger[] pAgg, byte[] message)
+    {
+        SM3Digest digest = new SM3Digest();
+
+        // R 的 x, y 坐标（32 字节大端）
+        byte[] rx = toBytes32(R[0]);
+        byte[] ry = toBytes32(R[1]);
+        digest.update(rx, 0, rx.length);
+        digest.update(ry, 0, ry.length);
+
+        // P_agg 的 x, y 坐标
+        byte[] px = toBytes32(pAgg[0]);
+        byte[] py = toBytes32(pAgg[1]);
+        digest.update(px, 0, px.length);
+        digest.update(py, 0, py.length);
+
+        // 消息
+        digest.update(message, 0, message.length);
+
+        byte[] hash = new byte[digest.getDigestSize()];
+        digest.doFinal(hash, 0);

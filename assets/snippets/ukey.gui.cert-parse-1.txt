@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.cert-parse · 来源 CertPanel.cpp:228-249
+
+        std::string err;
+        Bytes der;
+        bool ok = ctx.mgr->exportCert(isSign(), der, err);
+        if (ok) {
+            *lastCert = der;
+            certView->setPlainText(s2q(SmallCa::describe(der)));
+        } else {
+            certView->setPlainText("容器里没有该类型证书 (可在下方小 CA 签发后写回): " + s2q(err));
+        }
+        show("导出证书", ok, err);
+    });
+    btnImportCert->connect(btnImportCert, &QPushButton::clicked, [=, &ctx] {
+        Bytes der;
+        QString path, e;
+        if (!pickCert(page, der, path, e)) {
+            if (!e.isEmpty()) show("选择证书", false, q2s(e));
+            return;
+        }
+        std::string err;
+        bool ok = ctx.mgr->importCert(isSign(), der, err);
+        if (ok && isSign()) ctx.staleIdentity();  // 签名槽的证书 = 服务对外出示的那张
+        *lastCert = der;

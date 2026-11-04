@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一休 · 密码工程工作台</title>
+<meta name="description" content="一休的作品集：8 个平台、49 个模块、600+ 条可追溯的工具条目。国密算法、全栈开发与独立创作。">
+<meta name="theme-color" content="#0b0d0e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0e'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%233ee0c8'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23e7ecec' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="catalog.css">
+<style>
+  .about-grid { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 32px; }
+  .about-copy p { margin-bottom: 14px; color: var(--ink-2); font-size: 14px; line-height: 1.85; }
+  .about-copy .lead { color: var(--ink); font-size: 15px; }
+  .pull-quote { margin: 22px 0 0; padding: 14px 18px; border-left: 2px solid var(--accent-dim); color: var(--ink-2); font-size: 14px; line-height: 1.8; }
+  .pull-quote cite { display: block; margin-top: 8px; font: 11px/1 var(--mono); color: var(--muted); font-style: normal; }
+  .timeline { margin: 0; padding: 0; list-style: none; }
+  .timeline li { display: grid; grid-template-columns: 130px minmax(0,1fr); gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .timeline li:last-child { border-bottom: 0; }
+  .timeline .t-year { font: 11px/1.6 var(--mono); color: var(--amber); }
+  .timeline h3 { font-size: 14px; margin-bottom: 4px; }
+  .timeline .t-org { font: 11px/1 var(--mono); color: var(--muted); }
+  .timeline p { margin-top: 8px; color: var(--ink-2); font-size: 13px; line-height: 1.75; }
+  .method-list { margin: 0; padding: 0; list-style: none; counter-reset: m; }
+  .method-list li { display: grid; grid-template-columns: 56px minmax(0,1fr) auto; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .method-list li:last-child { border-bottom: 0; }
+  .method-list .m-num { font: 12px/1 var(--mono); color: var(--accent); }
+  .method-list h3 { font-size: 15px; margin-bottom: 6px; }
+  .method-list p { color: var(--ink-2); font-size: 13px; line-height: 1.75; max-width: 72ch; }
+  .method-list .m-side { font: 10px/1.5 var(--mono); color: var(--muted); text-align: right; }
+  .contact-block { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: 32px; align-items: start; }
+  .email-line { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+  .email-line a { font: 600 18px/1.2 var(--mono); color: var(--ink); }
+  .email-line a:hover { color: var(--accent); }
+  .anchor-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 0; }
+  .recent-list { border-top: 1px solid var(--line); }
+  .recent-list a.rl-row { display: grid; grid-template-columns: 92px 110px minmax(0,1fr) auto; gap: 16px; align-items: baseline; padding: 10px 6px; border-bottom: 1px solid var(--line); color: var(--ink); }
+  .recent-list a.rl-row:hover { background: var(--panel); color: var(--accent); }
+  .recent-list .rl-date { font: 11px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .recent-list .rl-mod { font: 10px/1 var(--mono); color: var(--muted); }
+  .recent-list .rl-title { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .recent-list .rl-vis { justify-self: end; }
+  .featured { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  .featured a { display: flex; flex-direction: column; gap: 8px; min-height: 120px; padding: 14px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--ink); }
+  .featured a:hover { background: var(--panel); color: var(--ink); }
+  .featured .f-id { font: 10px/1 var(--mono); letter-spacing: 0.12em; color: var(--muted); }
+  .featured h3 { font-size: 15px; }
+  .featured p { color: var(--ink-2); font-size: 12px; line-height: 1.6; }
+  .featured .f-foot { margin-top: auto; font: 11px/1 var(--mono); color: var(--accent); }
+  @media (max-width: 1023px) {
+    .about-grid, .contact-block { grid-template-columns: minmax(0,1fr); }
+    .featured { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .method-list li { grid-template-columns: 44px minmax(0,1fr); }
+    .method-list .m-side { display: none; }
+    .recent-list a.rl-row { grid-template-columns: 92px minmax(0,1fr) auto; }
+    .recent-list .rl-mod { display: none; }
+  }
+  @media (max-width: 720px) {
+    .featured { grid-template-columns: minmax(0,1fr); }
+    .timeline li { grid-template-columns: minmax(0,1fr); gap: 6px; }
+  }
+</style>
+</head>
+<body data-density="comfortable">
+<div class="shell">
+
+  <aside class="rail" id="rail" data-open="false"></aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="rail-toggle" type="button" aria-label="打开导航">≡</button>
+      <nav class="crumbs" aria-label="面包屑"><span>一休</span><span class="sep">/</span><span>系统概览</span></nav>
+      <div class="topbar-right">
+        <span class="result-count" id="stats-line"><b>—</b></span>
+        <div class="density" role="group" aria-label="列表密度">
+          <button type="button" data-density-set="comfortable" aria-pressed="true">54px</button>
+          <button type="button" data-density-set="compact" aria-pressed="false">42px</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+
+      <section class="hero" id="top">
+        <div>
+          <div class="eyebrow">SYSTEM OVERVIEW / 2026.11</div>
+          <h1>密码工程作品集，<br><em>拆到每一个工具</em>。</h1>
+          <p class="hero-lede">
+            我是<strong>一休</strong>：8 年 Java 全栈、6 年网络安全密码学骨干，现在借助 AI 做全语言独立开发。
+            这里按「平台 → 模块 → 工具」拆解了我做过的全部东西——每条都有场景、技术要点、证据路径与时间戳；
+            个人自研公开代码，公司项目只给说明与架构示意。
+          </p>
+          <div class="kpis" id="kpis">
+            <div class="kpi"><b>—</b><span>TOOLS</span></div>
+            <div class="kpi"><b>—</b><span>PLATFORMS</span></div>
+            <div class="kpi"><b>—</b><span>MODULES</span></div>
+            <div class="kpi"><b>—</b><span>TIME SPAN</span></div>
+          </div>
+          <div class="anchor-row">
+            <a class="chip" href="#about">关于</a>
+            <a class="chip" href="#featured">精选项目</a>
+            <a class="chip" href="#method">方法</a>
+            <a class="chip" href="#experience">经历</a>
+            <a class="chip" href="#contact">联系</a>
+          </div>
+        </div>
+        <div class="terminal">
+          <div class="terminal-bar"><i></i><i></i><i></i><span style="margin-left:auto">build_catalog.py</span></div>
+<pre><span class="c"># 单一事实源 → 派生数据</span>
+<span class="p">$</span> python tools/build_catalog.py --stats
+platforms=<span class="k" id="t-pl">8</span>  modules=<span class="k" id="t-mo">49</span>  tools=<span class="k" id="t-to">620</span>
+public=<span class="k" id="t-pub">353</span>  notice=<span class="k" id="t-not">261</span>  hidden=<span class="k">6</span>
+
+<span class="p">$</span> python tools/build_catalog_dist.py --strict --check
+scanFindings=[]  <span class="c"># 出站脱敏扫描 0 命中</span>
+indexBytes=<span class="k">85792</span>  <span class="c"># ≤ 90KB</span>
+check: hashes identical across rerun</pre>
+        </div>
+      </section>
+
+      <section class="section" id="platforms">
+        <div class="section-head">
+          <h2>平台矩阵</h2>
+          <span class="meta">点击进入平台 → 模块 → 工具</span>
+        </div>
+        <div class="platforms" id="platform-cards"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>高价值工具</h2>
+          <span class="meta">按影响面挑选 · <a href="work.html">全部目录 →</a></span>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl">
+            <colgroup>
+              <col class="col-idx"><col class="col-name"><col class="col-sum"><col class="col-mod"><col class="col-tech"><col class="col-time"><col class="col-vis">
+            </colgroup>
+            <thead>
+              <tr><th>#</th><th>工具</th><th>一句话</th><th>模块</th><th>技术栈</th><th>时间</th><th>可见性</th></tr>
+            </thead>
+            <tbody id="highlight-rows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>最近更新</h2>
+          <span class="meta">按证据时间排序 · <a href="work.html">按时间浏览全部 →</a></span>
+        </div>
+        <div class="recent-list" id="recent-list"></div>
+      </section>
+
+      <section class="section about" id="about">
+        <div class="section-head"><h2>关于</h2><span class="meta">01 / ABOUT</span></div>
+        <div class="about-grid">
+          <div class="about-copy">
+            <p class="lead">我是<strong>一休</strong>，一个把密码学与工程实现放在同一张桌子上的人。过去 8 年做 Java 全栈开发，近 6 年专注网络安全与密码学，是团队里的密码学骨干。现在借助 AI 进行全栈全语言开发，从问题定义一直做到上线。</p>
+            <p>我习惯先弄清楚「谁在什么场景下卡住」，再决定要不要写代码。密码学工具阶段就用真实算法、真实密钥和真实边界去验证，避免交付时才暴露问题。能自己实现的部分，我尽量自己写完——少一次转述，就少一层损耗。</p>
+            <p>日常使用 Java、C++、Go、Python、C#，也写 Vue 3 和 Spring Boot。喜欢纸质书、手写笔记和慢一点的工具。</p>
+            <blockquote class="pull-quote">
+              <p>「密码解决能不能被信任，代码解决能不能到达。分开做，磨损的是同一个人对作品的判断。」</p>
+              <cite>— 工作笔记</cite>
+            </blockquote>
+          </div>
+          <dl class="stat-row" id="about-stats"></dl>
+        </div>
+      </section>
+
+      <section class="section" id="featured">
+        <div class="section-head"><h2>精选项目</h2><span class="meta">按平台归组 · 2024 — 2026</span></div>
+        <div class="featured" id="featured-cards"></div>
+      </section>
+
+      <section class="section" id="method">
+        <div class="section-head"><h2>方法</h2><span class="meta">04 / METHOD · 从问题到上线，4—8 周</span></div>
+        <ol class="method-list">
+          <li><span class="m-num">01</span><div><h3>先问清楚问题</h3><p>不急着画界面。用访谈、观察和已有数据确认：谁在什么场景下卡住，卡在哪一步，现在怎么绕过。把「我想要一个功能」翻译成「我想要一个结果」。</p></div><span class="m-side">访谈 · 观察 · 数据</span></li>
+          <li><span class="m-num">02</span><div><h3>用最粗的笔画流程</h3><p>先在纸上排结构：一屏先放什么、后放什么、哪一步可以删掉。线框只验证顺序与密度，不提前讨论阴影和圆角。</p></div><span class="m-side">信息架构 · 线框</span></li>
+          <li><span class="m-num">03</span><div><h3>把设计写进代码</h3><p>能自己实现的部分自己做。使用真实内容、真实长度和真实边界做界面，提前暴露那些只在交接时才会出现的问题。</p></div><span class="m-side">原型 · 前端 · 可用性测试</span></li>
+          <li><span class="m-num">04</span><div><h3>上线之后继续</h3><p>上线不是交付终点。看真实使用路径，按周做小改动；用数据修正直觉，也用直觉判断哪些数据不该被追。</p></div><span class="m-side">观测 · 迭代 · 复盘</span></li>
+        </ol>
+      </section>
+
+      <section class="section" id="experience">
+        <div class="section-head"><h2>经历</h2><span class="meta">05 / EXPERIENCE · 机构名称均为示例</span></div>
+        <ol class="timeline">
+          <li><span class="t-year">2024 — 至今</span><div><h3>网络安全密码学骨干</h3><span class="t-org">某安全公司（示例）</span><p>专注国密算法工具链开发，主导 Ukey 管理、HSM 监控、签名验签服务器等核心产品。从 C++ Qt6 界面到 Java Spring Boot 后端，全栈交付。</p></div></li>
+          <li><span class="t-year">2021 — 2024</span><div><h3>高级 Java 开发工程师</h3><span class="t-org">某科技公司（示例）</span><p>负责密码服务平台架构设计，集成 SM2/SM3/SM4/RSA 等算法，实现证书生命周期管理、密钥分发与审计日志。带领 3 人小组完成从 0 到 1 交付。</p></div></li>
+          <li><span class="t-year">2019 — 2021</span><div><h3>Java 开发工程师</h3><span class="t-org">某互联网公司（示例）</span><p>参与电商平台后端开发，使用 Spring Boot + MyBatis 构建订单、支付与库存系统。优化数据库查询性能，QPS 提升 40%。</p></div></li>
+          <li><span class="t-year">2018</span><div><h3>计算机科学学士</h3><span class="t-org">某大学（示例）</span><p>主修 Java 开发与密码学基础。毕业设计：基于 SM2 的轻量级身份认证协议实现。</p></div></li>
+        </ol>
+      </section>
+
+      <section class="section" id="contact">
+        <div class="section-head"><h2>联系</h2><span class="meta">06 / CONTACT</span></div>
+        <div class="contact-block">
+          <div>
+            <h3 style="font-size:20px;line-height:1.4">有一个想认真做出来的东西？</h3>
+            <p style="margin-top:10px;color:var(--ink-2);font-size:14px;line-height:1.75">写信告诉我它解决了谁的什么问题。我通常会在两个工作日内回复；如果暂时不合适，也会直说。</p>
+            <div class="email-line">
+              <a href="mailto:m15501951002@163.com" id="email-link">m15501951002@163.com</a>
+              <button class="btn" type="button" id="copy-email" data-email="m15501951002@163.com">复制邮箱</button>
+            </div>
+            <p style="margin-top:12px;color:var(--muted);font-size:12px">所在地 杭州 / GMT+8 · 手机 15501951002 · 可合作 密码学工具 · 全栈开发 · 技术咨询</p>
+          </div>
+          <div class="terminal">
+            <div class="terminal-bar"><i></i><i></i><i></i><span style="margin-left:auto">contact.sh</span></div>
+<pre><span class="p">$</span> ./contact.sh <span class="c">--topic</span> <span class="k">"你的项目"</span>
+&gt; 读每一封邮件，两个工作日内回复
+&gt; 不合适也会直说，不拖着你
+<span class="p">$</span> <span class="c"># 远程 / 长期合作均可</span></pre>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site-foot">
+        <span>一休 · 密码工程工作台</span><span class="sep">/</span>
+        <span>620 归档 · 614 公开</span><span class="sep">/</span>
+        <span>SM2 · SM3 · SM4 · SM9 · ZUC · PQC</span>
+        <span class="right">m15501951002@163.com</span>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="catalog-core.js"></script>
+<script>
+(function () {
+  "use strict";
+  const C = window.Catalog;
+
+  const HIGHLIGHT = [
+    "ukey.skf.rsa-sign", "ukey.gui.assist-diag", "ukey.cli.keygen",
+    "bc-learning.sm2.biased-k", "bc-learning.trace.audit",
+    "algtool.sm9.decap", "algtool.sm2.consistency",
+    "selftest.bench.api-asy-decrypt", "ukeysite.api.changePin",
+    "flk-demo.core.auth-login", "tsvs.openapi.sign-detach", "devops.sample.build-all",
+  ];
+
+  const FEATURED = [
+    { pid: "flk-demo", no: "01", title: "国密加密演示平台", desc: "Spring Boot 4.1 + Electron · SM2/SM3/SM4/AI 对话 · 37 模块" },
+    { pid: "ukey", no: "02", title: "Ukey 智能密码钥匙", desc: "Qt6 + C++ · GM/T 0016 · 多家厂商 SKF 库 · 三通道架构" },
+    { pid: "algtool", no: "03", title: "AlgTool 算法工具", desc: "Qt6 + GmSSL/OpenSSL 双后端 · 后量子密码 · 证书信封" },
+    { pid: "devops", no: "04", title: "YiXiu 密码学工具集", desc: "C# .NET 8 + WPF · 跨平台 GUI/CLI · 证书解析与密钥管理" },
+    { pid: "selftest", no: "05", title: "HSM 管理与压测", desc: "设备发现与监控 · 密钥分量管理 · perf 根因定位" },
+    { pid: "bc-learning", no: "06", title: "密码学本质重写", desc: "纯函数重写 SM2/SM3/SM4/RSA/PQC · 执行追踪与可视化" },
+  ];
+
+  function kpis(stats) {
+    document.querySelectorAll("#kpis .kpi b").forEach((el, i) => {
+      el.textContent = [stats.tools, stats.platforms, stats.modules, "2024–26"][i];
+    });
+    document.getElementById("stats-line").innerHTML =
+      "<b>" + stats.tools + "</b> 工具 · " + stats.platforms + " 平台 · " + stats.modules + " 模块";
+    const map = { "t-pl": stats.platforms, "t-mo": stats.modules, "t-to": stats.tools + stats.hidden, "t-pub": stats.public, "t-not": stats.notice };
+    Object.entries(map).forEach(([id, v]) => { const el = document.getElementById(id); if (el) el.textContent = v; });
+    document.getElementById("about-stats").innerHTML =
+      '<div class="kpi"><b>08</b><span>JAVA 年资</span></div>' +
+      '<div class="kpi"><b>06</b><span>密码学骨干 年</span></div>' +
+      '<div class="kpi"><b>' + stats.platforms + '</b><span>平台</span></div>' +
+      '<div class="kpi"><b>1</b><span>一人全流程</span></div>';
+  }
+
+  function platformCards(platforms) {
+    document.getElementById("platform-cards").innerHTML = platforms.map((p, i) => {
+      const letter = String.fromCharCode(65 + i);
+      const dot = p.visibility === "public" ? "" : " amber";
+      const years = (p.period[0] || "").slice(0, 4) + "–" + (p.period[1] || "").slice(2, 4);
+      return '<a class="platform-card" href="platform.html?p=' + encodeURIComponent(p.id) + '">' +
+        '<div class="pc-top"><span class="pc-id">' + letter + " / " + C.esc(p.en) + '</span><span class="status-dot' + dot + '"></span></div>' +
+        "<h3>" + C.esc(p.title) + "</h3>" +
+        '<p class="pc-desc">' + C.esc(p.summary) + "</p>" +
+        '<div class="pc-foot"><b>' + p.tools + "</b> 工具 <span>·</span> " +
+        p.modules.length + " 模块 <span>·</span> " + C.esc(years) + "</div></a>";
+    }).join("");
+  }
+
+  function highlightRows(rowsById) {
+    const tbody = document.getElementById("highlight-rows");
+    tbody.innerHTML = HIGHLIGHT.filter((id) => rowsById[id]).map((id, i) => {
+      const r = rowsById[id];
+      return "<tr>" +
+        '<td class="col-idx">' + String(i + 1).padStart(3, "0") + "</td>" +
+        '<td class="col-name"><span class="tool-name">' + C.rowThumb(r.thumb, r.title) +
+          '<a href="tool.html?t=' + encodeURIComponent(r.id) + '">' + C.esc(r.title) + "</a></span></td>" +
+        '<td class="col-sum">' + C.esc(r.sumCache || "") + "</td>" +
+        '<td class="col-mod">' + C.esc(r.mid) + "</td>" +
+        '<td class="col-tech">' + C.esc(r.tech) + "</td>" +
+        '<td class="col-time">' + C.esc(r.upd || "—") + "</td>" +
+        '<td class="col-vis">' + C.badge(r.vis) + "</td></tr>";
+    }).join("");
+  }
+
+  function recentList(rows, platforms) {
+    const titles = {};
+    platforms.forEach((p) => p.modules.forEach((m) => { titles[m.id] = m.title; }));
+    const top = rows.slice().sort((a, b) => (b.upd || "").localeCompare(a.upd || "")).slice(0, 10);
+    document.getElementById("recent-list").innerHTML = top.map((r) =>
+      '<a class="rl-row" href="tool.html?t=' + encodeURIComponent(r.id) + '">' +
+      '<span class="rl-date">' + C.esc(r.upd || "") + "</span>" +
+      '<span class="rl-mod">' + C.esc(titles[r.mid] || r.mid) + "</span>" +
+      '<span class="rl-title">' + C.esc(r.title) + "</span>" +
+      '<span class="rl-vis">' + C.badge(r.vis) + "</span></a>").join("");
+  }
+
+  function featured(platforms) {
+    const byId = {};
+    platforms.forEach((p) => { byId[p.id] = p; });
+    document.getElementById("featured-cards").innerHTML = FEATURED.map((f) => {
+      const p = byId[f.pid];
+      const meta = p ? p.tools + " 工具 · " + p.modules.length + " 模块" : "";
+      return '<a href="platform.html?p=' + encodeURIComponent(f.pid) + '">' +
+        '<span class="f-id">' + f.no + " / " + C.esc(p ? p.en : f.pid) + "</span>" +
+        "<h3>" + C.esc(f.title) + "</h3>" +
+        "<p>" + C.esc(f.desc) + "</p>" +
+        '<span class="f-foot">' + C.esc(meta) + " →</span></a>";
+    }).join("");
+  }
+
+  document.getElementById("copy-email").addEventListener("click", (e) => {
+    const btn = e.currentTarget;
+    navigator.clipboard.writeText(btn.dataset.email).then(() => {
+      btn.textContent = "已复制";
+      setTimeout(() => { btn.textContent = "复制邮箱"; }, 1500);
+    }).catch(() => {
+      btn.textContent = "复制失败";
+      setTimeout(() => { btn.textContent = "复制邮箱"; }, 1500);
+    });
+  });
+
+  Promise.all([C.loadPlatforms(), C.loadIndex(), C.loadStats()]).then(([pl, idx, stats]) => {
+    const COLS = idx.header;
+    const rows = idx.rows.map((row) => {
+      const o = {};
+      COLS.forEach((c, i) => { o[c] = row[i]; });
+      o.mid = o.id.slice(0, o.id.lastIndexOf("."));
+      return o;
+    });
+    const rowsById = {};
+    rows.forEach((r) => { rowsById[r.id] = r; });
+
+    C.initShell({ stats, platforms: pl.platforms, activeNav: "" });
+    kpis(stats);
+    platformCards(pl.platforms);
+    featured(pl.platforms);
+    recentList(rows, pl.platforms);
+
+    // 高价值表的一句话摘要：从平台 JSON 补
+    Promise.all(pl.platforms.map((p) => C.loadPlatform(p.id))).then((payloads) => {
+      payloads.forEach((d) => d.tools.forEach((t) => {
+        if (rowsById[t.id]) rowsById[t.id].sumCache = t.summary;
+      }));
+      highlightRows(rowsById);
+    });
+  });
+})();
+</script>
+</body>
+</html>

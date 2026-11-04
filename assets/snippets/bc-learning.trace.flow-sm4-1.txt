@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-sm4 · 来源 Flows.java:151-172
+
+    private static FlowDefinition sm2SignVerify()
+    {
+        FlowDefinition flow = new FlowDefinition("SM2 签名验签（三次验签展开）");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "keygen", "生成密钥对 (d, P=dG)", FlowNodeType.OPERATION, "私钥 d，公钥 P");
+        node(flow, "computeZA", "计算 ZA = SM3(ENTL||ID||a||b||Gx||Gy||Px||Py)", FlowNodeType.OPERATION, "身份哈希");
+        node(flow, "computeE", "计算 e = SM3(ZA||M)", FlowNodeType.OPERATION, "消息哈希");
+        node(flow, "sm2Sign", "我们的签名 sm2Sign(d, e, k)", FlowNodeType.GROUP,
+            "r = (e+x₁) mod n；s = (k−rd)(1+d)⁻¹ mod n");
+        loop(flow, "mul_kG", "k·G 标量乘", FlowLoopKind.BIT, "k", null, "double-and-add：逐位扫描 k");
+        node(flow, "computeR", "r = (e + x₁) mod n", FlowNodeType.OPERATION, "");
+        node(flow, "checkR", "r == 0 ?", FlowNodeType.DECISION, "为 0 必须换 k 重签");
+        node(flow, "computeS", "s = (k - rd)(1+d)⁻¹ mod n", FlowNodeType.OPERATION, "");
+        node(flow, "checkRK", "r + k ≡ 0 (mod n) ?", FlowNodeType.DECISION, "退化则换 k");
+        node(flow, "returnRS", "返回 (r, s)", FlowNodeType.OPERATION, "我们的签名结果");
+        node(flow, "bcVerify", "BC 验我们的签名 (SM3withSM2.verify)", FlowNodeType.OPERATION,
+            "交叉验证：应通过");
+        node(flow, "bcSign", "BC 用同一私钥签名 (SM3withSM2.sign)", FlowNodeType.OPERATION,
+            "得到 DER(r,s)，供下面三次验签使用");
+
+        verifyPhase(flow, "verify1", "验签① 合法签名：BC 签 → 我们验",

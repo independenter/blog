@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.parallel · 来源 tts_tool.py:398-419
+
+        for line in (out or '').splitlines():
+            name = line.strip()
+            if name and TARGET_RE.match(name) and name not in targets:
+                targets.append(name)
+        targets.sort(key=natural_key)
+        log.info("自动发现设备目录 {} 个: {}".format(
+            len(targets), ', '.join(targets) or '(无)'))
+        return targets
+
+    @staticmethod
+    def build_remote_cmd(base_dir, target, binary, args, duration_s,
+                         kill_after=10):
+        """
+        构造远程命令：
+          cd {base_dir}/{target} && export LD_LIBRARY_PATH=. &&
+          timeout -s INT -k {kill_after}s {duration}s ./{binary} {args} 2>&1
+        """
+        if not BINARY_RE.match(binary or ''):
+            raise ValueError("非法二进制造文件名: {!r}".format(binary))
+        TtsTool.validate_target(target)
+        workdir = '{}/{}'.format(base_dir.rstrip('/'), target)
+        return (

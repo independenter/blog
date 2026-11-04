@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.file-rw · 来源 FilePanel.cpp:16-37
+
+#include <functional>
+#include <memory>
+
+using uk::Bytes;
+using uk::FileAttr;
+
+namespace ugui {
+
+QWidget* createFilePanel(Ctx& ctx) {
+    auto* page = new QWidget();
+    auto* lay = new QVBoxLayout(page);
+    lay->setContentsMargins(12, 12, 12, 12);
+    lay->setSpacing(10);
+    lay->addWidget(header("文件管理"));
+    lay->addWidget(muted("文件存放在应用之下, 与容器平级; 容量受设备剩余空间限制。"));
+
+    auto* tail = outBox(6);
+    auto show = [tail](const QString& what, bool ok, const std::string& err = "",
+                       const QString& extra = QString()) {
+        tail->setPlainText(what + ": " + (ok ? "成功" : "失败 -- " + s2q(err)) +
+                           (extra.isEmpty() ? QString() : "\n" + extra));
+    };

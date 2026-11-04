@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.cert.verify · 来源 AlgCert.cpp:493-513
+
+bool CertEnv::verifyByCa(const Bytes& der, const Bytes& caDer) {
+    Chrono t;
+    bool ok = !der.empty() && !caDer.empty() &&
+              x509_cert_verify_by_ca_cert(der.data(), der.size(), caDer.data(), caDer.size(),
+                                          kSm2CertId, kSm2CertIdLen) == 1;
+    return logOp("verifyByCa", ok ? Rc::Ok : Rc::VerifyFailed, t.ms(),
+                 ok ? "证书链验证通过" : "CA 验证失败 (签名/ issuer 不匹配)") == Rc::Ok;
+}
+
+bool CertEnv::verifySelfSigned(const Bytes& der) {
+    Chrono t;
+    const Bytes& data = der.empty() ? impl_->cert : der;
+    // 自签 = 自发行(is_self_issued) 且用自己的主体公钥能验过签名 (以自身为 CA 验证)
+    bool ok = !data.empty() &&
+              x509_cert_is_self_issued(data.data(), data.size()) == 1 &&
+              x509_cert_verify_by_ca_cert(data.data(), data.size(),
+                                          data.data(), data.size(),
+                                          kSm2CertId, kSm2CertIdLen) == 1;
+    return logOp("verifySelfSigned", ok ? Rc::Ok : Rc::VerifyFailed, t.ms(),
+                 ok ? "自签验证通过" : "自签验证失败") == Rc::Ok;
+}

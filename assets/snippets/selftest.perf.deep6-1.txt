@@ -1,0 +1,11 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.deep6 · 来源 deep_dive6.py:132-139
+
+code, out, err = remote.exec("python3 {} 2>&1 || python {} 2>&1".format(REMOTE_PATH, REMOTE_PATH), timeout=900)
+out = (out or '').strip()
+print(out[:30000])
+if err and err.strip():
+    print("[stderr]", err.strip()[:500])
+
+remote.close()
+print("\n探针6完成!")

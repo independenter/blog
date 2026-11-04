@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.build-kotlin · 来源 build-kotlin.sh:69-90
+
+KOTLIN_BUILD_CMD="${KOTLINC_CMD} -jvm-target 17"
+
+if [ "$INCLUDE_RUNTIME" = true ]; then
+    echo "Including Kotlin runtime in the jar..."
+    KOTLIN_BUILD_CMD="$KOTLIN_BUILD_CMD -include-runtime"
+else
+    echo "Not including Kotlin runtime in the jar (faster build)..."
+fi
+
+KOTLIN_BUILD_CMD="$KOTLIN_BUILD_CMD \"$PROJECT_DIR/src/main/kotlin/Main.kt\" -d \"$PROJECT_DIR/target/kotlin-app.jar\""
+
+echo "Executing: $KOTLIN_BUILD_CMD"
+eval $KOTLIN_BUILD_CMD
+
+if [ $? -eq 0 ]; then
+    echo "Kotlin application built successfully!"
+    echo "Application location: $PROJECT_DIR/target/kotlin-app.jar"
+    
+    if [ "$INCLUDE_RUNTIME" = true ]; then
+        echo "To run the application with java, use: java -jar $PROJECT_DIR/target/kotlin-app.jar [name]"
+        echo "To run the application with kotlin, use: kotlin -cp $PROJECT_DIR/target/kotlin-app.jar MainKt [name]"
+    else

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.build-python · 来源 build-python.sh:95-116
+
+            else
+                echo "requirements.txt not found"
+                exit 1
+            fi
+            ;;
+        *)
+            python3 "\$DIR/main.py" "\$@"
+            ;;
+    esac
+fi
+EOF
+
+chmod +x "$PROJECT_DIR/target/python/run.sh"
+
+if [ $? -eq 0 ]; then
+    echo "Python application built successfully!"
+    echo "Application location: $PROJECT_DIR/target/python/"
+    echo "To run the application, use: $PROJECT_DIR/target/python/run.sh"
+    echo "Available commands:"
+    echo "  $PROJECT_DIR/target/python/run.sh              # 运行主应用"
+    echo "  $PROJECT_DIR/target/python/run.sh web          # 运行Web应用"
+    echo "  $PROJECT_DIR/target/python/run.sh gui          # 运行GUI应用"

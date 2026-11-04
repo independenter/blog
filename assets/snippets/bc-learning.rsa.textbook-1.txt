@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.textbook · 来源 RsaEssenceTest.java:456-477
+
+    private static final BigInteger P_BIG = primeCoprimeTo(1024, F4);
+    private static final BigInteger Q_BIG = primeCoprimeTo(1024, F4);
+    private static final BigInteger[] KEY = keyGen(P_BIG, Q_BIG, F4);
+
+    // 位长 / 字节长度的换算（本文件所有 k、emLen、hLen、psLen 都是这套算术）：
+    //   bitLength(x) = x 的最高有效 1 位的位置，等于 ⌊log2 x⌋ + 1（x = 0 时定义为 0）
+    //   (bits + 7) / 8 = ⌈bits/8⌉：整数除法版的"向上取整"，即表示 x 所需的最少字节数
+    //   本例 n 是 2048-bit 级的模数 ⇒ k = 256 字节；"一个 RSA 块"就是 k 字节大端无符号整数
+    //   注意 bitLength(n) 常常比"p、q 位数之和"少几位：两个随机素数相乘，n 的最高几位经常是 0，
+    //   于是"1024+1024 的密钥"里 n 实际可能只有 2047 位 —— 这个细节正是下面 EM_BITS 的看点。
+    /** k = 模数的字节数 —— 所有填充过程都以它为长度基准。 */
+    private static final int K = (KEY[N].bitLength() + 7) / 8;
+
+    /**
+     * RFC 8017：modBits = bitLength(n)，emBits = modBits - 1，emLen = (emBits+7)/8。
+     * 关键细节：n 是两个随机大素数的乘积，它的最高几位经常是 0 —— 本例的 n 就只有
+     * 2046 个有效 bit，于是 8*k - emBits = 2，首位掩码是 0x3f 而不是 0x7f。
+     * 用"8k-1"去算掩码是一个真实的、能导致互操作失败的 bug（BC 会拒绝我们的签名）。
+     * <pre>
+     *   逐字母（这三个量就是 PSS 那两条公式里全部的"长度算术"）：
+     *     modBits = bitLength(n)             n 真正占用的位数。两枚 1024-bit 素数相乘只会落在
+     *                                        2047 或 2048 位（名义上的"2048-bit 密钥"就是这个意思）

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.keygen · 来源 RsaEssenceTest.java:2319-2340
+
+                publicOpBytes(KEY, privateCrtBytes(KEY, dataFlipped, "modExp"), "modExp"), body);
+            Tracer.traceDecision("verify", new Object[]{
+                "scheme", names[i], "flippedByte", K - 2
+            }, true, "verify", "OAEP 消息位篡改必须被拒绝");
+        }
+
+        // PSS 的 EM 末尾是固定 trailer 0xBC；它的 maskedDB 覆盖整条消息，所以改任何一位都会失败
+        int[] pssPositions = new int[]{ 100, K - 2, K - 1 };
+        for (int i = 7; i <= 8; i++)
+        {
+            byte[] emForFlip = padByScheme(i, body);
+            for (int j = 0; j < pssPositions.length; j++)
+            {
+                int at = pssPositions[j];
+                byte[] oneFlipped = emForFlip.clone();
+                oneFlipped[at] = (byte)(oneFlipped[at] ^ 0x01);
+                assertRejected(names[i] + "（改第 " + at + " 字节）", i,
+                    publicOpBytes(KEY, privateCrtBytes(KEY, oneFlipped, "modExp"), "modExp"), body);
+                Tracer.traceDecision("verify", new Object[]{
+                    "scheme", names[i], "flippedByte", at
+                }, true, "verify", "PSS 任意位篡改必须被拒绝");
+            }

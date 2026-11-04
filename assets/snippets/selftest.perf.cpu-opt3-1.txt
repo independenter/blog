@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-opt3 · 来源 cpu_optimize3.py:22-43
+
+def main():
+    remote = RemoteTool(config_path=CONFIG_PATH)
+    try:
+        remote.connect()
+        print("SSH 连接成功\n")
+    except Exception as e:
+        print("SSH 连接失败: {}".format(e))
+        sys.exit(1)
+
+    r = remote
+
+    def run(cmd, desc=""):
+        if desc:
+            print("\n>> {}".format(desc))
+        print("$ {}".format(cmd))
+        try:
+            _, out, err = r.exec(cmd, timeout=30)
+            out = out.strip()
+            if err.strip():
+                print("[stderr] {}".format(err.strip()[:200]))
+            if out:
+                print(out[:2000])

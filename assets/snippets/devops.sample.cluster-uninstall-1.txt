@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.cluster-uninstall · 来源 uninstall.py:267-288
+
+def interactive_select_nodes(config: Dict[str, Any]) -> tuple[List[str], List[str]]:
+    """Interactive node selection with master protection.
+
+    Returns:
+        (selected_masters, selected_workers)
+    """
+    all_masters = config.get("nodes", {}).get("master", [])
+    all_workers = config.get("nodes", {}).get("workers", [])
+
+    print()
+    print(color("  Node Selection  ", Colors.OKBLUE + Colors.BOLD).center(50, "-"))
+    print()
+
+    if all_masters:
+        print("  Masters:")
+        for node in all_masters:
+            print(f"    [{color('M', Colors.FAIL)}] {node.get('name')} ({node.get('ip')})")
+        print()
+
+    if all_workers:
+        print("  Workers:")
+        for node in all_workers:

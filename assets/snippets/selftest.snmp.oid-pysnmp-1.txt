@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.snmp.oid-pysnmp · 来源 snmp_test_pysnmp.py:184-204
+
+async def test_oid(snmp_engine, item):
+    """测试单个 OID"""
+    if item["method"] == "GET":
+        return await snmp_get(snmp_engine, item["oid"])
+    else:
+        return await snmp_walk(snmp_engine, item["oid"])
+
+
+async def main():
+    """主函数"""
+    output_file = Path("snmp_results.json")
+    
+    # 创建 SNMP 引擎
+    snmp_engine = SnmpDispatcher()
+    
+    print("=" * 60)
+    print("SNMP OID 测试报告")
+    print(f"目标主机: {TARGET_HOST}:{SNMP_PORT}")
+    print(f"测试时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("=" * 60)
+    print()

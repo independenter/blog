@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.file-delete · 来源 FilePanel.cpp:54-75
+
+    std::function<void()> refresh = [=] {
+        auto fs = ctx.mgr->listFiles();
+        tbl->setRowCount((int)fs.size());
+        for (int i = 0; i < (int)fs.size(); i++) {
+            QStringList cells;
+            cells << s2q(fs[i].name) << QString::number(fs[i].size)
+                  << QString("0x%1").arg(fs[i].readRights, 2, 16, QChar('0')).toUpper()
+                  << QString("0x%1").arg(fs[i].writeRights, 2, 16, QChar('0')).toUpper();
+            for (int c = 0; c < cells.size(); c++)
+                tbl->setItem(i, c, new QTableWidgetItem(cells[c]));
+        }
+        if (fs.empty()) tail->setPlainText("该应用下还没有文件 (硬件 SKF 库可能未实现文件接口)。");
+    };
+    btnRefresh->connect(btnRefresh, &QPushButton::clicked, [refresh] { refresh(); });
+    btnDelete->connect(btnDelete, &QPushButton::clicked, [=] {
+        int r = tbl->currentRow();
+        if (r < 0) {
+            show("删除文件", false, "未选中行");
+            return;
+        }
+        QString name = tbl->item(r, 0)->text();
+        if (QMessageBox::question(page, "确认删除", "删除文件 " + name + " ?") != QMessageBox::Yes)

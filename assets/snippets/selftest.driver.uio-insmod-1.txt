@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.driver.uio-insmod · 来源 insmod_uio.sh:59-80
+
+    echo "设置${PAGE_SIZE}kB大页数量为: $PAGE_COUNT"
+    echo "$PAGE_COUNT" > "$SYS_HUGEPAGE_PATH" || { echo "错误：设置大页数量失败！"; exit 1; }    
+elif [ -f "$SYS_HUGEPAGE_PATH2" ]; then
+    echo "设置${PAGE_SIZE}kB大页数量为: $PAGE_COUNT"
+    echo "$PAGE_COUNT" > "$SYS_HUGEPAGE_PATH2" || { echo "错误：设置大页数量失败！"; exit 1; }
+else
+    echo "警告：系统不支持${PAGE_SIZE}kB大页尺寸，尝试使用默认2048kB..."
+    SYS_HUGEPAGE_PATH="/sys/devices/system/node/node0/hugepages/hugepages-2048kB/nr_hugepages"
+    if [ -f "$SYS_HUGEPAGE_PATH" ]; then
+        echo "$PAGE_COUNT" > "$SYS_HUGEPAGE_PATH" || { echo "错误：设置默认大页数量失败！"; exit 1; }
+    else
+        echo "错误：系统不支持大页配置！"
+        exit 1
+    fi
+fi
+
+echo -e "\n===== 配置结果验证 ====="
+echo "挂载信息："
+mount | grep "$MOUNT_POINT"
+echo -e "\n大页配置："
+if [ -f "$SYS_HUGEPAGE_PATH" ]; then
+	cat "$SYS_HUGEPAGE_PATH"

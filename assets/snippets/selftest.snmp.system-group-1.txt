@@ -1,0 +1,22 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.snmp.system-group · 来源 snmp_test.py:219-237
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump({
+            "timestamp": datetime.now().isoformat(),
+            "host": SNMP_HOST,
+            "summary": {
+                "total": total,
+                "ok": total_ok,
+                "fail": total_fail,
+                "timeout": total_timeout
+            },
+            "results": results
+        }, f, ensure_ascii=False, indent=2)
+    print(f"\n详细结果已保存: {output_file}")
+
+    return 0 if total_fail + total_timeout == 0 else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

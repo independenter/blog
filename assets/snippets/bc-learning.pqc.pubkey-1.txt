@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.pubkey · 来源 PqcEssenceTest.java:435-456
+
+    private static boolean allZero(int[] a)
+    {
+        for (int i = 0; i < a.length; i++)
+        {
+            if (a[i] != 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** 除 skip 这一个下标外，其余系数全是 0。 */
+    private static boolean allZeroExcept(int[] a, int skip)
+    {
+        for (int i = 0; i < a.length; i++)
+        {
+            if (i != skip && a[i] != 0)
+            {
+                return false;
+            }
+        }

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.app-enum · 来源 SkfApi.cpp:71-92
+
+void* sym(void* h, const char* name) {
+#ifdef _WIN32
+    return (void*)GetProcAddress((HMODULE)h, name);
+#else
+    (void)h;
+    return dlsym(h, name);
+#endif
+}
+
+void closeLib(void* h) {
+    if (!h) return;
+#ifdef _WIN32
+    FreeLibrary((HMODULE)h);
+#else
+    dlclose(h);
+#endif
+}
+
+}  // namespace
+
+// BIND: 解析函数指针; 未解析到的记入 api.missing, 由上层决定是否降级为"不支持"。
+#define UK_BIND(field)                                                  \

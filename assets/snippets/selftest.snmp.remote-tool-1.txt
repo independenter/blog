@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.snmp.remote-tool · 来源 remote_tool.py:63-84
+
+    def __enter__(self):
+        return self.connect()
+
+    def __exit__(self, *args):
+        self.close()
+
+    def exec(self, cmd, timeout=1200, max_out=100000):
+        """Execute command with drain pattern to avoid deadlock on large output"""
+        if not self.client:
+            raise RuntimeError("Not connected")
+
+        stdin, stdout, stderr = self.client.exec_command(cmd, timeout=timeout)
+
+        out_chunks = []
+        err_chunks = []
+        deadline = time.time() + timeout
+
+        while True:
+            if stdout.readable():
+                chunk = stdout.read(65536)
+                if chunk:
+                    out_chunks.append(chunk.decode('utf-8', errors='replace'))

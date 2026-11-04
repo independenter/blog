@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.skf.pin · 来源 SkfApi.cpp:121-141
+
+    UK_BIND(DisConnectDev);
+    UK_BIND(GetDevState);
+    UK_BIND(SetLabel);
+    UK_BIND(GetDevInfo);
+    UK_BIND(LockDev);
+    UK_BIND(UnlockDev);
+    UK_BIND(Transmit);
+
+    UK_BIND(ChangeDevAuthKey);
+    UK_BIND(DevAuth);
+    UK_BIND(ChangePIN);
+    UK_BIND(GetPINInfo);
+    UK_BIND(VerifyPIN);
+    UK_BIND(UnblockPIN);
+    UK_BIND(ClearSecureState);
+
+    UK_BIND(CreateApplication);
+    UK_BIND(EnumApplication);
+    UK_BIND(DeleteApplication);
+    UK_BIND(OpenApplication);
+    UK_BIND(CloseApplication);

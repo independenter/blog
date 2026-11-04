@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.cert.ca-issue · 来源 CertPanel.h:177-198
+
+            std::string cn;
+            if (!ce->cmsVerify(cms, out, cn)) {
+                cmsStatus->setText("CMS 验签失败 ✗ (消息被篡改或签名无效)");
+                return;
+            }
+            const alg::Bytes local = algui::textBytes(contentEd);
+            const bool same = !local.empty() && local == out;
+            cmsStatus->setText("CMS 验签通过 ✓ 签名者 CN=" + QString::fromStdString(cn) +
+                               (local.empty() ? "" : (same ? " ; 原文一致 ✓" : " ; 原文不一致 ✗")));
+            detail->setPlainText("验签还原原文:\n" + QString::fromStdString(alg::toHex(out)));
+        });
+        connect(envBtn, &QPushButton::clicked, this, [ce, contentEd, cmsEd, cmsStatus]() {
+            const alg::Bytes content = algui::textBytes(contentEd);
+            const alg::Bytes cms = ce->cmsEnvelop(content);
+            if (cms.empty()) { cmsStatus->setText("信封失败: 需当前证书且原文非空"); return; }
+            cmsEd->setPlainText(QString::fromStdString(alg::toHex(cms)));
+            cmsStatus->setText("CMS 信封完成: " + QString::number(cms.size()) + " 字节 (SM2+SM4-CBC)");
+        });
+        connect(deenvBtn, &QPushButton::clicked, this, [ce, cmsEd, cmsStatus, detail]() {
+            const alg::Bytes cms = algui::hexBytes(cmsEd);
+            const alg::Bytes out = ce->cmsDeenvelop(cms);
+            if (out.empty()) {

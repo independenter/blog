@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm9.decap · 来源 AlgSm9.cpp:567-588
+
+    std::memset(&key, 0, sizeof(key));
+    uint8_t doct[129];
+    if (dePriv.size() == 128) { doct[0] = 0x04; std::memcpy(doct + 1, dePriv.data(), 128); }
+    else if (dePriv.size() == 129 && dePriv[0] == 0x04) { std::memcpy(doct, dePriv.data(), 129); }
+    else { logOp("decDev", Rc::InvalidArg, t.ms(), "用户私钥 de 需 128B(原始) 或 129B(0x04||x||y)"); return {}; }
+    if (sm9_z256_twist_point_from_uncompressed_octets(&key.de, doct) != 1) {
+        logOp("decDev", Rc::InvalidArg, t.ms(), "de 点导入失败 (不在曲线上)"); return {};
+    }
+    SM9_Z256_POINT C1;
+    uint8_t c1oct[65]; c1oct[0] = 0x04; std::memcpy(c1oct + 1, rawCt.data(), 64);
+    if (sm9_z256_point_from_uncompressed_octets(&C1, c1oct) != 1) {
+        logOp("decDev", Rc::InvalidArg, t.ms(), "C1 点非法"); return {};
+    }
+    const uint8_t* C3 = rawCt.data() + 64;
+    size_t c2len = rawCt.size() - 64 - 32;
+    const uint8_t* C2 = rawCt.data() + 64 + 32;
+    uint8_t K[48];
+    if (sm9_kem_decrypt(&key, id.data(), id.size(), &C1, sizeof(K), K) != 1) {
+        logOp("decDev", Rc::CryptoError, t.ms(), "KEM 解密失败 (de 或 C1 无效)"); return {};
+    }
+    uint8_t dg[SM3_DIGEST_SIZE];
+    { SM3_CTX cc; sm3_init(&cc); sm3_update(&cc, C2, c2len); sm3_update(&cc, K + 16, 32); sm3_finish(&cc, dg); }

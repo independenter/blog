@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.yixiu.activation · 来源 ActivationDialog.xaml:22-43
+
+            <TextBlock Text="🔐" FontSize="32" Margin="0,0,10,0"/>
+            <StackPanel>
+                <TextBlock Text="许可证激活" FontSize="20" FontWeight="Bold" Foreground="#2c3e50"/>
+                <TextBlock Text="请上传管理员签发的许可证文件 (.dat)" FontSize="12" Foreground="#7f8c8d"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 机器指纹 -->
+        <Border Grid.Row="1" BorderBrush="#eee" BorderThickness="1" Padding="12" CornerRadius="6"
+                Background="#f8f9fa" Margin="0,0,0,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="机器指纹" FontSize="12" FontWeight="Bold" Foreground="#555" Margin="0,0,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.cert.self-signed · 来源 AlgCert.cpp:30-51
+
+std::string utcText(time_t t) {
+    long long days = static_cast<long long>(t) / 86400;
+    int secs = static_cast<int>(static_cast<long long>(t) % 86400);
+    if (secs < 0) { secs += 86400; --days; }
+    // Howard Hinnant civil_from_days
+    days += 719468;
+    long long era = (days >= 0 ? days : days - 146096) / 146097;
+    long long doe = days - era * 146097;
+    long long yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+    long long y = yoe + era * 400;
+    long long doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    long long mp = (5 * doy + 2) / 153;
+    long long d = doy - (153 * mp + 2) / 5 + 1;
+    long long m = mp + (mp < 10 ? 3 : -9);
+    if (m <= 2) ++y;
+    char buf[32];
+    std::snprintf(buf, sizeof(buf), "%04lld-%02lld-%02lld %02d:%02d:%02d UTC",
+                  y, m, d, secs / 3600, (secs % 3600) / 60, secs % 60);
+    return buf;
+}
+
+// DN 字段 oid -> 可读名

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-quantum · 来源 Flows.java:515-536
+
+    private static FlowDefinition rsaBlocks()
+    {
+        FlowDefinition flow = new FlowDefinition("RSA 分块加密");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "split", "按 k−11 字节分块", FlowNodeType.OPERATION, "长消息切块");
+        loop(flow, "blockLoop", "逐块 RSA", FlowLoopKind.BLOCK, "", "对一块做模幂", "每块独立加密");
+        node(flow, "modExp", "cᵢ = mᵢᵉ mod n", FlowNodeType.OPERATION, "原语");
+        node(flow, "concat", "拼接密文块", FlowNodeType.OPERATION, "按序拼接");
+        node(flow, "compare", "解密还原原文?", FlowNodeType.DECISION, "往返一致");
+        node(flow, "end", "结束", FlowNodeType.TERMINAL, "");
+
+        chain(flow, "start", "split", "blockLoop", "modExp", "concat", "compare", "end");
+        flow.addEdge("modExp", "blockLoop", "下一块");
+        flow.addEdge("compare", "end", "是");
+        flow.setStartNodeId("start");
+        return flow;
+    }
+
+    // ------------------------------------------------------------------ SM9
+
+    private static FlowDefinition sm9Key()

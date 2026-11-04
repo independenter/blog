@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.small-ca · 来源 SmallCa.cpp:17-37
+
+#include <fstream>
+#include <sstream>
+
+namespace uk {
+
+// 注意: GmSSL 的 <gmssl/mem.h> 没有 extern "C" 包裹, 在 C++ 里 include 会得到
+// 被修饰的函数名从而链接失败, 因此这里按 C 链接单独声明所需的清零函数。
+extern "C" void gmssl_secure_clear(void* ptr, size_t len);
+
+static const char* kDefaultId = "1234567812345678";  // GM/T 0009 规定的 SM2 默认用户 ID
+static const int kSigAlg = OID_sm2sign_with_sm3;
+
+static bool sm3Hash(const uint8_t* d, size_t n, uint8_t out[32]) {
+    SM3_CTX ctx;
+    sm3_init(&ctx);
+    sm3_update(&ctx, d, n);
+    sm3_finish(&ctx, out);
+    return true;
+}
+
+// ---------------------------------------------------------------- 小工具

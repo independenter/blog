@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.scalarmul · 来源 Sm2EssenceTest.java:1357-1378
+
+    private static final int SEED_SPACE = 256;
+
+    /**
+     * 弱随机池：k 只从 [1, K_POOL] 里取 —— 等价于"只生成 2 字节随机数当 k"的实现。
+     * K_POOL = 1024 = 2¹⁰ 就是值域大小（有效熵上界 10 bit，而 k 需要约 255 bit），
+     * 它同时决定两件事：可枚举性（攻击 a）和撞车概率（攻击 b，生日悖论下 128 个样本必撞）。
+     */
+    private static final int K_POOL = 1024;
+
+    /**
+     * 攻击公式①：已知 k 时直接反解私钥。<b>d = (k - s)·(r + s)⁻¹ mod n</b>，一次模逆。
+     * 参数全是普通的大整数，返回也是一个普通的大整数 —— 没有任何"拿到签名的对象再调方法"。
+     *
+     * <p>推导（就是上面那条一次方程的解，逐项对照代码）：
+     * <pre>
+     *   s = (1+d)⁻¹ (k − r·d)                 | 两边乘 (1+d)，消掉那个讨厌的模逆
+     *   s + s·d = k − r·d
+     *   s·d + r·d = k − s                      | 含 d 的项到左边
+     *   d·(s + r) = k − s                      | coefficient = (r + s) mod n，即 d 的系数
+     *   d = (k − s) · (r + s)⁻¹  (mod n)       | 一次模逆落地
+     * </pre>
+     * 三个入参的来源都是"公开信息 + 一个猜中的 k"：r、s 直接读自签名 DER，

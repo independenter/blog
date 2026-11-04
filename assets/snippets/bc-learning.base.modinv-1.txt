@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.base.modinv · 来源 ModularInverseTest.java:54-75
+
+    @Test
+    public void testModularInverse() {
+        // 情况1：互素，有逆元
+        int a = 3;
+        int m = 17;
+
+        // 用扩展欧几里得算法计算逆元
+        int inverse = modInverse(a, m);
+
+        log.info("{} 在模 {} 下的逆元是: {}", a, m, inverse);
+
+        // 验证：a * inverse ≡ 1 (mod m)
+        int verification = (a * inverse) % m;
+        log.info("验证: {} × {} mod {} = {}", a, inverse, m, verification);
+        assertEquals(1, verification);
+
+        // 情况2：不互素，无逆元
+        int a2 = 2;
+        int m2 = 6;
+
+        try {
+            int inverse2 = modInverse(a2, m2);

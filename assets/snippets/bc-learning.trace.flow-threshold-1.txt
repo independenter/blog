@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-threshold · 来源 Flows.java:200-220
+
+    private static void verifyPhase(FlowDefinition flow, String prefix, String label,
+        String enterDesc, String finalDesc)
+    {
+        node(flow, prefix, label, FlowNodeType.GROUP, "sm2Verify(pub, e, rs)");
+        nodeIn(flow, prefix + "_enter", prefix + ":sm2Verify", "进入 sm2Verify(pub, e, rs)",
+            FlowNodeType.OPERATION, enterDesc);
+        nodeIn(flow, prefix + "_checkFormat", prefix + ":checkFormat", "r,s ∈ [1,n-1] ?",
+            FlowNodeType.DECISION, "格式检查");
+        nodeIn(flow, prefix + "_computeT", prefix + ":computeT", "t = (r + s) mod n",
+            FlowNodeType.OPERATION, "");
+        nodeIn(flow, prefix + "_checkT", prefix + ":checkT", "t == 0 ?", FlowNodeType.DECISION, "");
+        flow.addNode(prefix + "_mul_sG", "s·G 标量乘", FlowNodeType.LOOP, prefix + ":mul_sG",
+            "double-and-add：逐位扫描 s").asLoop(FlowLoopKind.BIT, "s", null);
+        flow.addNode(prefix + "_mul_tP", "t·P 标量乘", FlowNodeType.LOOP, prefix + ":mul_tP",
+            "double-and-add：逐位扫描 t").asLoop(FlowLoopKind.BIT, "t", null);
+        nodeIn(flow, prefix + "_ecOp", prefix + ":ecOp", "(x₁,y₁) = sG + tP",
+            FlowNodeType.OPERATION, "点加");
+        nodeIn(flow, prefix + "_checkPoint", prefix + ":checkPoint", "point == O ?",
+            FlowNodeType.DECISION, "");
+        nodeIn(flow, prefix + "_finalCheck", prefix + ":finalCheck", "(e + x₁) mod n == r ?",
+            FlowNodeType.DECISION, finalDesc);

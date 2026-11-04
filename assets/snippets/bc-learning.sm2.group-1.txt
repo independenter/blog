@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm2.group · 来源 Sm2EssenceTest.java:908-929
+
+    @TraceExecution(value = "SM2 标准曲线常数", algorithm = "SM2", flow = "SM2-CURVE")
+    @Test
+    public void curveConstantsAreTheStandardCurve()
+    {
+        setHelperTrace(true);
+        Tracer.trace("start", new Object[]{"curve", "sm2p256v1"}, null, "start");
+
+        X9ECParameters std = GMNamedCurves.getByName("sm2p256v1");
+        Tracer.trace("params", new Object[]{
+            "p", P, "a", A, "b", B, "n", N, "Gx", GX, "Gy", GY
+        }, new Object[]{"curve", std.getCurve(), "G", std.getG()}, "params");
+        Assert.assertEquals("p 必须与标准一致", std.getCurve().getField().getCharacteristic(), P);
+        Assert.assertEquals("a 必须与标准一致", modP(std.getCurve().getA().toBigInteger()), A);
+        Assert.assertEquals("b 必须与标准一致", modP(std.getCurve().getB().toBigInteger()), B);
+        Assert.assertEquals("n 必须与标准一致", std.getN(), N);
+        Assert.assertEquals("Gx 必须与标准一致", std.getG().getAffineXCoord().toBigInteger(), GX);
+        Assert.assertEquals("Gy 必须与标准一致", std.getG().getAffineYCoord().toBigInteger(), GY);
+        boolean gOnCurve = onCurve(G);
+        Tracer.traceDecision("onCurve", new Object[]{"point", G}, gOnCurve,
+            "onCurve", "y² ≡ x³ + ax + b (mod p)");
+        Assert.assertTrue("生成元必须在曲线上", gOnCurve);
+        Assert.assertEquals("n 必须是 G 的阶：nG = 无穷远点", 0, mul(N, G).length);

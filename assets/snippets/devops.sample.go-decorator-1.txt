@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.go-decorator · 来源 decorators.go:24-45
+
+func LogExecutionTime(name string, fn func()) {
+	start := time.Now()
+	fn()
+	elapsed := time.Since(start)
+	fmt.Printf("%s 执行时间: %s\n", name, elapsed)
+}
+
+// SingletonProvider 单例提供者结构体
+type SingletonProvider struct {
+	instances map[string]interface{}
+}
+
+// NewSingletonProvider 创建新的单例提供者
+func NewSingletonProvider() *SingletonProvider {
+	return &SingletonProvider{
+		instances: make(map[string]interface{}),
+	}
+}
+
+// GetInstance 获取单例实例
+func (s *SingletonProvider) GetInstance(name string, creator func() interface{}) interface{} {
+	if instance, exists := s.instances[name]; exists {

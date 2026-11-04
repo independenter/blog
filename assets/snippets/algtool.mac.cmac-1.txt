@@ -1,0 +1,21 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.mac.cmac · 来源 AlgMac.cpp:38-55
+
+        std::strncpy(cipherBuf, alg_.c_str(), sizeof(cipherBuf) - 1);
+        cipherBuf[sizeof(cipherBuf) - 1] = '\0';
+        params[0] = OSSL_PARAM_construct_utf8_string("cipher", cipherBuf, 0);
+        params[1] = OSSL_PARAM_construct_end();
+        if (EVP_MAC_init(ctx, key.data(), key.size(), params) == 1 &&
+            EVP_MAC_update(ctx, data.data(), data.size()) == 1) {
+            unsigned char tag[EVP_MAX_MD_SIZE]; size_t tagl = 0;
+            if (EVP_MAC_final(ctx, tag, &tagl, sizeof(tag)) == 1) out.assign(tag, tag + tagl);
+        }
+        if (out.empty()) ALGLOG_ERROR(name_) << "CMAC failed: " << ERR_error_string(ERR_get_error(), nullptr);
+        EVP_MAC_CTX_free(ctx);
+    }
+    EVP_MAC_free(m);
+    if (!out.empty()) ALGLOG_INFO(name_) << "cmac ok cost=" << t.ms() << "ms tag=" << out.size() << "B";
+    return out;
+}
+
+} // namespace alg

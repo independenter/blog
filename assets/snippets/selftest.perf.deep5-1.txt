@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.deep5 · 来源 deep_dive5.py:169-190
+
+void* other_worker(void *arg) {
+    (void)arg;
+    pthread_setname_np(pthread_self(), "other0");
+    struct timespec st, now;
+    clock_gettime(CLOCK_MONOTONIC, &st);
+    for (;;) {
+        usleep(10);
+        ot_count++;
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        if (now.tv_sec - st.tv_sec >= 3) break;
+    }
+    return NULL;
+}
+
+int main(void) {
+    pthread_t t1, t2;
+    pthread_create(&t1, NULL, c0_worker, NULL);
+    pthread_create(&t2, NULL, other_worker, NULL);
+    pthread_join(t1, NULL);
+    pthread_join(t2, NULL);
+    printf("C0-sim0 loops(3s): %llu (%.1f/s)   other0 loops(3s): %llu (%.1f/s)\n",
+           c0_count, c0_count / 3.0, ot_count, ot_count / 3.0);

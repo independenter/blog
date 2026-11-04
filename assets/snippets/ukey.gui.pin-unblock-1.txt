@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.pin-unblock · 来源 PinPanel.cpp:215-236
+
+        std::string err;
+        bool ok = ctx.mgr->createApp(q2s(adName->text()), q2s(adAdmin->text()), q2s(adUser->text()),
+                                     (uint32_t)adRetry->value(), err);
+        show("创建应用", ok, err);
+        ctx.done("创建应用", ok, err);
+        refreshAll();
+        if (ok) apps->setCurrentText(adName->text());  // 刚建好的应用直接成为当前项
+    });
+    btnOpenApp->connect(btnOpenApp, &QPushButton::clicked, [&ctx, apps, pinOld, refreshAll, tail, show] {
+        std::string err;
+        bool ok = ctx.mgr->openApp(q2s(apps->currentText()), err);
+        if (!ok) ok = ctx.mgr->verifyPin(USER_PIN, q2s(pinOld->text()), nullptr, err) &&
+                      ctx.mgr->openApp(q2s(apps->currentText()), err);
+        show("打开应用 " + apps->currentText(), ok, err);
+        ctx.done("打开应用", ok, err);
+        refreshAll();
+    });
+    btnCloseApp->connect(btnCloseApp, &QPushButton::clicked, [&ctx, refreshAll, tail, show] {
+        ctx.mgr->closeContainer();
+        ctx.mgr->closeApp();
+        show("关闭应用", true, "");
+        refreshAll();

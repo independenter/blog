@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukeysite.runtime.soft-ukey · 来源 softUkey.js:156-177
+
+    return toHex(sm2Sign(this.signPriv(pin), sdk.DEFAULT_ID, msg));
+  }
+
+  verify(data, sigHex, pubHex) {
+    const msg = typeof data === 'string' && /^[0-9a-fA-F]+$/.test(data) && data.length % 2 === 0
+      ? fromHex(data) : utf8b(data);
+    return sm2Verify(fromHex(pubHex || this.state.signPub), sdk.DEFAULT_ID, msg, fromHex(sigHex));
+  }
+
+  /** GM/T 0016 的 SKF_CalcMAC: 对设备内缓存区做 HMAC-SM3, 用作 GetMAC 之外的完整性凭证。 */
+  mac(data, pin) {
+    const key = this.signPriv(pin).slice(0, 16);
+    return toHex(hmacSm3(key, typeof data === 'string' ? utf8b(data) : data)).toUpperCase();
+  }
+
+  csr(attrs, pin) {
+    this.requireLogin();
+    const subject = Object.assign({}, this.state.subject, attrs || {});
+    return der.toB64(der.buildCsr(subject, fromHex(this.state.signPub), this.signPriv(pin)));
+  }
+
+  cert(isSign) {

@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.go-crawler · 来源 crawler.go:89-109
+
+func (c *WebCrawler) extractTitle(n *html.Node) string {
+	if n.Type == html.ElementNode && n.Data == "title" {
+		if n.FirstChild != nil {
+			return n.FirstChild.Data
+		}
+		return ""
+	}
+
+	for child := n.FirstChild; child != nil; child = child.NextSibling {
+		if title := c.extractTitle(child); title != "" {
+			return title
+		}
+	}
+
+	return ""
+}
+
+// extractLinksAndImages 提取页面中的链接和图片
+func (c *WebCrawler) extractLinksAndImages(n *html.Node) ([]Link, []Image) {
+	var links []Link
+	var images []Image

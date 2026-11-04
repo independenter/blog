@@ -1,0 +1,23 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.api-verify · 来源 test_data.py:183-202
+
+def build_asy_encrypt(did=None):
+    """非对称加密（外部密钥）"""
+    body = {
+        "algorithmType": ALGORITHM_TYPE,
+        "data": _current_data_hex,
+        "publicKey": PUBLIC_KEY,
+        "plainIsEncode": False,
+    }
+    return "/api/crypto/asyEncrypt", body
+
+
+def build_asy_decrypt(did=None):
+    """非对称解密（外部密钥）"""
+    body = {
+        "algorithmType": ALGORITHM_TYPE,
+        "encryptData": SAMPLE_CIPHER or _current_data_b64,
+        "privateKey": PRIVATE_KEY,
+        "plainIsEncode": False,
+    }
+    return "/api/crypto/asyDecrypt", body

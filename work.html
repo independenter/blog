@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>全部工具目录 · 一休密码工程工作台</title>
+<meta name="description" content="一休作品集全量目录：8 个平台、49 个模块、600+ 条工具条目，支持搜索、筛选与排序。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230b0d0e'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%233ee0c8'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23e7ecec' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="catalog.css">
+</head>
+<body data-density="comfortable">
+<div class="shell">
+
+  <aside class="rail" id="rail" data-open="false"></aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="rail-toggle" type="button" aria-label="打开导航">≡</button>
+      <nav class="crumbs" aria-label="面包屑">
+        <a href="index.html">一休</a><span class="sep">/</span><span>全部工具目录</span>
+      </nav>
+      <div class="topbar-filters" id="active-chips"></div>
+      <div class="topbar-right">
+        <span class="result-count"><b id="result-n">0</b> / <span id="result-total">0</span></span>
+        <div class="density" role="group" aria-label="列表密度">
+          <button type="button" data-density-set="comfortable" aria-pressed="true">54px</button>
+          <button type="button" data-density-set="compact" aria-pressed="false">42px</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="work-layout">
+
+        <aside class="filters" id="filters" aria-label="筛选条件"></aside>
+
+        <section aria-label="工具列表">
+          <label class="work-search">
+            <span class="mono">/</span>
+            <input id="q" type="search" placeholder="搜索名称、ID、技术栈，如 SM2 / ukey / Locust…" aria-label="搜索工具">
+          </label>
+
+          <div class="toolbar">
+            <span class="eyebrow" id="sort-label">排序</span>
+            <select class="sort-select" id="sort" aria-label="排序方式">
+              <option value="time-desc">时间 · 新→旧</option>
+              <option value="time-asc">时间 · 旧→新</option>
+              <option value="name">名称 · A→Z</option>
+              <option value="platform">平台 · 分组</option>
+            </select>
+            <span class="grow"></span>
+            <button class="btn" type="button" id="reset-filters">重置筛选</button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="tbl">
+              <colgroup>
+                <col class="col-idx"><col class="col-name"><col class="col-sum"><col class="col-mod"><col class="col-tech"><col class="col-time"><col class="col-vis">
+              </colgroup>
+              <thead>
+                <tr><th>#</th><th>工具</th><th>一句话</th><th>模块</th><th>技术栈</th><th>时间</th><th>可见性</th></tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+            <div class="load-more" id="load-more" aria-live="polite"></div>
+            <div class="empty-state hidden" id="empty">没有匹配的条目<br>试试减少筛选条件或更换关键词</div>
+          </div>
+        </section>
+
+      </div>
+
+      <footer class="site-foot">
+        <span>一休 · 密码工程工作台</span><span class="sep">/</span>
+        <span>数据由 catalog 流水线脱敏生成</span>
+        <span class="right">m15501951002@163.com</span>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script src="catalog-core.js"></script>
+<script>
+(function () {
+  "use strict";
+  const C = window.Catalog;
+  const $ = (id) => document.getElementById(id);
+
+  const COLS = ["id", "title", "vis", "kind", "status", "tech", "upd", "thumb"];
+  const state = {
+    rows: [],
+    q: "",
+    platform: "",
+    tech: "",
+    kind: "",
+    vis: "",
+    year: "",
+    sort: "time-desc",
+    moduleTitles: {},
+    platformTitles: {},
+  };
+
+  const params = new URLSearchParams(location.search);
+  state.q = params.get("q") || "";
+  state.platform = params.get("p") || "";
+  $("q").value = state.q;
+
+  function rowObj(row) {
+    const o = {};
+    COLS.forEach((c, i) => { o[c] = row[i]; });
+    o.pid = o.id.split(".")[0];
+    o.mid = o.id.slice(0, o.id.lastIndexOf("."));
+    return o;
+  }
+
+  function matches(r) {
+    if (state.platform && r.pid !== state.platform) return false;
+    if (state.tech && !r.tech.split(";").includes(state.tech)) return false;
+    if (state.kind && r.kind !== state.kind) return false;
+    if (state.vis && r.vis !== state.vis) return false;
+    if (state.year && !(r.upd || "").startsWith(state.year)) return false;
+    if (state.q) {
+      const q = state.q.toLowerCase();
+      const hay = (r.title + " " + r.id + " " + r.tech + " " + (state.moduleTitles[r.mid] || "")).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  }
+
+  function sortRows(list) {
+    const by = {
+      "time-desc": (a, b) => (b.upd || "").localeCompare(a.upd || "") || a.id.localeCompare(b.id),
+      "time-asc": (a, b) => (a.upd || "").localeCompare(b.upd || "") || a.id.localeCompare(b.id),
+      "name": (a, b) => a.title.localeCompare(b.title, "zh") || a.id.localeCompare(b.id),
+      "platform": (a, b) => a.pid.localeCompare(b.pid) || a.mid.localeCompare(b.mid) || a.id.localeCompare(b.id),
+    };
+    return list.slice().sort(by[state.sort]);
+  }
+
+  function renderRow(r, i) {
+    return "<tr>" +
+      '<td class="col-idx">' + String(i + 1).padStart(3, "0") + "</td>" +
+      '<td class="col-name"><span class="tool-name">' +
+        C.rowThumb(r.thumb, r.title) +
+        '<a href="tool.html?t=' + encodeURIComponent(r.id) + '">' + C.esc(r.title) + "</a></span></td>" +
+      '<td class="col-sum">' + C.esc(r.title === r.id ? "" : shortSummary(r)) + "</td>" +
+      '<td class="col-mod">' + C.esc(r.mid) + "</td>" +
+      '<td class="col-tech">' + C.esc(r.tech) + "</td>" +
+      '<td class="col-time">' + C.esc(r.upd || "—") + "</td>" +
+      '<td class="col-vis">' + C.badge(r.vis) + "</td></tr>";
+  }
+
+  const summaryCache = {};
+  function shortSummary(r) {
+    return summaryCache[r.id] || "";
+  }
+
+  const table = C.createIncrementalTable($("rows"), $("load-more"), renderRow, 60);
+
+  function apply() {
+    const list = sortRows(state.rows.filter(matches));
+    table.setItems(list);
+    $("result-n").textContent = list.length;
+    $("empty").classList.toggle("hidden", list.length !== 0);
+    renderChips();
+    const usp = new URLSearchParams();
+    if (state.q) usp.set("q", state.q);
+    if (state.platform) usp.set("p", state.platform);
+    history.replaceState(null, "", "work.html" + (usp.toString() ? "?" + usp : ""));
+  }
+
+  function renderChips() {
+    const chips = [];
+    const add = (label, key) => {
+      chips.push('<span class="chip" data-active="true">' + C.esc(label) +
+        ' <span class="x" data-clear="' + key + '" role="button" tabindex="0" aria-label="清除">×</span></span>');
+    };
+    if (state.platform) add(state.platformTitles[state.platform] || state.platform, "platform");
+    if (state.tech) add(state.tech, "tech");
+    if (state.kind) add(C.KIND_LABEL[state.kind] || state.kind, "kind");
+    if (state.vis) add(state.vis, "vis");
+    if (state.year) add(state.year, "year");
+    if (state.q) add("“" + state.q + "”", "q");
+    $("active-chips").innerHTML = chips.join("");
+    $("active-chips").querySelectorAll(".x").forEach((x) => {
+      const clear = () => { state[x.dataset.clear] = ""; if (x.dataset.clear === "q") $("q").value = ""; apply(); syncFilterButtons(); };
+      x.addEventListener("click", clear);
+      x.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); clear(); } });
+    });
+  }
+
+  /* ---------- filter sidebar ---------- */
+
+  function group(label, key, items) {
+    const chips = items.map((it) => {
+      const active = state[key] === it.value;
+      return '<button class="f-chip" type="button" data-filter-key="' + key + '" data-filter-value="' + C.esc(it.value) +
+        '" aria-pressed="' + active + '"><span>' + C.esc(it.label) + '</span><span class="n">' + it.n + "</span></button>";
+    }).join("");
+    return '<div class="filter-group"><div class="fg-label">' + label + "</div>" + chips + "</div>";
+  }
+
+  function syncFilterButtons() {
+    document.querySelectorAll("[data-filter-key]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(state[btn.dataset.filterKey] === btn.dataset.filterValue));
+    });
+  }
+
+  function buildFilters(stats, platforms, rows) {
+    const techCount = {};
+    rows.forEach((r) => r.tech.split(";").forEach((t) => { techCount[t] = (techCount[t] || 0) + 1; }));
+    const topTech = Object.entries(techCount).sort((a, b) => b[1] - a[1]).slice(0, 14);
+
+    const years = Object.entries(stats.years || {}).sort((a, b) => b[0].localeCompare(a[0]));
+
+    $("filters").innerHTML =
+      group("平台", "platform",
+        platforms.map((p) => ({ value: p.id, label: p.title, n: p.tools }))) +
+      group("技术栈", "tech",
+        topTech.map(([t, n]) => ({ value: t, label: t, n }))) +
+      group("类型", "kind",
+        Object.keys(C.KIND_LABEL).map((k) => ({ value: k, label: C.KIND_LABEL[k], n: rows.filter((r) => r.kind === k).length }))) +
+      group("可见性", "vis",
+        ["public", "notice"].map((v) => ({ value: v, label: C.VIS_LABEL[v], n: rows.filter((r) => r.vis === v).length }))) +
+      group("年份", "year",
+        years.map(([y, n]) => ({ value: y, label: y, n })));
+
+    document.querySelectorAll("[data-filter-key]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.filterKey;
+        state[key] = state[key] === btn.dataset.filterValue ? "" : btn.dataset.filterValue;
+        syncFilterButtons();
+        apply();
+      });
+    });
+  }
+
+  /* ---------- boot ---------- */
+
+  Promise.all([C.loadPlatforms(), C.loadIndex(), C.loadStats()]).then(([pl, idx, stats]) => {
+    const platforms = pl.platforms;
+    platforms.forEach((p) => { state.platformTitles[p.id] = p.title; });
+
+    state.rows = idx.rows.map(rowObj);
+    state.rows.forEach((r) => {
+      // summary 不在 index 行里；用模块标题暂代，详情页有完整摘要
+      state.moduleTitles[r.mid] = r.mid;
+    });
+
+    // 模块标题需要从平台 JSON 补全：延迟按需加载过于复杂，直接用标题列留空即可
+    C.initShell({
+      stats, platforms, activeNav: "work",
+      activePlatform: state.platform,
+      onSearch: (v) => { state.q = v.trim(); $("q").value = state.q; apply(); },
+    });
+
+    buildFilters(stats, platforms, state.rows);
+
+    // 为「一句话」列补数据：从各平台 JSON 拿 summary（懒加载全部平台后重绘当前批次）
+    Promise.all(platforms.map((p) => C.loadPlatform(p.id))).then((payloads) => {
+      payloads.forEach((d) => {
+        d.tools.forEach((t) => { summaryCache[t.id] = t.summary; });
+        d.platform.modules.forEach((m) => { state.moduleTitles[m.id] = m.title; });
+      });
+      apply();
+    });
+
+    $("result-total").textContent = state.rows.length;
+    $("q").addEventListener("input", () => { state.q = $("q").value.trim(); apply(); });
+    $("sort").addEventListener("change", () => { state.sort = $("sort").value; apply(); });
+    $("reset-filters").addEventListener("click", () => {
+      state.q = state.platform = state.tech = state.kind = state.vis = state.year = "";
+      $("q").value = "";
+      syncFilterButtons();
+      apply();
+    });
+
+    apply();
+  }).catch((err) => {
+    document.querySelector(".table-wrap").innerHTML =
+      '<div class="empty-state">数据加载失败：' + C.esc(err.message) + "</div>";
+  });
+})();
+</script>
+</body>
+</html>

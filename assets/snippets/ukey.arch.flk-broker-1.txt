@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.flk-broker · 来源 FlkBroker.cpp:509-530
+
+            bool nonzero = false;
+            for (ULONG i = 0; i < 6; i++)
+                if (cur->Address[i] != 0) nonzero = true;
+            if (!nonzero) continue;
+            return macToString(cur->Address, 6);
+        }
+        break;
+    }
+    return "";  // 兜底: 助手侧只把 mac 当设备指纹, 空串即可
+#else
+    struct ifaddrs* ifs = nullptr;
+    if (getifaddrs(&ifs) != 0) return "";
+    std::string out;
+    for (struct ifaddrs* i = ifs; i != nullptr; i = i->ifa_next) {
+        if (!i->ifa_addr) continue;
+        const uint8_t* mac = nullptr;
+        size_t maclen = 0;
+#ifdef __APPLE__
+        if (i->ifa_addr->sa_family != AF_LINK) continue;
+        struct sockaddr_dl* sdl = reinterpret_cast<struct sockaddr_dl*>(i->ifa_addr);
+        mac = reinterpret_cast<const uint8_t*>(LLADDR(sdl));
+        maclen = (size_t)sdl->sdl_alen;

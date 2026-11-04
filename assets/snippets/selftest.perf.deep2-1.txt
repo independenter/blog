@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.deep2 · 来源 deep_dive2.py:80-101
+
+def sample_all():
+    data = {}
+    for d in glob.glob('/proc/[0-9]*'):
+        pid = d.rsplit('/', 1)[1]
+        try:
+            with open(d + '/stat', 'rb') as f:
+                stat = f.read().decode('utf-8', 'replace')
+            c1 = stat.rfind(')')
+            comm = stat[stat.find('(') + 1:c1]
+            rest = stat[c1 + 2:].split()
+            utime = int(rest[11]); stime = int(rest[12]); ppid = int(rest[1])
+            with open(d + '/status', 'rb') as f:
+                st2 = f.read().decode('utf-8', 'replace')
+            v = n = 0; th = 0
+            for line in st2.splitlines():
+                if line.startswith('voluntary_ctxt_switches:'):
+                    v = int(line.split()[1])
+                elif line.startswith('nonvoluntary_ctxt_switches:'):
+                    n = int(line.split()[1])
+                elif line.startswith('Threads:'):
+                    th = int(line.split()[1])
+            data[pid] = (comm, ppid, utime, stime, v, n, th)

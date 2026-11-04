@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.threshold-3of5 · 来源 ThresholdSignatureTest.java:295-316
+
+        return lagrangeInterpolateAtZero(xs, shares, modulus);
+    }
+
+    /**
+     * 门限签名：用指定的参与方份额协同签名。
+     *
+     * <p>简化实现：用恢复的私钥直接签名（实际协议应该用局部签名合成）。
+     * 这里只是为了演示协议流程，真正的门限签名协议（如 GG18/GG20）更复杂。
+     *
+     * @param dShares   所有份额
+     * @param signers   参与签名的参与方索引
+     * @param message   待签消息
+     * @param keyBits   密钥位宽
+     * @return 签名（byte[]）
+     */
+    private static byte[] thresholdSign(BigInteger[] dShares, int[] signers, byte[] message,
+        int keyBits)
+        throws Exception
+    {
+        // 简化：先恢复私钥，再用它签名
+        BigInteger[] selectedShares = new BigInteger[signers.length];
+        for (int i = 0; i < signers.length; i++)

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#ffffff" stroke-opacity="0.045"/>
+    </pattern>
+    <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#3ee0c8" fill-opacity="0.22"/>
+    </pattern>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0d0e" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0b0d0e" stop-opacity="0.92"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0b0d0e"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#dots)" opacity="0.55"/>
+  <rect width="1200" height="630" fill="url(#fade)"/>
+  <path d="M0 92H1200" stroke="#23282b" stroke-width="1"/>
+  <path d="M0 556H1200" stroke="#23282b" stroke-width="1"/>
+  <path d="M72 524H196" stroke="#3ee0c8" stroke-width="2"/>
+  <text x="72" y="76" fill="#6f7a7d" font-family="'JetBrains Mono',Consolas,monospace" font-size="20" letter-spacing="4">YIXIU / ENGINEERING NOTES</text>
+  <text x="1128" y="76" text-anchor="end" fill="#e2a35a" font-family="'JetBrains Mono',Consolas,monospace" font-size="20">012</text>
+  <text x="72" y="300" fill="#e7ecec" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="76" font-weight="700">后量子本质</text>
+  <text x="72" y="366" fill="#a9b3b5" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="30">密码学本质重写</text>
+  <text x="72" y="486" fill="#3ee0c8" font-family="'JetBrains Mono',Consolas,monospace" font-size="26">12 NOTES</text>
+  <text x="1128" y="600" text-anchor="end" fill="#6f7a7d" font-family="'PingFang SC','Microsoft YaHei',sans-serif" font-size="20">示意图 · 非真实界面</text>
+</svg>

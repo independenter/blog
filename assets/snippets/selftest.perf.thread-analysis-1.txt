@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.thread-analysis · 来源 thread_analysis.py:88-108
+
+if [ $HSM_COUNT -gt 0 ]; then
+    echo "每个 hsm 平均线程数: $((HSM_TOTAL / HSM_COUNT))"
+fi
+
+echo ""
+echo "--- k3s-server ---"
+K3S_PID=$(pgrep -f 'k3s server' | head -1)
+K3S_TOTAL=0
+if [ -n "$K3S_PID" ]; then
+    K3S_TOTAL=$(ls /proc/$K3S_PID/task 2>/dev/null | wc -l)
+fi
+echo "k3s-server 线程数: $K3S_TOTAL"
+
+echo ""
+echo "--- dockerd ---"
+DOCKERD_PID=$(pgrep dockerd | head -1)
+DOCKERD_TOTAL=0
+if [ -n "$DOCKERD_PID" ]; then
+    DOCKERD_TOTAL=$(ls /proc/$DOCKERD_PID/task 2>/dev/null | wc -l)
+fi
+echo "dockerd 线程数: $DOCKERD_TOTAL"

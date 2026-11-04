@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.master-pub · 来源 Sm9KeyEssenceTest.java:383-404
+
+    @TraceExecution(value = "用户私钥 DER 携带私钥点与主公钥", algorithm = "SM9", flow = "SM9-KEY")
+    @Test
+    public void userKeyDerCarriesPrivateKeyPointPlusMasterPublicKey()
+        throws Exception
+    {
+        Tracer.trace("start", new Object[]{"id", "Alice", "id_enc", "Bob", "hid", Sm9Math.HID_ENC},
+            null, "start");
+
+        BigInteger[][] ppubs = Sm9Math.signMasterPublicKey(HEX_KS);
+        byte[] ds = Sm9Math.pointToOctets(Sm9Math.signPrivateKeyExtract(HEX_KS, ID_ALICE));
+        Tracer.trace("signPrivateKeyExtract", new Object[]{"ks", HEX_KS, "id", "Alice",
+            "hid", Sm9Math.HID_SIGN}, ds, "keygen");
+        ASN1EncodableVector signKey = new ASN1EncodableVector();
+        signKey.add(new DERBitString(ds));
+        signKey.add(new DERBitString(Sm9Math.twistToOctets(ppubs)));
+        Tracer.trace("encodeSignUserKey", new Object[]{"dsLen", ds.length,
+            "ppubsLen", Sm9Math.twistToOctets(ppubs).length},
+            new DERSequence(signKey).getEncoded(), "marshal");
+        ASN1Sequence parsedSign = ASN1Sequence.getInstance(new DERSequence(signKey).getEncoded());
+        Tracer.trace("decodeSignUserKey", new Object[]{"sequenceSize", parsedSign.size()},
+            parsedSign, "unmarshal");
+        Assert.assertEquals("ds 必须与标准答案一字不差", "04" + HEX_DS,

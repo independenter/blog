@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.snmp.cpu-group · 来源 snmp_test.py:190-211
+
+                    for i, s in enumerate(result.get("samples", []), 1):
+                        if len(s) > 60:
+                            s = s[:60] + "..."
+                        print(f"         样本{i}: {s}")
+            else:
+                err = result.get("error", "Unknown error")
+                if len(err) > 80:
+                    err = err[:80] + "..."
+                print(f"         错误: {err}")
+
+    # 汇总
+    print(f"\n\n{'='*60}")
+    print("测试汇总")
+    print(f"{'='*60}")
+    total = total_ok + total_fail + total_timeout
+    print(f"总 OID 数: {total}")
+    print(f"成功: {total_ok} ({100*total_ok/total:.1f}%)")
+    print(f"失败: {total_fail} ({100*total_fail/total:.1f}%)")
+    print(f"超时: {total_timeout} ({100*total_timeout/total:.1f}%)")
+
+    # 按类别统计
+    print(f"\n按类别统计:")

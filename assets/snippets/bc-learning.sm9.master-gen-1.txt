@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.master-gen · 来源 Sm9KeyEssenceTest.java:127-148
+
+    private static final byte[] ID_ALICE = "Alice".getBytes();
+    private static final byte[] ID_BOB = "Bob".getBytes();
+    private static final byte[] MESSAGE = "Chinese IBS standard".getBytes();
+
+    // 三把主私钥标量（GmSSL: hex_ks / hex_ke / hex_kex），都是 64 个十六进制字符 = 32 字节大端。
+    // 注意三个值都以 "0001…" / "0002…" 开头，即第 1 个字节就是 0x00、第 2 个字节只有 0x01/0x02，
+    // 真正的 bitLength 只有 241~242（远不到 256）：
+    // 这正是测试③要和 DER 最短编码对着干的那类值。
+    //   HEX_KS  = 签名主私钥 ks，      Ppubs = ks·P2 ∈ G₂，ds = ks/(ks+H1(Alice,0x01))·P1
+    //   HEX_KE  = 加密主私钥 ke，      Ppube = ke·P1 ∈ G₁，de = ke/(ke+H1(Bob,0x03))·P2
+    //   HEX_KEX = 交换主私钥 kex，      标准样例里另一把，它的 kex·P1 就是下面那个 HEX_PUBE
+    private static final BigInteger HEX_KS = new BigInteger("000130E78459D78545CB54C587E02CF480CE0B66340F319F348A1D5B1F2DC5F4", 16);
+    private static final BigInteger HEX_KE = new BigInteger("0001EDEE3778F441F8DEA3D9FA0ACC4E07EE36C93F9A08618AF4AD85CEDE1C22", 16);
+    private static final BigInteger HEX_KEX = new BigInteger("0002E65B0762D042F51F0D23542B13ED8CFA2E9A0E7206361E013A283905E31F", 16);
+
+    // 标准答案（KAT）：ds 是 G₁ 的点，所以只有 x(32) ‖ y(32) = 128 个十六进制字符，
+    // 前缀 0x04 由测试里手动拼上去（见 "04" + HEX_DS）。
+    private static final String HEX_DS =
+        "A5702F05CF1315305E2D6EB64B0DEB923DB1A0BCF0CAFF90523AC8754AA69820"
+            + "78559A844411F9825C109F5EE3F52D720DD01785392A727BB1556952B2B013D3";
+    // 标准答案 de 是 G₂ 的点，四个 Fp 分量各 32 字节 = 256 个十六进制字符，
+    // 顺序是 GmSSL/国标的编排 x₁ ‖ x₀ ‖ y₁ ‖ y₀（x₁ 是 x 的 u 分量，写在前面；见 Sm9Math.twistToOctets）。

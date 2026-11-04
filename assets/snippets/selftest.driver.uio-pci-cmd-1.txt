@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.driver.uio-pci-cmd · 来源 pci_cmd.h:32-52
+
+#define CH_EN(n)						(1<<(n-1))
+#define CH_EN_WE(n)						(1<<(n+7))
+
+#define TT_FC_MASK						0xfffffff8
+#define TT_FC_MEM2MEM					0
+#define DST_MULTBLK_TYPE_MASK			0xfffffff3
+#define DST_MULTBLK_TYPE_CONTIGUOUS		0
+#define SRC_MULTBLK_TYPE_MASK			0xfffffffc
+#define SRC_MULTBLK_TYPE_CONTIGUOUS		0
+
+
+#define DMAC_RST						(1<<0)
+#define SHADOWREG_LLI_VALID				(1<<31)
+#define SHADOWREG_LLI_LAST				(1<<30)
+#define IOC_BLKTFR						(1<<26)
+#define SRC_MSIZE_MASK					0xfffc3000
+#define SRC_MSIZE_1						0
+#define SRC_MSIZE_4						(1<<14)
+#define SRC_MSIZE_8						(2<<14)
+#define SRC_MSIZE_16					(3<<14)
+#define SRC_MSIZE_32					(4<<14)

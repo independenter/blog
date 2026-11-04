@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.shamir-recover · 来源 ThresholdEssenceTest.java:326-347
+
+    @TraceExecution(value = "门限 ECDSA 签名：局部签名与拉格朗日合成", algorithm = "THRESHOLD",
+        flow = "THRESHOLD-ECDSA")
+    @Test
+    public void thresholdEcdsaSignature()
+    {
+        int t = 2; // 门限值
+        int n = 3; // 总参与方数
+        Tracer.trace("start", new Object[]{"t", t, "n", n}, "threshold ECDSA", "start");
+
+        // 1. 密钥生成：随机私钥 d，公钥 P = d·G
+        BigInteger d = new BigInteger(256, new SecureRandom()).mod(N);
+        BigInteger[] pubPoint = ecMul(d, GX, GY, P);
+        log.info("[门限签名] 私钥 d = {}...", d.toString(16).substring(0, 16));
+        log.info("[门限签名] 公钥 P = ({}..., {}...)",
+            pubPoint[0].toString(16).substring(0, 8),
+            pubPoint[1].toString(16).substring(0, 8));
+        Tracer.trace("setup", new Object[]{"d", d, "P", pubPoint}, pubPoint, "setup");
+
+        // 2. 用 SSS 把 d 切成 n 份（mod n，不是 mod p！因为签名运算在 Z/nZ 里）
+        BigInteger[] dShares = new BigInteger[n];
+        BigInteger[] coeffs = new BigInteger[t];
+        coeffs[0] = d;

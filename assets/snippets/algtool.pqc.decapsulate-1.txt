@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.pqc.decapsulate · 来源 PqcPanel.h:51-72
+
+public:
+    explicit KyberPanel(QWidget* parent = nullptr) : QWidget(parent) {
+        holder = std::make_unique<alg::KyberKem>();
+        alg::KyberKem* kem = holder.get();
+
+        auto* pkEd = algui::mono(new QLineEdit(this));
+        pkEd->setPlaceholderText("公钥 1184 字节 hex (点[生成密钥]自动填入)");
+        auto* skEd = algui::mono(new QLineEdit(this));
+        skEd->setPlaceholderText("私钥 2400 字节 hex (点[生成密钥]自动填入)");
+        auto* genBtn = new QPushButton("生成密钥", this);
+
+        auto* ctEd = algui::mono(new QPlainTextEdit(this));
+        ctEd->setPlaceholderText("密文 (1088 字节 hex) — 封装后自动回填, 解封装在此粘贴外部密文");
+        ctEd->setFixedHeight(90);
+
+        auto* encBtn = new QPushButton("封装 (发送方)", this);
+        auto* decBtn = new QPushButton("解封装 (接收方)", this);
+
+        auto* kEd = algui::mono(new QPlainTextEdit(this));
+        kEd->setReadOnly(true);
+        kEd->setPlaceholderText("共享密钥 K (32 字节 hex)");
+        kEd->setFixedHeight(60);

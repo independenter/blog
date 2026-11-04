@@ -1,0 +1,24 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.sm2.derive-pub · 来源 AlgSm2.cpp:261-281
+
+bool Sm2::verify(const Bytes& pub, const Bytes& msg, const Bytes& id,
+                 bool hashMode, const Bytes& sig) {
+    if (pub.size() != 2 * FE || sig.size() != 2 * FE) return false;
+    Bytes eB = digest(pub, msg, id, hashMode);
+    if (eB.empty()) return false;
+    return verifyDigest(pub, eB, sig);
+}
+
+Bytes Sm2::encrypt(const Bytes& pub, const Bytes& plain, const Bytes& fixedR) {
+    if (pub.size() != 2 * FE || plain.empty()) return {};
+    EC_GROUP* g = newGroup(); if (!g) return {};
+    BN_CTX* ctx = BN_CTX_new();
+    const BIGNUM* n = EC_GROUP_get0_order(g);
+    EC_POINT* P = xyToPoint(g, pub, ctx);
+    Bytes out;
+    if (P) {
+        BIGNUM* r = BN_new();
+        bool fixed = (fixedR.size() == FE);
+        for (int attempt = 0; attempt < 64 && out.empty(); ++attempt) {
+            if (fixed) { BN_free(r); r = BN_bin2bn(fixedR.data(), FE, nullptr); if (BN_is_zero(r)) break; }
+            else       { BN_rand_range(r, n); if (BN_is_zero(r)) continue; }

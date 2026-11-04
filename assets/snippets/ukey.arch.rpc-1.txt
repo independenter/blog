@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.rpc · 来源 UkeyRpc.cpp:111-132
+
+bool UkeyRpcClient::ping(Json& data, std::string& err) {
+    HttpResponse resp;
+    std::string e;
+    if (!http_.get(kUkeyRpcPath, resp, e)) {
+        err = "Ukey 桥不可达 (" + host_ + ":" + std::to_string(port_) + "): " + e;
+        return false;
+    }
+    bool ok = false;
+    Json r = Json::parse(bodyText(resp.body), &ok);
+    if (!ok || !r.at("ok").asBool()) {
+        err = "Ukey 桥应答异常 (HTTP " + std::to_string(resp.status) + ")";
+        return false;
+    }
+    data = r.at("d");
+    return true;
+}
+
+// ---------------------------------------------------------------- 服务端
+
+// 参数取值: 缺键就当默认值, 让客户端少抄几个字段; 真正致命的缺参由各方法自己判。
+static std::string argS(const Json& a, const char* k) { return a.at(k).asString(); }
+static uint32_t argU(const Json& a, const char* k) { return (uint32_t)a.at(k).asInt(); }

@@ -1,0 +1,9 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-cipher · 来源 Flows.java:830-835
+
+        chain(flow, "start", "setup", "round1", "round2", "round3", "combine", "verify", "end");
+        flow.addEdge("verify", "end", "通过");
+        flow.setStartNodeId("start");
+        return flow;
+    }
+}

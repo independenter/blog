@@ -1,0 +1,17 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.wait-stable · 来源 wait_stable.py:54-67
+
+print(">> hsm 数: " + run("pgrep -f 'bin/hsm' | wc -l"))
+print(">> Running Pod: " + run("k3s kubectl get pods -n saas 2>/dev/null | grep -c Running"))
+print(">> Running openapi: " + run("k3s kubectl get deploy -n saas 2>/dev/null | grep openapi | grep -c '1/1'"))
+
+# hsm 线程分布
+print("\n>> hsm 线程分布:")
+print(run("pgrep -f 'bin/hsm' | while read pid; do ls /proc/$pid/task 2>/dev/null | wc -l; done | sort -n | uniq -c | sort -rn"))
+
+# 检查是否有失败 pod
+print("\n>> 异常 Pod:")
+print(run("k3s kubectl get pods -n saas 2>/dev/null | grep -vE 'Running|Completed|NAME' | head -20"))
+
+remote.close()
+print("\n完成!")

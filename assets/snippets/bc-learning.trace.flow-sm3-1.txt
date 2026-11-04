@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-sm3 · 来源 Flows.java:641-662
+
+    private static FlowDefinition pqcMlKem()
+    {
+        FlowDefinition flow = new FlowDefinition("ML-KEM 密钥封装");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "params", "参数表与编码约定：k, dᵤ, dᵥ / compress / 12-bit 打包", FlowNodeType.OPERATION, "长度算术");
+        node(flow, "keygen", "KeyGen: (pk, sk)", FlowNodeType.OPERATION, "矩阵 A + 噪声");
+        node(flow, "encap", "Encaps(pk) → (c, K)", FlowNodeType.OPERATION, "压缩系数");
+        node(flow, "decap", "Decaps(sk, c) → K'", FlowNodeType.OPERATION, "去压缩 + 纠错");
+        node(flow, "compare", "K == K' ?", FlowNodeType.DECISION, "隐式拒绝");
+        node(flow, "end", "结束", FlowNodeType.TERMINAL, "");
+
+        chain(flow, "start", "params", "keygen", "encap", "decap", "compare", "end");
+        flow.addEdge("compare", "end", "相等");
+        flow.setStartNodeId("start");
+        return flow;
+    }
+
+    /**
+     * ML-DSA 公钥的分解：t = t1·2^d + t0，公钥只发 ρ 与高位 t1。
+     * 节点顺序就是测试里逐步验证的顺序：先拿 BC 密钥，再逐项验证打包/偏置/可逆性。
+     */

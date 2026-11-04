@@ -1,0 +1,20 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.hash.sm3 · 来源 AlgHash.cpp:30-46
+
+    if (EVP_DigestInit_ex(ctx, md, nullptr) == 1 &&
+        EVP_DigestUpdate(ctx, msg.data(), msg.size()) == 1 &&
+        EVP_DigestFinal_ex(ctx, out.data(), &len) == 1) {
+        out.resize(len);
+        hex = toHex(out);
+        if (outRaw) *outRaw = out;
+        logOp("hash:" + name_, Rc::Ok, t.ms(), "in=" + std::to_string(msg.size()) + "B digest=" + hex);
+    } else {
+        logOp("hash:" + name_, Rc::CryptoError, t.ms(), ERR_error_string(ERR_get_error(), nullptr));
+        hex.clear();
+    }
+
+    EVP_MD_CTX_free(ctx);
+    return hex;
+}
+
+} // namespace alg

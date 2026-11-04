@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm9.pairing · 来源 Sm9PairingEssenceTest.java:298-319
+
+    @TraceExecution(value = "扩域塔三条规则与分配律", algorithm = "SM9", flow = "SM9-PAIRING")
+    @Test
+    public void towerRulesInverseAndDistributivity()
+    {
+        Tracer.trace("start", new Object[]{"rules", "u²=-2, v²=u, w³=v", "iterations", 5}, null, "start");
+
+        // u² = −2（Fp2）
+        // u 本身 = 0 + 1·u，所以在 Fp2 的 {常数项, u 项} 里写作 {0, 1}；
+        // "等于 −2" 的写法是"加 2 之后是不是 0"：fp2Add(u², {2, 0}) 必须是 Fp2 的零元
+        BigInteger[] u = new BigInteger[]{ BigInteger.ZERO, BigInteger.ONE };
+        Assert.assertTrue("u² 必须等于 −2", Sm9Math.fp2IsZero(Sm9Math.fp2Add(Sm9Math.fp2Sqr(u),
+            new BigInteger[]{ BigInteger.valueOf(2), BigInteger.ZERO })));
+        Tracer.trace("fp2SquareU", new Object[]{"u", u}, Sm9Math.fp2Sqr(u), "tower");
+
+        // v² = u（Fp4）：v 是"只有 v 分量、且那个 Fp2 分量等于 1"的元素
+        BigInteger[] v = new BigInteger[]{ BigInteger.ZERO, BigInteger.ZERO, BigInteger.ONE, BigInteger.ZERO };
+        BigInteger[] vSquaredExpect = new BigInteger[]{ BigInteger.ZERO, BigInteger.ONE, BigInteger.ZERO, BigInteger.ZERO };
+        Assert.assertTrue("v² 必须等于 u", java.util.Arrays.equals(Sm9Math.fp4Sqr(v), vSquaredExpect));
+        Tracer.trace("fp4SquareV", new Object[]{"v", v}, Sm9Math.fp4Sqr(v), "tower");
+
+        // w³ = v（Fp12）：w 落在下标 4，v 落在下标 2
+        BigInteger[] w = new BigInteger[12];

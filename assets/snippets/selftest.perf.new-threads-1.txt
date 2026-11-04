@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.new-threads · 来源 check_new_threads.py:113-134
+
+import json,sys
+data = json.load(sys.stdin)
+count = 0
+for item in data.get('items',[]):
+    name = item.get('metadata',{}).get('name','')
+    if 'openapi' not in name: continue
+    replicas = item.get('spec',{}).get('replicas',0)
+    if replicas and replicas > 0:
+        count += 1
+print(count)
+")
+echo "openapi deployment 总数: $total"
+echo "当前启动中 (replicas>0): $running"
+echo ""
+echo "=== Running Pod 数 ==="
+k3s kubectl get pods -n saas 2>/dev/null | grep Running | wc -l
+echo ""
+echo "=== 当前未启动的 openapi ==="
+k3s kubectl get deploy -n saas -o json 2>/dev/null | python3 -c "
+import json,sys
+data = json.load(sys.stdin)
+stopped = []

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm3.vectors · 来源 Sm3EssenceTest.java:127-148
+
+    @TraceExecution(value = "Merkle–Damgård 逐块折叠", algorithm = "SM3", flow = "SM3-HASH")
+    @Test
+    public void merkleDamgardIsJustALoopOverBlocks()
+        throws Exception
+    {
+        byte[] head = Calc.repeat("head-", 5).getBytes("UTF-8");
+        byte[] tail = Calc.repeat("-tail", 7).getBytes("UTF-8");
+
+        Tracer.trace("start", new Object[]{"headLen", head.length, "tailLen", tail.length}, null, "start");
+
+        // 分块逐块推进后与整体推进必须相同（除了最后一块要带长度）：验证"推进顺序无关性"
+        // whole 就是链接值 V：初值 V₀ = IV，循环里每步做 V = CF(V, B)
+        long[] whole = Sm3.iv();
+        byte[] wholeMsg = Calc.concat(head, tail);
+        List<byte[]> wholeBlocks = Sm3.mdPad(wholeMsg);
+        Tracer.trace("pad", new Object[]{"msgLen", wholeMsg.length, "blockSize", BLOCK_SIZE},
+            wholeBlocks.size() + " blocks", "pad");
+        Tracer.trace("split", new Object[]{"blocks", wholeBlocks.size()},
+            wholeBlocks.get(0).length + " B/block", "split");
+        Tracer.trace("initV", null, Calc.hex(whole), "initV");
+        for (int i = 0; i < wholeBlocks.size(); i++)
+        {

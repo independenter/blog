@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.service-start · 来源 ServicePanel.cpp:456-477
+
+        show(ok ? "CRL 已重建并写入 " + s2q(ca->caDir()) + "/crl.der" : "重建失败: " + s2q(err));
+    });
+
+    // ---------------------------------------------------------------- 接口说明
+    auto g3 = addGroup(lay, "接口速查");
+    g3.lay->addWidget(new QLabel(
+        "GET  /health            公开信息 (版本/后端/是否要求证书)\n"
+        "POST /ukey/challenge    注册用随机挑战\n"
+        "POST /ukey/enroll       公钥 + 持有证明 -> 小 CA 签发证书\n"
+        "POST /ukey/hello        服务端公钥/证书/签名 (防中间人)\n"
+        "POST /ukey/negotiate    SM2 协商, 得到会话密钥 + 密钥确认\n"
+        "POST /ukey/api          之后的一切业务调用 (报文整体加密)\n"
+        "\n可远程调用的 op: ukey.info / apps / containers / pin_info / verify_pin / random /\n"
+        "  digest / digest_with_id / sign / verify / sm2_encrypt / export_pub /\n"
+        "  envelope_seal / envelope_open / symm_crypt / files / file_read / file_write /\n"
+        "  file_delete / ca.list / ca.comms / ca.cert / ca.crl / ca.challenge / ca.issue /\n"
+        "  ca.revoke / session.info / echo"));
+    g3.box->setStyleSheet("QLabel { font-family: Consolas, monospace; }");
+
+    // tail 必须真的挂到布局上: 之前它是个没有父控件的孤儿, 页面上看不到任何操作结果。
+    lay->addWidget(muted("最近一次操作输出:"));
+    lay->addWidget(tail);

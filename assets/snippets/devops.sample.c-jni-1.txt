@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.c-jni · 来源 JNIExample.c:3-24
+
+#include "../include/example.h"
+
+/*
+ * Simple example of a JNI function that adds two integers
+ */
+JNIEXPORT jint JNICALL Java_com_example_util_NativeUtils_add
+  (JNIEnv *env, jclass clazz, jint a, jint b) {
+    return add(a, b);
+}
+
+/*
+ * Simple example of a JNI function that multiplies two integers
+ */
+JNIEXPORT jint JNICALL Java_com_example_util_NativeUtils_multiply
+  (JNIEnv *env, jclass clazz, jint a, jint b) {
+    return multiply(a, b);
+}
+
+/*
+ * Simple example of a JNI function that prints a message
+ */
+JNIEXPORT void JNICALL Java_com_example_util_NativeUtils_printMessage

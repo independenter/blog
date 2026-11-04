@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>管理札记 · 一休</title>
+  <meta name="description" content="一休的札记管理后台。">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b0d0e">
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2315130f'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%23dd4a18'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23f5f0e7' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body id="top" class="admin-page">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="site-head" id="site-head">
+    <a class="wordmark" href="index.html" aria-label="一休，回到作品集">一休<span class="wordmark-dot" aria-hidden="true"></span></a>
+
+    <nav class="site-nav" id="site-nav" aria-label="主导航">
+      <a href="index.html#about"><span>01</span>关于</a>
+      <a href="index.html#work"><span>02</span>作品</a>
+      <a href="blog.html"><span>03</span>笔记</a>
+      <a href="thoughts.html"><span>04</span>想法</a>
+      <a href="mvps.html"><span>05</span>MVP</a>
+      <a href="index.html#contact"><span>06</span>联系</a>
+    </nav>
+
+    <div class="head-end">
+      <span class="head-meta">ADMIN — 2026</span>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">目录</button>
+    </div>
+  </header>
+
+  <main id="main" class="admin-main">
+    <div class="admin-heading">
+      <div class="admin-heading-main">
+        <p class="eyebrow">
+          <span class="eyebrow-mark" aria-hidden="true"></span>
+          后台 / ADMIN
+        </p>
+        <h1>管理札记</h1>
+      </div>
+      <div class="admin-heading-side">
+        <p>仅站长账号可读写。发布后会立即出现在「札记」。</p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span class="admin-identity" id="admin-identity">正在确认身份…</span>
+          <button class="admin-quiet" id="logout-btn" type="button" style="display: none;">登出</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="admin-gate" id="admin-gate" aria-live="polite">
+      <p class="admin-gate-kicker" id="gate-kicker">CHECKING</p>
+      <h2 id="gate-title">正在确认登录状态…</h2>
+      <p class="admin-gate-text" id="gate-text"></p>
+      <div class="admin-gate-actions" id="gate-actions"></div>
+    </section>
+
+    <section class="admin-app" id="admin-app" hidden aria-label="文章管理">
+      <div class="admin-toolbar">
+        <div class="admin-toolbar-left">
+          <button class="admin-primary" id="new-post" type="button">＋ 新建文章</button>
+          <button class="admin-quiet" id="refresh-posts" type="button">刷新</button>
+        </div>
+        <span class="admin-count" id="admin-count">—</span>
+      </div>
+
+      <div class="admin-grid">
+        <aside class="admin-list-panel" aria-labelledby="admin-list-title">
+          <h2 class="admin-panel-title" id="admin-list-title">文章 <span id="admin-list-count"></span></h2>
+          <div class="admin-list-filters">
+            <input id="admin-search" type="search" placeholder="搜索标题或地址" autocomplete="off" aria-label="搜索文章">
+            <select id="admin-status-filter" aria-label="按状态筛选">
+              <option value="">全部状态</option>
+              <option value="published">已发布</option>
+              <option value="draft">草稿</option>
+            </select>
+          </div>
+          <div class="admin-list" id="admin-list"></div>
+          <button class="admin-list-more" id="admin-list-more" type="button" hidden>加载更多</button>
+        </aside>
+
+        <section class="admin-editor-panel" aria-labelledby="editor-title">
+          <div class="admin-editor-empty" id="editor-empty">
+            <p class="admin-empty-mark" aria-hidden="true">文</p>
+            <h2 id="editor-title">从左侧选择一篇文章</h2>
+            <p>或者新建一篇。正文支持 Markdown，保存草稿不会出现在博客里。</p>
+            <button class="admin-quiet" id="empty-new" type="button">新建文章</button>
+          </div>
+
+          <form class="editor" id="editor" novalidate hidden>
+            <div class="editor-top">
+              <span class="editor-mode" id="editor-mode">新文章</span>
+              <span class="editor-version" id="editor-version"></span>
+            </div>
+
+            <div class="editor-fields">
+              <label class="field field--wide">
+                <span class="field-label">标题 <em id="title-count">0 / 120</em></span>
+                <input id="f-title" name="title" type="text" maxlength="120" autocomplete="off" required>
+              </label>
+
+              <label class="field">
+                <span class="field-label">文章地址 <em>小写字母、数字、短横线</em></span>
+                <input id="f-slug" name="slug" type="text" maxlength="80" placeholder="design-notes-01" autocomplete="off" spellcheck="false" required>
+              </label>
+
+              <div class="field">
+                <span class="field-label" id="status-label">状态</span>
+                <div class="status-switch" role="radiogroup" aria-labelledby="status-label">
+                  <label>
+                    <input type="radio" name="status" value="draft" checked>
+                    <span>草稿</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="status" value="published">
+                    <span>已发布</span>
+                  </label>
+                </div>
+              </div>
+
+              <label class="field field--wide">
+                <span class="field-label">摘要 <em id="excerpt-count">0 / 240</em></span>
+                <textarea id="f-excerpt" name="excerpt" rows="3" maxlength="240"></textarea>
+              </label>
+
+              <label class="field field--wide">
+                <span class="field-label">封面图片地址 <em>可留空，仅支持 https</em></span>
+                <input id="f-cover" name="coverUrl" type="text" inputmode="url" placeholder="https://images.unsplash.com/..." autocomplete="off" spellcheck="false">
+              </label>
+
+              <div class="cover-preview" id="cover-preview" hidden>
+                <img id="cover-preview-img" alt="封面预览">
+                <span id="cover-preview-text">封面预览</span>
+              </div>
+
+              <div class="field field--wide editor-content-head">
+                <span class="field-label">正文 <em id="content-count">0 / 30000</em></span>
+                <div class="editor-tabs" role="group" aria-label="正文视图">
+                  <button type="button" data-view="write" aria-pressed="true">编写</button>
+                  <button type="button" data-view="preview" aria-pressed="false">预览</button>
+                </div>
+              </div>
+
+              <textarea id="f-content" class="editor-content" name="content" rows="18" maxlength="30000" placeholder="## 小标题&#10;&#10;从一句话开始。"></textarea>
+              <div class="editor-preview markdown" id="content-preview" hidden></div>
+            </div>
+
+            <div class="editor-actions">
+              <div class="editor-actions-left">
+                <button class="admin-primary" type="submit" id="save-post">保存</button>
+                <a class="admin-quiet" id="view-post" target="_blank" rel="noopener" hidden>查看 ↗</a>
+              </div>
+              <button class="admin-danger" type="button" id="delete-post" hidden>删除</button>
+            </div>
+
+            <p class="editor-hint">支持 Markdown：<code>## 小标题</code>、<code>- 列表</code>、<code>&gt; 引用</code>、<code>**加粗**</code>。⌘/Ctrl + S 保存。</p>
+          </form>
+        </section>
+      </div>
+
+      <p class="admin-status" id="admin-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <span>© 2026 一休 · 真实作品</span>
+    <span>配图来自 <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a></span>
+    <span class="foot-links"><a href="blog.html">笔记</a> · <a href="thoughts.html">想法</a> · <a href="mvps.html">MVP</a> · <a href="admin.html">管理</a></span>
+    <span class="foot-time">北京时间 <time id="clock">--:--:--</time></span>
+    <a class="to-top" href="#top">回到顶部 ↑</a>
+  </footer>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

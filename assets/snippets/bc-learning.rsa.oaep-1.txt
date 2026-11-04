@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.oaep · 来源 RsaEssenceTest.java:1662-1683
+
+        throws Exception
+    {
+        Calc.useBc();
+        byte[] pt = "PKCS#1 v1.5 encryption padding".getBytes("UTF-8");
+        Tracer.trace("start", new Object[]{"ptLen", pt.length, "k", K}, null, "start");
+        // 先看填充后的 EM 结构，再过一次公钥运算才是密文
+        byte[] em = pkcs1Type2(K, pt);
+        Tracer.trace("encode", new Object[]{
+            "ptLen", pt.length, "k", K, "psLen", K - pt.length - 3
+        }, em, "encode");
+        byte[] ours = publicOpBytes(KEY, em, "modExp");
+        Tracer.trace("modExp", new Object[]{"em", em, "e", KEY[E], "n", KEY[N]}, ours, "modExp");
+
+        Assert.assertEquals("EM 必须是 k 字节", K, em.length);
+        Assert.assertEquals("首字节 00", 0, em[0] & 0xff);
+        Assert.assertEquals("块类型 02", 2, em[1] & 0xff);
+        // 结构：00 ‖ 02 ‖ PS(k-pt-3) ‖ 00 ‖ PT  ->  分隔符下标 = k - pt - 1
+        Assert.assertEquals("分隔符 00 固定在明文之前", 0, em[K - pt.length - 1] & 0xff);
+        Assert.assertTrue("填充体不能含 00", allNonZero(em, 2, K - pt.length - 1));
+
+        Cipher dec = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
+        dec.init(Cipher.DECRYPT_MODE, jcePair(KEY).getPrivate());

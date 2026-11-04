@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.deploy-remote · 来源 deploy_tool.py:619-640
+
+    def _build_env_exports(self, api_mode=None, payload_size=None, extra_env=None):
+        """构造远程环境变量 export 列表"""
+        env_exports = []
+        if api_mode:
+            env_exports.append('export API_MODE={}'.format(api_mode))
+        if payload_size:
+            env_exports.append('export PAYLOAD_SIZE={}'.format(payload_size))
+        if extra_env:
+            for k, v in extra_env.items():
+                env_exports.append('export {}={}'.format(k, v))
+        return env_exports
+
+    @staticmethod
+    def _wrap_bash(cmd_parts, env_exports):
+        """拼装 bash -c 包装（环境变量 + 命令）"""
+        inner = '{} ; {}'.format(' ; '.join(env_exports), ' '.join(cmd_parts)) if env_exports else ' '.join(cmd_parts)
+        return "bash -c '{}'".format(inner)
+
+    def _build_locust_cmd(self, host_url, api_mode, users=None, duration=None,
+                          payload_size=None, processes=None, csv_prefix='locust_run',
+                          master_port=None, cpu_cores=None, extra_env=None,
+                          master=False, master_bind_host=None, expect_workers=None,

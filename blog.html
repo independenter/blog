@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>札记 · 一休</title>
+  <meta name="description" content="一休的札记：记录产品设计、独立开发与做东西过程中的判断。">
+  <meta name="theme-color" content="#0b0d0e">
+  <meta property="og:title" content="札记 · 一休">
+  <meta property="og:description" content="记录设计与代码之间的判断。">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2315130f'/%3E%3Ccircle cx='52' cy='13' r='4' fill='%23dd4a18'/%3E%3Ctext x='30' y='45' font-size='38' text-anchor='middle' fill='%23f5f0e7' font-family='serif'%3E%E4%B8%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body id="top" class="blog-page">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="site-head" id="site-head">
+    <a class="wordmark" href="index.html" aria-label="一休，回到作品集">一休<span class="wordmark-dot" aria-hidden="true"></span></a>
+
+    <nav class="site-nav" id="site-nav" aria-label="主导航">
+      <a href="index.html#about"><span>01</span>关于</a>
+      <a href="index.html#work"><span>02</span>作品</a>
+      <a href="blog.html" aria-current="page"><span>03</span>笔记</a>
+      <a href="thoughts.html"><span>04</span>想法</a>
+      <a href="mvps.html"><span>05</span>MVP</a>
+      <a href="index.html#contact"><span>06</span>联系</a>
+    </nav>
+
+    <div class="head-end">
+      <span class="head-meta">NOTES — 2026</span>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">目录</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="notes-hero" aria-labelledby="notes-hero-title">
+      <div class="notes-hero-top">
+        <p class="eyebrow">
+          <span class="eyebrow-mark" aria-hidden="true"></span>
+          笔记 / NOTES
+        </p>
+        <p class="notes-issue">VOL. 01 <span>/</span> 2026</p>
+      </div>
+
+      <div class="notes-hero-main">
+        <h1 class="notes-title" id="notes-hero-title">
+          札记<span class="hero-dot" aria-hidden="true">.</span>
+        </h1>
+        <div class="notes-aside">
+          <p class="notes-lede">记录设计与代码之间的判断：做过的决定、踩过的坑，以及还没想清楚的问题。</p>
+          <p class="notes-sub">不定期更新，不追热点。</p>
+        </div>
+      </div>
+
+      <div class="notes-hero-meta">
+        <span id="notes-count">正在读取…</span>
+        <span>按发布时间排序</span>
+        <a href="index.html#contact">写信聊项目 <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="notes-section" aria-labelledby="notes-title-label">
+      <div class="notes-section-head">
+        <h2 id="notes-title-label">全部文章</h2>
+        <span class="notes-section-index">03 / NOTES</span>
+      </div>
+
+      <div class="notes-tools">
+        <label class="notes-search">
+          <span class="notes-search-label">搜索</span>
+          <input id="notes-search" type="search" placeholder="标题、模块、技术栈…" autocomplete="off">
+        </label>
+        <div class="notes-years" id="notes-years" role="group" aria-label="按年份筛选"></div>
+        <p class="notes-filter-count" id="notes-filter-count" hidden></p>
+      </div>
+
+      <div class="notes-feed" id="notes-feed"></div>
+      <div class="notes-state" id="notes-state" hidden></div>
+      <div class="notes-more">
+        <button class="notes-more-btn" id="notes-more" type="button" hidden>加载更多</button>
+      </div>
+      <noscript>
+        <p class="notes-noscript">需要启用 JavaScript 才能读取文章列表。</p>
+      </noscript>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <span>© 2026 一休 · 真实作品</span>
+    <span>配图来自 <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Unsplash</a></span>
+    <span class="foot-links"><a href="blog.html">笔记</a> · <a href="thoughts.html">想法</a> · <a href="mvps.html">MVP</a> · <a href="admin.html">管理</a></span>
+    <span class="foot-time">北京时间 <time id="clock">--:--:--</time></span>
+    <a class="to-top" href="#top">回到顶部 ↑</a>
+  </footer>
+
+  <script type="module" src="blog.js"></script>
+</body>
+</html>

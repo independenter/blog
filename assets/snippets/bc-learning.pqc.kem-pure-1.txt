@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.pqc.kem-pure · 来源 PqcEssenceTest.java:2038-2059
+
+    @TraceExecution(value = "签名 = 环乘 + 分解 + 打包", algorithm = "PQC", flow = "PQC-MLDSA")
+    @Test
+    public void signingIsOneRingMultiplyOneDecompositionAndOnePack()
+    {
+        Tracer.trace("start", new Object[]{"param", "ml_dsa_44", "seed", "mldsa-essence"},
+            "sign = multiply + decompose + pack", "start");
+
+        MLDSAParameters p = MLDSAParameters.ml_dsa_44;
+        MLDSAEngine eng = MLDSAEngine.getInstance(p, ANY);
+        byte[] seed = shakeBytes("mldsa-essence", MLDSAEngine.SeedBytes);
+        MLDSAPrivateKeyParameters priv = dsaPriv(p, seed);
+        MLDSAPublicKeyParameters pub = priv.getPublicKeyParameters();
+        Assert.assertArrayEquals("从私钥取出的公钥必须等于我们自己拼的", pub.getEncoded(),
+            new MLDSAPublicKeyParameters(p, priv.getRho(), priv.getT1()).getEncoded());
+        Tracer.trace("keygen", new Object[]{"seed", seed, "param", p.getName()},
+            new Object[]{"pkBytes", pub.getEncoded().length, "rhoBytes", priv.getRho().length,
+                "t1Bytes", priv.getT1().length, "s1Bytes", priv.getS1().length,
+                "t0Bytes", priv.getT0().length}, "keygen");
+
+        // 步骤 0：s1 是"η 采样 + 4 bit（其实 3 bit）偏置打包"的产物 —— 用我们的 unpack 还原，幅度必须 <= η
+        // 符号：η = 系数幅度（44 档 = 2）；stored ∈ [0, 2η] 只需 ⌈log2(2η+1)⌉ = 3 bit，标准仍按 4 bit/系数打包（128 字节/份）；
+        // 真值 s1[i] = η − stored —— "偏置打包"就是用偏移量 η 把 [0,2η] 翻成 [−η, η]，中心化表示的又一次现身

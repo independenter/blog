@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.k3s-status · 来源 check_k3s_status.py:42-63
+
+    run("top -b -n 1 | head -8", "CPU 概览")
+    run("ps -eo pid,comm | wc -l", "总进程数")
+    run("ps -eo pid,comm | grep -c hsm || echo 0", "hsm 进程数")
+    run("ps -eo pid,comm | grep -c containerd-shim || echo 0", "containerd-shim 数")
+
+    # === 2. k3s 状态 ===
+    print("\n" + "=" * 60)
+    print("【k3s 状态】")
+    print("=" * 60)
+    run("systemctl is-active k3s", "k3s 服务状态")
+    run("k3s kubectl get pods --all-namespaces --no-headers 2>/dev/null | wc -l", "k3s Pod 总数")
+    run("k3s kubectl get pods --all-namespaces 2>/dev/null | head -30", "Pod 列表（前 30）")
+
+    # === 3. k3s containerd 容器状态 ===
+    print("\n" + "=" * 60)
+    print("【k3s containerd 容器状态】")
+    print("=" * 60)
+    run("ctr -a /run/k3s/containerd/containerd.sock containers ls 2>/dev/null | wc -l", "k3s containerd 容器数")
+    run("ctr -a /run/k3s/containerd/containerd.sock containers ls 2>/dev/null | head -20", "k3s 容器列表（前 20）")
+
+    # === 4. crictl 状态 ===
+    print("\n" + "=" * 60)

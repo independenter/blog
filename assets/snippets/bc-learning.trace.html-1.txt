@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.html · 来源 HtmlGenerator.java:761-782
+
+            "    .dim-outer.active { background: #e74c3c; transform: scale(1.1); animation: pulse 1.2s infinite; }\n" +
+            "    .dim-inner.active { background: #ff7675; }\n" +
+            "    .dim-inner.active .dim-text { color: white; }\n" +
+
+            // 循环虚线框
+            "    .loop-wrapper { border: 2px dashed #27ae60; border-radius: 12px; padding: 10px 12px 12px; background: rgba(39,174,96,0.04); width: 400px; transition: all 0.3s; }\n" +
+            "    .loop-wrapper.active { border-color: #e74c3c; background: rgba(231,76,60,0.05); box-shadow: 0 0 15px rgba(231,76,60,0.3); }\n" +
+            "    .loop-wrapper.visited { border-color: #27ae60; }\n" +
+
+            // 循环头部
+            "    .loop-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px; margin-bottom: 8px; border-bottom: 1px dashed #27ae60; font-size: 10px; }\n" +
+            "    .loop-badge { font-weight: bold; color: white; background: #27ae60; padding: 2px 8px; border-radius: 3px; font-size: 11px; }\n" +
+            "    .loop-wrapper.active .loop-badge { background: #e74c3c; }\n" +
+            "    .loop-count { font-weight: bold; color: #2c3e50; font-size: 12px; }\n" +
+            "    .loop-goal { color: #888; font-style: italic; font-size: 10px; }\n" +
+
+            // 循环子流程图
+            "    .loop-flow { display: flex; flex-direction: column; align-items: center; gap: 3px; }\n" +
+            "    .lf-step { padding: 5px 12px; border: 2px solid #3498db; border-radius: 5px; background: white; font-size: 11px; text-align: center; transition: all 0.3s; min-width: 110px; }\n" +
+            "    .lf-step-title { font-weight: bold; color: #2c3e50; }\n" +
+            "    .lf-step-val { font-size: 10px; color: #888; margin-top: 2px; }\n" +
+            "    .lf-step.lf-active { border-color: #e74c3c; background: #fff3cd; transform: scale(1.08); box-shadow: 0 0 10px rgba(231,76,60,0.5); }\n" +

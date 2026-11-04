@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 devops.sample.build-all · 来源 build.sh:21-42
+
+fi
+
+echo "清理旧构建..."
+rm -rf "$PROJECT_DIR/target/classes"
+rm -f "$PROJECT_DIR/target/my-app.jar"
+mkdir -p "$PROJECT_DIR/target/classes"
+
+echo "编译源代码..."
+# 查找所有Java源文件
+find "$PROJECT_DIR/src/main/java" -name "*.java" > "$PROJECT_DIR/target/sources.txt"
+
+# 构建类路径（Java支持通配符加载所有子目录下的JAR）
+CLASSPATH=""
+
+# 添加lib目录下每个子目录的JAR文件
+for subdir in "$PROJECT_DIR"/lib/*; do
+    if [[ -d "$subdir" && "$(basename "$subdir")" != "test" ]]; then
+        CLASSPATH="$CLASSPATH:$subdir/*"
+    fi
+done
+
+# 编译

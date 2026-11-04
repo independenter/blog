@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.crypto-keygen · 来源 CryptoPanel.cpp:207-228
+
+        std::string err;
+        Bytes key = uk::fromHex(sKey->text().toStdString());
+        Bytes iv = uk::fromHex(sIv->text().toStdString());
+        Bytes in = dataOf(din3.text, din3.asHex);
+        Bytes out;
+        bool ok = ctx.mgr->symmCrypt(key, (uint32_t)sAlg->currentData().toUInt(), iv, in, out, enc,
+                                     err);
+        if (ok) {
+            symOut->setPlainText(s2q(uk::toHex(out)));
+            // 回填时必须同步切换"按十六进制解析": 否则下一步"解密"会把这串 hex
+            // 当成 UTF-8 文本喂进去, 得到的是完全不同的字节 (实测报 DECRYPTPADERR)。
+            if (enc) {
+                din3.text->setPlainText(uk::toHex(out).c_str());
+                din3.asHex->setChecked(true);
+            } else {
+                din3.text->setPlainText(u8(out));
+                din3.asHex->setChecked(false);
+            }
+        } else {
+            showError(symOut, err);
+        }
+        show(enc ? "对称加密" : "对称解密", ok, err);

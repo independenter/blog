@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.device-broker · 来源 DeviceBroker.cpp:816-837
+
+        bool enc = args.at("enc").asBool(true);
+        uint32_t alg = (uint32_t)args.at("alg").asInt(SGD_SM4_CBC);
+        Bytes out;
+        if (!mgr_.symmCrypt(key, alg, iv, data, out, enc, e)) return need("对称运算失败: " + e);
+        putB64(o, "data", out);
+        return o;
+    }
+    if (op == "ukey.files") {
+        Json arr = Json::array();
+        for (const auto& f : mgr_.listFiles()) {
+            Json one = obj();
+            put(one, "name", f.name);
+            put(one, "size", (long long)f.size);
+            put(one, "read_rights", (long long)f.readRights);
+            put(one, "write_rights", (long long)f.writeRights);
+            arr.push(one);
+        }
+        o.set("files", arr);
+        return o;
+    }
+    if (op == "ukey.file_read") {
+        Bytes data;

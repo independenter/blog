@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.arch.dwarf-probe · 来源 dwarf_params.py:74-95
+
+            while len(stack) <= depth:
+                stack.append(None)
+            parent = stack[depth - 1] if depth > 0 else None
+            if parent is not None:
+                kids.setdefault(parent, []).append(off)
+            stack[depth] = off
+            stack = stack[:depth + 1]
+            cur = off
+            continue
+        if cur is None:
+            continue
+        a = ATTR_RE.match(ln)
+        if not a:
+            continue
+        name, val = a.group("attr"), a.group("val").strip()
+        if name == "DW_AT_name":
+            mm = re.search(r"offset:\s*0x[0-9a-f]+\)\s*:?\s*(.*)$", val)
+            dies[cur]["name"] = (mm.group(1) if mm else val).strip()
+        elif name in ("DW_AT_type", "DW_AT_referenced_type"):
+            r = REF_RE.match(val)
+            if r:
+                dies[cur]["type"] = int(r.group(1), 16)

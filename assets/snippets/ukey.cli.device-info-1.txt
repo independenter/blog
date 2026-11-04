@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.device-info · 来源 ukeyctl.cpp:592-613
+
+int cmd_certImport() {
+    std::string err;
+    openIdentity();
+    std::string f = g_cli.get("in");
+    if (f.empty()) die("请指定 --in FILE (.der 或 .pem)");
+    Bytes b;
+    if (!readFileAll(f, b, &err)) die("读取失败: " + err);
+    std::string text(b.begin(), b.end());
+    if (text.find("BEGIN") != std::string::npos) {
+        // PEM -> DER: 去掉头尾再 base64 解码
+        size_t s = text.find("-----");
+        size_t e2 = text.rfind("-----");
+        if (s == std::string::npos || e2 == std::string::npos) die("PEM 格式不正确");
+        std::string body;
+        for (size_t i = text.find('\n', s) + 1; i < e2; i++)
+            if (text[i] != '\r' && text[i] != '\n') body += text[i];
+        b = b64Decode(body);
+    }
+    bool sign = !g_cli.flag("enc");
+    if (!mgr.importCert(sign, b, err)) die("写入容器失败: " + err);
+    std::printf("证书已写入容器 (%s 证书, %zu 字节)\n", sign ? "签名" : "加密", b.size());
+    std::printf("%s\n", SmallCa::describe(b).c_str());

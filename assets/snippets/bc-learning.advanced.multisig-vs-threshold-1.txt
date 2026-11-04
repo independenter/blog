@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.advanced.multisig-vs-threshold · 来源 MultisigEssenceTest.java:153-174
+
+    @TraceExecution(value = "多重签名：nonce 生成、部分签名与聚合", algorithm = "MULTISIG",
+        flow = "MULTISIG-CORE")
+    @Test
+    public void multisigSigningProcess()
+    {
+        int n = 3;
+        Tracer.trace("start", new Object[]{"n", n}, "multisig", "start");
+
+        // 1. 生成密钥对
+        BigInteger[] d = new BigInteger[n];
+        BigInteger[][] pubPoints = new BigInteger[n][2];
+        for (int i = 0; i < n; i++)
+        {
+            d[i] = new BigInteger(256, new SecureRandom()).mod(N);
+            pubPoints[i] = ecMul(d[i], GX, GY, P);
+        }
+
+        // 2. 聚合公钥
+        BigInteger[] pAgg = pubPoints[0].clone();
+        for (int i = 1; i < n; i++)
+        {
+            pAgg = ecAdd(pAgg, pubPoints[i]);

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.pkcs1-sign · 来源 RsaEssenceTest.java:1903-1924
+
+    @TraceExecution(value = "OAEP 三种摘要往返", algorithm = "RSA", flow = "RSA-PADDING")
+    @Test
+    public void oaepRoundTripsUnderThreeHashes()
+        throws Exception
+    {
+        Calc.useBc();
+        byte[] pt = "OAEP gives RSA semantic security".getBytes("UTF-8");
+        Tracer.trace("start", new Object[]{"ptLen", pt.length, "k", K}, null, "start");
+
+        // 三种"绑定 label 的哈希"：SHA-1 / SHA-256 / SM3。两张值表按下标对齐，裁判用 BC 的 crypto 层，参数完全显式。
+        String[] hashNames = new String[]{ SHA1, SHA256, SM3 };
+        Digest[] bcDigests = new Digest[]{ new SHA1Digest(), new SHA256Digest(), new SM3Digest() };
+        for (int i = 0; i < hashNames.length; i++)
+        {
+            String hash = hashNames[i];
+            OAEPEncoding referee = new OAEPEncoding(new RSAEngine(), bcDigests[i]);
+
+            byte[] em = oaepEncode(hash, hash, K, EMPTY, pt);
+            Tracer.trace("encode", new Object[]{
+                "hash", hash, "hLen", digestSize(hash), "emLen", K
+            }, em, "encode");
+            byte[] ours = publicOpBytes(KEY, em, "modExp");

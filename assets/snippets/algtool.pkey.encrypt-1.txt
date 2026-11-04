@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 algtool.pkey.encrypt · 来源 AlgPkey.cpp:138-159
+
+    Bytes out(len);
+    if (EVP_PKEY_decrypt(ctx, out.data(), &len, cipher.data(), cipher.size()) <= 0) {
+        logOp("dec", Rc::CryptoError, t.ms(), ERR_error_string(ERR_get_error(), nullptr));
+        EVP_PKEY_CTX_free(ctx); return {};
+    }
+    out.resize(len);
+    EVP_PKEY_CTX_free(ctx);
+    logOp("dec", Rc::Ok, t.ms(), "out=" + std::to_string(len) + "B");
+    return out;
+}
+
+static std::string toPem(EVP_PKEY* k, int priv) {
+    BIO* b = BIO_new(BIO_s_mem());
+    if (priv ? PEM_write_bio_PrivateKey(b, k, nullptr, nullptr, 0, nullptr, nullptr)
+             : PEM_write_bio_PUBKEY(b, k)) {
+        char* data = nullptr;
+        long n = BIO_get_mem_data(b, &data);
+        std::string s(data, data + (n > 0 ? n : 0));
+        BIO_free(b);
+        return s;
+    }
+    BIO_free(b);

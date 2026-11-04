@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.cli.pin-unblock · 来源 ukeyctl.cpp:295-316
+
+             std::to_string(di.FirmwareVersion.major) + "." + std::to_string(di.FirmwareVersion.minor));
+        show("空间", std::to_string(di.FreeSpace) + " / " + std::to_string(di.TotalSpace) + " 字节");
+        show("对称算法能力", "0x" + toHex(Bytes((const uint8_t*)&di.AlgSymCap, (const uint8_t*)&di.AlgSymCap + 4)));
+        show("非对称算法能力", "0x" + toHex(Bytes((const uint8_t*)&di.AlgAsymCap, (const uint8_t*)&di.AlgAsymCap + 4)));
+        show("杂凑算法能力", "0x" + toHex(Bytes((const uint8_t*)&di.AlgHashCap, (const uint8_t*)&di.AlgHashCap + 4)));
+    } else {
+        std::printf("  (读取 DEVINFO 失败: %s)\n", err.c_str());
+    }
+    auto apps = mgr.listApps();
+    std::printf("应用 (%d):%s\n", (int)apps.size(), apps.empty() ? " 无" : "");
+    for (auto& a : apps) std::printf("    %s\n", a.c_str());
+    if (mgr.openApp(g_cfg.appName(), err)) {
+        show("当前应用", mgr.appName());
+        PinInfo pi{};
+        if (mgr.pinInfo(USER_PIN, pi, err))
+            show("用户 PIN", "重试上限 " + std::to_string(pi.maxRetry) + ", 剩余 " +
+                                 std::to_string(pi.remainRetry) + (pi.defaultPin ? ", 仍是默认值" : ""));
+        auto cs = mgr.listContainers();
+        std::printf("容器 (%d):%s\n", (int)cs.size(), cs.empty() ? " 无" : "");
+        for (auto& c : cs) std::printf("    %s\n", c.c_str());
+        if (mgr.openContainer(g_cfg.containerName(), err)) {
+            show("当前容器", mgr.containerName());

@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 ukey.gui.crypto-sm2 · 来源 CryptoPanel.cpp:268-289
+
+        std::string err;
+        bool okj = false;
+        uk::Json j = uk::Json::parse(text, &okj, &err);
+        if (!okj) {
+            show("打开信封", false, "JSON 解析失败: " + err);
+            return;
+        }
+        Envelope env;
+        env.sessionKeyCipher = uk::b64Decode(j.at("key_cipher").asString());
+        env.macKeyCipher = uk::b64Decode(j.at("mac_key_cipher").asString());
+        env.iv = uk::b64Decode(j.at("iv").asString());
+        env.cipher = uk::b64Decode(j.at("cipher").asString());
+        env.mac = uk::b64Decode(j.at("mac").asString());
+        Bytes plain;
+        bool ok = ctx.mgr->openEnvelope(env, plain, err);
+        show("打开信封", ok, err, ok ? u8(plain) : QString());
+        ctx.done("打开信封", ok, err);
+    };
+    btnSeal->connect(btnSeal, &QPushButton::clicked, [=, &ctx] {
+        std::string err;
+        Bytes pub = uk::fromHex(envPub->text().toStdString());
+        if (pub.empty()) {

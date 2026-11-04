@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.quick-check · 来源 quick_check.py:5-26
+
+import os, sys
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from utils.remote_tool import RemoteTool
+
+remote = RemoteTool(config_path=os.path.join(HERE, 'config.yaml'))
+remote.connect()
+print("SSH OK\n")
+
+def run(cmd, desc=""):
+    if desc:
+        print(">> {}".format(desc))
+    code, out, err = remote.exec(cmd, timeout=60)
+    out = (out or '').strip()
+    if out:
+        print(out[:3000])
+    print("")
+    return out
+
+run("top -b -n 1 | head -n 10", "top 里程碑")
+run("k3s kubectl get deploy -n saas 2>/dev/null | grep openapi | grep -c '1/1'", "运行中 openapi (1/1)")
+run("k3s kubectl get deploy -n saas 2>/dev/null | grep openapi | grep -c '0/0'", "未启动 openapi (0/0)")

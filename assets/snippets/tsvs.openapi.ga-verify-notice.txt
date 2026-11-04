@@ -1,0 +1,27 @@
+# 一休作品集 · 脱敏接口说明
+# 条目 tsvs.openapi.ga-verify · 公司项目不公开源代码
+
+// 区域 CA 对接验签
+// 公司项目 · 脱敏接口说明
+// 技术栈: 
+
+/**
+ * 核心功能接口
+ */
+public interface GaVerifyService {
+    
+    /**
+     * 执行业务逻辑
+     */
+    Result execute(Request request);
+    
+    /**
+     * 参数校验
+     */
+    boolean validate(Input input);
+    
+    /**
+     * 审计记录
+     */
+    void audit(Action action, Result result);
+}

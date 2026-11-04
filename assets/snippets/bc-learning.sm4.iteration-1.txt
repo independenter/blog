@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm4.iteration · 来源 Sm4EssenceTest.java:112-133
+
+    private static final int BS = 16;
+    /** M32_BIG = 2³²−1 的大数形态（BigInteger 版的 u32）：GCM 的 inc32 加完 1 后要"只留低 32 位"。 */
+    private static final BigInteger M32_BIG = BigInteger.valueOf(Calc.M32);
+
+    /** S 盒：SM4 唯一的非线性来源 —— 一张 byte -> byte 的查表，不是对象。
+     * <pre>
+     *   长什么样  256 个表项：下标是 1 个字节（0..255），值也是 1 个字节。第 0 格是 0xd6，第 255 格是 0x48
+     *   本质      它是一个<b>置换 (permutation)</b>：256 个输入各对应唯一输出，且 256 个像互不相同
+     *             （下面有一个测试专门用布尔表数一遍），所以查表可逆、解密时不丢信息
+     *   记号      就是公式里的 τ（见 {@link #tau}）：一个 32-bit 字的 4 个字节各自进表里换一次
+     *   为什么是非线性  表里没有任何代数结构可用，导致 τ(a ⊕ b) ≠ τ(a) ⊕ τ(b)；
+     *             攻击者输入差分时，输出差分被彻底打散 —— 这就是"混淆 (confusion)"，
+     *             全 SM4 只有这一处非线性，其余全是移位和异或（纯线性），所以 S 盒一坏整个算法就塌
+     *   国标来源  GB/T 32907 附录直接给的固定表，与算法结构一起构成"公开设计"（柯克霍夫原则：安全只依赖密钥）
+     * </pre>
+     */
+    private static final byte[] S_BOX =
+    {
+        (byte)0xd6, (byte)0x90, (byte)0xe9, (byte)0xfe, (byte)0xcc, (byte)0xe1, (byte)0x3d, (byte)0xb7, (byte)0x16, (byte)0xb6, (byte)0x14, (byte)0xc2, (byte)0x28, (byte)0xfb, (byte)0x2c, (byte)0x05,
+        (byte)0x2b, (byte)0x67, (byte)0x9a, (byte)0x76, (byte)0x2a, (byte)0xbe, (byte)0x04, (byte)0xc3, (byte)0xaa, (byte)0x44, (byte)0x13, (byte)0x26, (byte)0x49, (byte)0x86, (byte)0x06, (byte)0x99,
+        (byte)0x9c, (byte)0x42, (byte)0x50, (byte)0xf4, (byte)0x91, (byte)0xef, (byte)0x98, (byte)0x7a, (byte)0x33, (byte)0x54, (byte)0x0b, (byte)0x43, (byte)0xed, (byte)0xcf, (byte)0xac, (byte)0x62,
+        (byte)0xe4, (byte)0xb3, (byte)0x1c, (byte)0xa9, (byte)0xc9, (byte)0x08, (byte)0xe8, (byte)0x95, (byte)0x80, (byte)0xdf, (byte)0x94, (byte)0xfa, (byte)0x75, (byte)0x8f, (byte)0x3f, (byte)0xa6,

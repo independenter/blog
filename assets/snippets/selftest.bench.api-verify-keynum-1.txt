@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.bench.api-verify-keynum · 来源 test_data.py:145-166
+
+def build_verify(did=None):
+    """数据验签（外部密钥）"""
+    body = {
+        "algorithmType": ALGORITHM_TYPE,
+        "data": _current_data_hex,
+        "signature": SAMPLE_SIGNATURE,
+        "pucId": PUC_ID,
+        "plainIsEncode": False,
+        "publicKey": PUBLIC_KEY,
+    }
+    return "/api/crypto/verify", body
+
+
+def build_sign_key_num(did=None):
+    """数据签名（密钥号）"""
+    body = {
+        "privateKey": str(SIGN_KEY_INDEX),
+        "algorithmType": ALGORITHM_TYPE,
+        "data": _current_data_hex,
+        "plainIsEncode": False,
+        "pucId": PUC_ID,
+    }

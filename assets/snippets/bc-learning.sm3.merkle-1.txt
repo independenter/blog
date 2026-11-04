@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm3.merkle · 来源 Sm3EssenceTest.java:51-72
+
+@Slf4j
+public class Sm3EssenceTest
+{
+    @Rule
+    public TraceExecutionRule traceRule = new TraceExecutionRule();
+
+    /** HMAC / KDF 里 SM3 的分组长度（字节）。 */
+    private static final int BLOCK_SIZE = Sm3.BLOCK_SIZE;
+
+    // ------------------------------------------------------------------ 测试
+
+    /**
+     * 标准测试向量：SM3("abc") 与 SM3("abcd"*16)。自己的面向过程实现必须一字不差。
+     *
+     * <p>两个向量分别覆盖 3 字节（1 个块，填充后 0x80 + 53 个 0 + 8 字节长度）与
+     * 64 字节（恰好对齐，填充必须<b>再开一整块</b>）两种填充分支；
+     * 期望值是 GB/T 32905 附录里的原文，逐位（256 bit = 64 个十六进制字符）比对。
+     */
+    @TraceExecution(value = "SM3 标准向量与逐块压缩", algorithm = "SM3", flow = "SM3-HASH")
+    @Test
+    public void sm3EssenceMatchesGbt32905Vectors()
+        throws Exception

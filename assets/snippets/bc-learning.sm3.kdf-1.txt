@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm3.kdf · 来源 Sm3EssenceTest.java:349-370
+
+    private static byte[] kdf(byte[] z, int klen)
+    {
+        int blocks = Calc.ceilDiv(klen, 32);
+        byte[] stream = new byte[0];
+        for (int ct = 1; ct <= blocks; ct++)
+        {
+            // 把 32-bit 计数器 ct 摊成 4 个字节，高位在前（大端）：i = 0 取第 31..24 位
+            byte[] counterBytes = new byte[4];
+            for (int i = 0; i < 4; i++)
+            {
+                counterBytes[i] = (byte)(ct >>> (24 - 8 * i));
+            }
+            stream = Calc.concat(stream, Sm3.sm3(Calc.concat(z, counterBytes)));
+        }
+        return Arrays.copyOf(stream, klen);
+    }
+
+    /**
+     * 填充模式的"哈希侧视角"：0x80 + 0 填充 vs 只追加长度 —— 说明为什么 SM3 不需要加密式填充。
+     *
+     * <p>MD 填充式：m ‖ 0x80 ‖ 0^k ‖ len₆₄(m)，要求总长 ≡ 0 (mod 64)。
+     * 三条断言的分界点解释（len 是消息<b>字节</b>数，8 字节给长度字段，块长 64 字节）：

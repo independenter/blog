@@ -1,0 +1,20 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.k3s-recover · 来源 recover_k3s.py:73-89
+
+    run("top -b -n 1 | head -10", "CPU 概览")
+    run("mpstat 3 1", "mpstat")
+    run("docker ps 2>/dev/null | head -20", "docker 容器列表")
+    run("docker ps 2>/dev/null | wc -l", "docker 容器总数")
+    run("k3s kubectl get pods --all-namespaces 2>/dev/null | head -25", "k3s Pod 列表")
+    run("k3s kubectl get nodes 2>/dev/null", "节点状态")
+    run("ps -eo pid,comm | grep -c hsm || echo 0", "hsm 进程")
+    run("ps -eo pid,comm | grep -c pgpool || echo 0", "pgpool 进程")
+    run("ps -eo pid,comm | grep -c containerd-shim || echo 0", "containerd-shim")
+    run("ps -eLf | wc -l", "总线程数")
+    run("vmstat 3 2 | tail -3", "vmstat")
+
+    remote.close()
+    print("\n恢复完成!")
+
+if __name__ == '__main__':
+    main()

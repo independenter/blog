@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.sm3.bool · 来源 Sm3EssenceTest.java:502-523
+
+    @TraceExecution(value = "布尔函数分解为异或与循环移位", algorithm = "SM3", flow = "SM3-BOOL")
+    @Test
+    public void booleanFunctionsDecomposeToXorAndRotate()
+    {
+        long a = 0xdeadbeefL, b = 0x12345678L, c = 0xcafebabeL;
+        Tracer.trace("start", new Object[]{"a", Calc.hex(new long[]{a}), "b", Calc.hex(new long[]{b}),
+            "c", Calc.hex(new long[]{c})}, null, "start");
+        // 前 16 轮 FF/GG 都是纯异或（线性）
+        Assert.assertEquals(u32(a ^ b ^ c), Sm3.ff(0L, a, b, c));
+        Assert.assertEquals(u32(a ^ b ^ c), Sm3.gg(15L, a, b, c));
+        // 16 轮之后 FF 变成多数函数、GG 变成选择函数（引入非线性）
+        Assert.assertEquals(u32((a & b) | (a & c) | (b & c)), Sm3.ff(16L, a, b, c));
+        Assert.assertEquals(u32((a & b) | ((~a & M32) & c)), Sm3.gg(63L, a, b, c));
+        Tracer.trace("ff", new Object[]{"j0", 0, "j16", 16, "a", Calc.hex(new long[]{a}),
+            "b", Calc.hex(new long[]{b}), "c", Calc.hex(new long[]{c})},
+            "FF(0)=" + Calc.hex(new long[]{Sm3.ff(0L, a, b, c)}) + " (期望 "
+                + Calc.hex(new long[]{u32(a ^ b ^ c)}) + "); FF(16)="
+                + Calc.hex(new long[]{Sm3.ff(16L, a, b, c)}) + " (期望 "
+                + Calc.hex(new long[]{u32((a & b) | (a & c) | (b & c))}) + ")", "ff");
+        Tracer.trace("gg", new Object[]{"j15", 15, "j63", 63, "a", Calc.hex(new long[]{a}),
+            "b", Calc.hex(new long[]{b}), "c", Calc.hex(new long[]{c})},
+            "GG(15)=" + Calc.hex(new long[]{Sm3.gg(15L, a, b, c)}) + " (期望 "

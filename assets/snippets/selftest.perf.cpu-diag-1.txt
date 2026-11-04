@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 selftest.perf.cpu-diag · 来源 cpu_diag.py:296-317
+
+    def _kernel_thread_cpu(self):
+        """内核线程 CPU 消耗"""
+        r = self.remote
+        result = {}
+
+        # 内核线程列表（方括号包裹）按 CPU 排序
+        print("\n  [内核线程 CPU top 20]")
+        _, out, _ = r.exec(
+            "ps -eo pid,%cpu,%mem,comm --sort=-%cpu | head -1; "
+            "ps -eo pid,%cpu,%mem,comm --sort=-%cpu | awk '$4 ~ /^\\[/ {print}' | head -20")
+        result['kernel_top'] = out.strip()
+        print(out.strip())
+
+        # 特别关注的内核线程
+        print("\n  [高消耗内核线程排查]")
+        _, out, _ = r.exec(
+            "ps -eo pid,%cpu,comm --sort=-%cpu | awk '$2 > 1.0 && $3 ~ /^\\[/ {print}'")
+        result['high_kernel'] = out.strip()
+        if out.strip():
+            print(out.strip())
+            print("  [!] 发现 CPU > 1% 的内核线程")
+        else:

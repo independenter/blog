@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.rsa.pkcs1-enc · 来源 RsaEssenceTest.java:348-369
+
+    private static BigInteger[] keyGen(BigInteger p, BigInteger q, BigInteger e)
+    {
+        return keyGen(p, q, e, true);
+    }
+
+    /**
+     * emitTrace = false 用于"已经由调用方讲完密钥生成、这里只是重建元组"的场景，
+     * 避免同一组 selectP/computeN 事件在流程图上重复出现、打乱主题顺序。
+     */
+    private static BigInteger[] keyGen(BigInteger p, BigInteger q, BigInteger e, boolean emitTrace)
+    {
+        if (emitTrace)
+        {
+            Tracer.trace("selectP", new Object[]{"bits", 1024}, p, "selectP");
+            Tracer.trace("selectQ", new Object[]{"bits", 1024}, q, "selectQ");
+        }
+
+        BigInteger n = p.multiply(q);
+        if (emitTrace)
+        {
+            Tracer.trace("computeN", new Object[]{"p", p, "q", q}, n, "computeN");
+        }

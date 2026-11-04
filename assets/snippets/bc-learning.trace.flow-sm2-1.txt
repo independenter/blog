@@ -1,0 +1,25 @@
+# 一休作品集 · 脱敏代码片段
+# 条目 bc-learning.trace.flow-sm2 · 来源 Flows.java:251-272
+
+    private static FlowDefinition sm2Cipher()
+    {
+        FlowDefinition flow = new FlowDefinition("SM2 公钥加密");
+
+        node(flow, "start", "开始", FlowNodeType.TERMINAL, "");
+        node(flow, "keygen", "接收方密钥对 (d, P)", FlowNodeType.OPERATION, "解密私钥");
+        node(flow, "c1", "C1 = k·G", FlowNodeType.OPERATION, "临时公钥点");
+        node(flow, "kdf", "t = KDF(x₂‖y₂, klen)", FlowNodeType.OPERATION, "密钥流");
+        node(flow, "c2", "C2 = M ⊕ t", FlowNodeType.OPERATION, "异或加密");
+        node(flow, "c3", "C3 = SM3(x₂‖M‖y₂)", FlowNodeType.OPERATION, "完整性校验");
+        node(flow, "decrypt", "M' = C2 ⊕ KDF(d·C1)", FlowNodeType.OPERATION, "解密");
+        node(flow, "compare", "M' == M ?", FlowNodeType.DECISION, "往返一致");
+        node(flow, "end", "结束", FlowNodeType.TERMINAL, "");
+
+        chain(flow, "start", "keygen", "c1", "kdf", "c2", "c3", "decrypt", "compare", "end");
+        flow.addEdge("compare", "end", "相等");
+        flow.setStartNodeId("start");
+        return flow;
+    }
+
+    private static FlowDefinition sm2KReuse()
+    {
