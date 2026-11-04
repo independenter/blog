@@ -57,6 +57,18 @@
   .ach-title { font-size: 13px; color: var(--ink-2); margin: 0 0 4px 0; line-height: 1.5; }
   .ach-meta { font: 11px/1.4 var(--mono); color: var(--muted); margin: 0; }
   .ach-arrow { font-size: 18px; color: var(--accent); flex-shrink: 0; }
+  .ai-tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .ai-tool-card { display: flex; flex-direction: column; gap: 12px; padding: 18px; border: 1px solid var(--line); background: var(--panel); }
+  .ai-tool-card:hover { border-color: var(--accent-dim); background: var(--panel-2); }
+  .ai-tool-header { display: flex; align-items: flex-start; gap: 14px; }
+  .ai-tool-icon { font-size: 28px; flex-shrink: 0; }
+  .ai-tool-header h3 { font-size: 15px; margin: 0 0 4px 0; }
+  .ai-tool-meta { font: 11px/1.4 var(--mono); color: var(--muted); }
+  .ai-tool-desc { color: var(--ink-2); font-size: 13px; line-height: 1.75; margin: 0; }
+  .ai-tool-features { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ai-tool-features span { font: 11px/1.4 var(--mono); color: var(--accent); padding: 4px 8px; border: 1px solid var(--accent-dim); background: rgba(62, 224, 200, 0.05); }
+  .ai-tool-link { font: 12px/1 var(--mono); color: var(--accent); text-decoration: none; margin-top: auto; }
+  .ai-tool-link:hover { text-decoration: underline; }
   @media (max-width: 1023px) {
     .about-grid, .contact-block { grid-template-columns: minmax(0,1fr); }
     .featured { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -111,6 +123,7 @@
             <a class="chip" href="#featured">精选项目</a>
             <a class="chip" href="#method">方法</a>
             <a class="chip" href="#experience">经历</a>
+            <a class="chip" href="#ai-capabilities">AI 能力</a>
             <a class="chip" href="#achievements">资质</a>
             <a class="chip" href="#contact">联系</a>
           </div>
@@ -204,8 +217,70 @@ check: hashes identical across rerun</pre>
         </ol>
       </section>
 
+      <section class="section" id="ai-capabilities">
+        <div class="section-head"><h2>AI 能力与工具</h2><span class="meta">06 / AI CAPABILITIES · 借助 AI 实现全栈多语言开发</span></div>
+        <div class="ai-tools-grid">
+          <div class="ai-tool-card">
+            <div class="ai-tool-header">
+              <span class="ai-tool-icon">🤖</span>
+              <div>
+                <h3>Agent 智能体学习项目</h3>
+                <span class="ai-tool-meta">Python / Java · Ollama · LangGraph · RAG</span>
+              </div>
+            </div>
+            <p class="ai-tool-desc">从零构建 AI Agent 系统：ReAct 循环、记忆与 RAG、Graph 工作流、FastAPI 服务化。涵盖 Python 与 Java 双语言实现，遵循 FDE（Forward Deployed Engineer）落地思维。</p>
+            <div class="ai-tool-features">
+              <span>6 阶段学习路径</span>
+              <span>裸 Agent → Memory → Graph → 服务化</span>
+              <span>本地 Ollama 模型</span>
+              <span>Web UI + 工具调用</span>
+            </div>
+            <a href="https://github.com/independenter/agent-learning" target="_blank" class="ai-tool-link">查看项目 →</a>
+          </div>
+
+          <div class="ai-tool-card">
+            <div class="ai-tool-header">
+              <span class="ai-tool-icon">🔧</span>
+              <div>
+                <h3>远程服务器调试 Skill</h3>
+                <span class="ai-tool-meta">SSH / SFTP · Paramiko · Kubectl · Docker</span>
+              </div>
+            </div>
+            <p class="ai-tool-desc">Qoder 自动化技能：通过 SSH/SFTP 与远程服务器交互，执行命令、文件传输、脚本下发、K8s/Docker 操作。安全优先原则——只读诊断、写操作需确认、凭据不落地。</p>
+            <div class="ai-tool-features">
+              <span>公钥免密登录</span>
+              <span>多机身份确认</span>
+              <span>脚本化而非裸命令</span>
+              <span>敏感信息过滤</span>
+            </div>
+            <span class="ai-tool-link">Qoder Skill · remote-server-debug</span>
+          </div>
+
+          <div class="ai-tool-card">
+            <div class="ai-tool-header">
+              <span class="ai-tool-icon">📊</span>
+              <div>
+                <h3>性能调优根因分析 Skill</h3>
+                <span class="ai-tool-meta">CPU / 内存 / IO · 探针脚本 · 证据链闭环</span>
+              </div>
+            </div>
+            <p class="ai-tool-desc">系统性性能调优方法论：多轮编号追踪、只读探针采样、证据链闭环（现场采样 + 源码/反汇编印证）、量化对比与干预实验。适用于无监控体系下的瓶颈定位。</p>
+            <div class="ai-tool-features">
+              <span>8 步工作流</span>
+              <span>6 种标准探针模式</span>
+              <span>线程级归因三板斧</span>
+              <span>根因报告模板</span>
+            </div>
+            <span class="ai-tool-link">Qoder Skill · perf-tuning-root-cause</span>
+          </div>
+        </div>
+        <p style="margin-top:16px;color:var(--muted);font-size:12px;text-align:center">
+          AI 不是替代，是放大器——把 8 年经验提炼成可复用的流程、Skill 与知识库
+        </p>
+      </section>
+
       <section class="section" id="achievements">
-        <div class="section-head"><h2>资质与成果</h2><span class="meta">06 / ACHIEVEMENTS</span></div>
+        <div class="section-head"><h2>资质与成果</h2><span class="meta">07 / ACHIEVEMENTS</span></div>
         <div class="achievements-grid">
           <a href="https://zedpuboljbzkdpbzzlxl.supabase.co/storage/v1/object/public/certificates/patent.pdf" target="_blank" class="achievement-card">
             <div class="ach-icon">⚙</div>
@@ -232,7 +307,7 @@ check: hashes identical across rerun</pre>
       </section>
 
       <section class="section" id="contact">
-        <div class="section-head"><h2>联系</h2><span class="meta">07 / CONTACT</span></div>
+        <div class="section-head"><h2>联系</h2><span class="meta">08 / CONTACT</span></div>
         <div class="contact-block">
           <div>
             <h3 style="font-size:20px;line-height:1.4">有一个想认真做出来的东西？</h3>
