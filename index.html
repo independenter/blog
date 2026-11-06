@@ -83,6 +83,553 @@
     .featured { grid-template-columns: minmax(0,1fr); }
     .timeline li { grid-template-columns: minmax(0,1fr); gap: 6px; }
   }
+  
+  /* Story section styles */
+  .story-intro {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 32px;
+  }
+  
+  .story-lead {
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0 0 12px 0;
+  }
+  
+  .story-lead strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  
+  .story-sub {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  
+  .story-chapter {
+    margin-bottom: 48px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+  }
+  
+  .chapter-header {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  
+  .chapter-marker {
+    font: 700 36px/1 var(--mono);
+    color: var(--accent);
+    text-align: center;
+    padding: 16px;
+    border: 2px solid var(--accent-dim);
+    background: rgba(62, 224, 200, 0.05);
+  }
+  
+  .chapter-rescue .chapter-marker {
+    color: var(--danger);
+    border-color: var(--danger);
+    background: rgba(239, 107, 90, 0.05);
+  }
+  
+  .chapter-defend .chapter-marker {
+    color: var(--amber);
+    border-color: var(--amber);
+    background: rgba(226, 163, 90, 0.05);
+  }
+  
+  .chapter-attack .chapter-marker {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+    background: rgba(62, 224, 200, 0.05);
+  }
+  
+  .chapter-title h3 {
+    font-size: 20px;
+    margin: 0 0 8px 0;
+    color: var(--ink);
+  }
+  
+  .chapter-meta {
+    font: 12px/1.4 var(--mono);
+    color: var(--muted);
+  }
+  
+  /* Case cards for rescue chapter */
+  .case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .case-card {
+    display: flex;
+    gap: 16px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    transition: all 0.15s;
+  }
+  
+  .case-card:hover {
+    border-color: var(--line-strong);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .case-critical {
+    border-left: 3px solid var(--danger);
+  }
+  
+  .case-high {
+    border-left: 3px solid var(--amber);
+  }
+  
+  .case-medium {
+    border-left: 3px solid var(--accent-dim);
+  }
+  
+  .case-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+  
+  .case-content {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .case-content h4 {
+    font-size: 15px;
+    margin: 0 0 12px 0;
+    color: var(--ink);
+  }
+  
+  .case-situation,
+  .case-action,
+  .case-result {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin: 0 0 8px 0;
+  }
+  
+  .case-situation strong,
+  .case-action strong,
+  .case-result strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  
+  .case-content code {
+    font: 12px/1.4 var(--mono);
+    color: var(--accent);
+    padding: 2px 6px;
+    background: rgba(62, 224, 200, 0.1);
+    border: 1px solid var(--accent-dim);
+  }
+  
+  /* Highlight stories */
+  .highlight-stories {
+    margin-top: 32px;
+    padding: 24px;
+    border: 1px solid var(--line-strong);
+    background: rgba(62, 224, 200, 0.02);
+  }
+  
+  .highlight-title {
+    font-size: 16px;
+    margin: 0 0 20px 0;
+    color: var(--ink);
+  }
+  
+  .highlight-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  
+  .highlight-item:last-child {
+    border-bottom: 0;
+  }
+  
+  .highlight-badge {
+    font: 600 11px/1 var(--mono);
+    color: var(--ink);
+    text-align: center;
+    padding: 8px 12px;
+    border: 1px solid var(--line-strong);
+    background: var(--panel);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    height: fit-content;
+  }
+  
+  .badge-rescue {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: rgba(239, 107, 90, 0.1);
+  }
+  
+  .badge-praise {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(62, 224, 200, 0.1);
+  }
+  
+  .badge-performance {
+    border-color: var(--amber);
+    color: var(--amber);
+    background: rgba(226, 163, 90, 0.1);
+  }
+  
+  .highlight-content h5 {
+    font-size: 15px;
+    margin: 0 0 10px 0;
+    color: var(--ink);
+  }
+  
+  .highlight-content p {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-2);
+    margin: 0 0 12px 0;
+  }
+  
+  .highlight-content strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  
+  /* Performance comparison */
+  .perf-comparison {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    margin: 16px 0;
+    padding: 16px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+  }
+  
+  .perf-before,
+  .perf-after {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--line);
+  }
+  
+  .perf-before {
+    border-color: var(--danger);
+    background: rgba(239, 107, 90, 0.05);
+  }
+  
+  .perf-after {
+    border-color: var(--accent);
+    background: rgba(62, 224, 200, 0.05);
+  }
+  
+  .perf-label {
+    font: 600 11px/1 var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  
+  .perf-before .perf-label {
+    color: var(--danger);
+  }
+  
+  .perf-after .perf-label {
+    color: var(--accent);
+  }
+  
+  .perf-spec {
+    font-size: 13px;
+    color: var(--ink);
+  }
+  
+  .perf-metric {
+    font: 600 14px/1.4 var(--mono);
+    color: var(--amber);
+  }
+  
+  .perf-arrow {
+    font-size: 24px;
+    color: var(--muted);
+  }
+  
+  .perf-note {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 12px;
+  }
+  
+  /* Infrastructure cards for defend chapter */
+  .infra-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  
+  .infra-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    transition: all 0.15s;
+  }
+  
+  .infra-card:hover {
+    border-color: var(--amber);
+    background: rgba(226, 163, 90, 0.02);
+  }
+  
+  .infra-full {
+    grid-column: 1 / -1;
+  }
+  
+  .infra-icon {
+    font-size: 32px;
+  }
+  
+  .infra-card h4 {
+    font-size: 15px;
+    margin: 0;
+    color: var(--ink);
+  }
+  
+  .infra-card p {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  
+  .infra-card strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  
+  .infra-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  
+  .tag {
+    font: 11px/1 var(--mono);
+    color: var(--amber);
+    padding: 4px 8px;
+    border: 1px solid var(--amber);
+    background: rgba(226, 163, 90, 0.05);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  
+  .cert-list {
+    margin: 12px 0 0 0;
+    padding: 0 0 0 20px;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--ink-2);
+  }
+  
+  .cert-list li {
+    margin-bottom: 6px;
+  }
+  
+  /* Breakthrough cards for attack chapter */
+  .breakthrough-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 20px;
+  }
+  
+  .breakthrough-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    overflow: hidden;
+    transition: all 0.15s;
+  }
+  
+  .breakthrough-card:hover {
+    border-color: var(--accent);
+    background: rgba(62, 224, 200, 0.02);
+  }
+  
+  .breakthrough-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(62, 224, 200, 0.03);
+  }
+  
+  .breakthrough-num {
+    font: 700 32px/1 var(--mono);
+    color: var(--accent);
+  }
+  
+  .breakthrough-header h4 {
+    font-size: 16px;
+    margin: 0;
+    color: var(--ink);
+    flex: 1;
+  }
+  
+  .breakthrough-content {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  
+  .breakthrough-content p {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  
+  .breakthrough-content strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  
+  .breakthrough-solutions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .solution-item {
+    padding: 12px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+  }
+  
+  .solution-label {
+    display: inline-block;
+    font: 600 10px/1 var(--mono);
+    color: var(--accent);
+    padding: 4px 8px;
+    border: 1px solid var(--accent-dim);
+    background: rgba(62, 224, 200, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  
+  .solution-item p {
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin: 0 0 8px 0;
+  }
+  
+  .solution-fix {
+    font-size: 12px;
+    color: var(--ink);
+    margin: 0;
+  }
+  
+  .code-snippet {
+    padding: 12px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    font: 12px/1.6 var(--mono);
+    color: var(--accent);
+    overflow-x: auto;
+  }
+  
+  /* Story coda */
+  .story-coda {
+    margin-top: 48px;
+    padding: 32px;
+    border: 2px solid var(--accent-dim);
+    background: rgba(62, 224, 200, 0.03);
+  }
+  
+  .story-coda .story-quote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+  
+  .story-coda .story-quote cite {
+    margin-top: 16px;
+    font: 12px/1 var(--mono);
+    color: var(--muted);
+    text-align: right;
+  }
+  
+  @media (max-width: 720px) {
+    .chapter-header {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    
+    .chapter-marker {
+      font-size: 28px;
+      padding: 12px;
+    }
+    
+    .case-grid,
+    .infra-grid,
+    .breakthrough-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .highlight-item {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .highlight-badge {
+      width: fit-content;
+    }
+    
+    .perf-comparison {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .perf-arrow {
+      transform: rotate(90deg);
+      text-align: center;
+    }
+    
+    .infra-full {
+      grid-column: 1;
+    }
+  }
+
 </style>
 </head>
 <body data-density="comfortable">
@@ -121,6 +668,7 @@
             <div class="kpi"><b>—</b><span>TIME SPAN</span></div>
           </div>
           <div class="anchor-row">
+            <a class="chip" href="#story">故事</a>
             <a class="chip" href="#about">关于</a>
             <a class="chip" href="#featured">精选项目</a>
             <a class="chip" href="#method">方法</a>
@@ -141,6 +689,287 @@ public=<span class="k" id="t-pub">353</span>  notice=<span class="k" id="t-not">
 scanFindings=[]  <span class="c"># 出站脱敏扫描 0 命中</span>
 indexBytes=<span class="k">85792</span>  <span class="c"># ≤ 90KB</span>
 check: hashes identical across rerun</pre>
+        </div>
+      </section>
+
+      <section class="section story" id="story">
+        <div class="section-head"><h2>我的故事</h2><span class="meta">00 / STORY · 救急 · 守城 · 攻城</span></div>
+        
+        <div class="story-intro">
+          <p class="story-lead">8 年密码学研发，我做过三件事：<strong>救火</strong>、<strong>筑基</strong>、<strong>破局</strong>。</p>
+          <p class="story-sub">从半夜排查 OOM 到挽回 2000 万项目，从整合产线服务到独立通过国密送检，从单向网络同步到全局代理架构——每一个问题都是一次工程判断的锤炼。</p>
+        </div>
+
+        <!-- 第一章：救急 -->
+        <div class="story-chapter chapter-rescue">
+          <div class="chapter-header">
+            <div class="chapter-marker">救急</div>
+            <div class="chapter-title">
+              <h3>现场救火：在崩溃边缘抢回系统</h3>
+              <span class="chapter-meta">7 次关键介入 · 最长稳定运行 5 年 · 挽回 2000 万级项目</span>
+            </div>
+          </div>
+          
+          <div class="case-grid">
+            <div class="case-card case-critical">
+              <div class="case-icon">🔥</div>
+              <div class="case-content">
+                <h4>千亿级三级缓存架构 OOM</h4>
+                <p class="case-situation"><strong>情况：</strong>现场数据量巨大，系统频繁崩溃</p>
+                <p class="case-action"><strong>介入：</strong>Dump 堆内存 → 分析 Ehcache 对象 → 定位 LRU 配置层级失控</p>
+                <p class="case-result"><strong>结果：</strong>配置 <code>net.sf.ehcache.use.classic.lru=true</code>，永久解决一级缓存问题</p>
+              </div>
+            </div>
+
+            <div class="case-card case-critical">
+              <div class="case-icon">💾</div>
+              <div class="case-content">
+                <h4>Metaspace 溢出：微服务稳定性危机</h4>
+                <p class="case-situation"><strong>情况：</strong>新同事自研 RPC 框架，注解生成大量动态代理类</p>
+                <p class="case-action"><strong>介入：</strong>Dump 元数据空间 → 梳理动态代理类 → 估算实际内存需求（128M → 512M）</p>
+                <p class="case-result"><strong>结果：</strong>程序稳定运行 <strong>5 年</strong>未再发生此类问题</p>
+              </div>
+            </div>
+
+            <div class="case-card case-high">
+              <div class="case-icon">⚡</div>
+              <div class="case-content">
+                <h4>CPU 占用过高：微服务环路调用</h4>
+                <p class="case-situation"><strong>情况：</strong>新功能部署后，某时间段 CPU 持续飙高</p>
+                <p class="case-action"><strong>介入：</strong><code>top -H</code> 定位线程 → <code>jstack</code> 分析调用链 → 发现服务间环路调用</p>
+                <p class="case-result"><strong>结果：</strong>拆解环路，恢复系统稳定性</p>
+              </div>
+            </div>
+
+            <div class="case-card case-high">
+              <div class="case-icon">🗄️</div>
+              <div class="case-content">
+                <h4>MySQL 持续崩溃：慢 SQL + 连接风暴</h4>
+                <p class="case-situation"><strong>情况：</strong>索引选择性极低 + 应用层假慢查询 + 微服务连接线程吃光内存</p>
+                <p class="case-action"><strong>介入：</strong>优化索引 → 限制查询数据量 → 调整连接池配置</p>
+                <p class="case-result"><strong>结果：</strong>数据库恢复稳定，支撑业务持续增长</p>
+              </div>
+            </div>
+
+            <div class="case-card case-medium">
+              <div class="case-icon">🔐</div>
+              <div class="case-content">
+                <h4>Kafka + SASL_SSL 通信排查</h4>
+                <p class="case-action"><strong>方法：</strong>OpenSSL 获取服务端证书 → JDB 监控关键返回 → 确认环境匹配</p>
+              </div>
+            </div>
+
+            <div class="case-card case-medium">
+              <div class="case-icon">📊</div>
+              <div class="case-content">
+                <h4>Kafka 生产消费速率不匹配</h4>
+                <p class="case-action"><strong>方案：</strong>快速入库 + 监控告警 → 消费过载时暂停并记录偏移值 → 恢复后继续</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-stories">
+            <h4 class="highlight-title">🏆 现场挽救：关键时刻的担当</h4>
+            
+            <div class="highlight-item">
+              <div class="highlight-badge badge-rescue">挽救</div>
+              <div class="highlight-content">
+                <h5>2000 万级项目演示：当场挽回客户信心</h5>
+                <p>客户对产品存疑，被委派现场调试演示。通过<strong>无数次私下演练</strong>，当场解答疑问，整理拓扑图讲解支持方案，最终挽回客户信心。</p>
+              </div>
+            </div>
+
+            <div class="highlight-item">
+              <div class="highlight-badge badge-praise">赞誉</div>
+              <div class="highlight-content">
+                <h5>老项目协同签名故障：获得客户邮件夸奖</h5>
+                <p>领导决策失误裁掉老员工，未交接就派我接手。获取权限后赴现场安抚客户，修复问题，获得<strong>大华</strong>邮件表彰。</p>
+              </div>
+            </div>
+
+            <div class="highlight-item">
+              <div class="highlight-badge badge-performance">性能</div>
+              <div class="highlight-content">
+                <h5>北京公安亿级平台：单机性能优化 8 倍</h5>
+                <p>半夜与现场对数字信封逻辑，凭借专业密码学功底猜测正确调用方式，获得书面赞赏。后续性能优化：</p>
+                <div class="perf-comparison">
+                  <div class="perf-before">
+                    <span class="perf-label">优化前</span>
+                    <span class="perf-spec">100KB × 50 并发</span>
+                    <span class="perf-metric">QPS 1000 · P99 3000ms</span>
+                  </div>
+                  <div class="perf-arrow">→</div>
+                  <div class="perf-after">
+                    <span class="perf-label">优化后</span>
+                    <span class="perf-spec">100KB × 500 并发</span>
+                    <span class="perf-metric">QPS 4000 · P99 200ms</span>
+                  </div>
+                </div>
+                <p class="perf-note">并发提升 10 倍，延迟降低 15 倍。背景：工作太多无法出差，出差同事解释不清现场逻辑。</p>
+              </div>
+            </div>
+
+            <div class="highlight-item">
+              <div class="highlight-badge badge-rescue">限流</div>
+              <div class="highlight-content">
+                <h5>定制 API 导致产品瘫痪：紧急限流恢复</h5>
+                <p>某 IP 调用量异常导致产品无法使用，紧急在 Nginx 增加限流配置，恢复服务。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第二章：守城 -->
+        <div class="story-chapter chapter-defend">
+          <div class="chapter-header">
+            <div class="chapter-marker">守城</div>
+            <div class="chapter-title">
+              <h3>基础设施：把能力沉淀成可复用的组件</h3>
+              <span class="chapter-meta">2 个产线级服务整合 · 4 项国密送检 · 多家 CA 兼容</span>
+            </div>
+          </div>
+
+          <div class="infra-grid">
+            <div class="infra-card">
+              <div class="infra-icon">📁</div>
+              <h4>整合产线文件上传服务</h4>
+              <p>统一文件上传接口，返回文件 ID，做成独立组件。<strong>替换底层存储不影响上层业务</strong>，实现存储层解耦。</p>
+              <div class="infra-tags">
+                <span class="tag">组件化</span>
+                <span class="tag">存储解耦</span>
+                <span class="tag">无感替换</span>
+              </div>
+            </div>
+
+            <div class="infra-card">
+              <div class="infra-icon">🔍</div>
+              <h4>整合产线数据检索服务</h4>
+              <p>梳理大数据查询常用语法，提供统一查询接口。<strong>底层对接 Elasticsearch、ClickHouse 无感切换</strong>，屏蔽存储差异。</p>
+              <div class="infra-tags">
+                <span class="tag">统一接口</span>
+                <span class="tag">ES / ClickHouse</span>
+                <span class="tag">存储无关</span>
+              </div>
+            </div>
+
+            <div class="infra-card infra-cert">
+              <div class="infra-icon">🛡️</div>
+              <h4>独立签名验签服务器国密送检</h4>
+              <p>独立完成产品送检，对接多项国标：</p>
+              <ul class="cert-list">
+                <li>GA 216.1-1999 计算机信息系统安全产品部件</li>
+                <li>GMT 0029-2014 签名验签服务器技术规范</li>
+                <li>GMT 0033-2014 时间戳接口规范</li>
+                <li>GBT 20520-2025 公钥基础设施时间戳规范</li>
+              </ul>
+            </div>
+
+            <div class="infra-card infra-cert">
+              <div class="infra-icon">☁️</div>
+              <h4>独立云密码机国密送检</h4>
+              <p>独立完成云密码机产品送检，对接多项国标：</p>
+              <ul class="cert-list">
+                <li>GMT 0028-2024 密码模块安全技术要求</li>
+                <li>GMT 0018-2012 密码设备应用接口规范</li>
+                <li>GMT 0088-2020 云服务器密码机管理接口规范</li>
+              </ul>
+            </div>
+
+            <div class="infra-card infra-full">
+              <div class="infra-icon">🔑</div>
+              <h4>各家 CA 数字信封格式学习、解封、兼容</h4>
+              <p>研究多家 CA 厂商的数字信封实现，完成格式解析与兼容适配，确保跨 CA 互操作性。</p>
+              <div class="infra-tags">
+                <span class="tag">多 CA 兼容</span>
+                <span class="tag">数字信封</span>
+                <span class="tag">格式解析</span>
+                <span class="tag">互操作性</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 第三章：攻城 -->
+        <div class="story-chapter chapter-attack">
+          <div class="chapter-header">
+            <div class="chapter-marker">攻城</div>
+            <div class="chapter-title">
+              <h3>技术突破：解决别人没遇到过的问题</h3>
+              <span class="chapter-meta">3 个创新方案 · 权限架构设计 · 全局代理模式 · 国际化改造</span>
+            </div>
+          </div>
+
+          <div class="breakthrough-grid">
+            <div class="breakthrough-card">
+              <div class="breakthrough-header">
+                <span class="breakthrough-num">01</span>
+                <h4>单向网络数据同步 + 拓扑权限管理</h4>
+              </div>
+              <div class="breakthrough-content">
+                <p><strong>挑战：</strong>在单向网络访问条件下实现数据同步，同时保证权限管理的正确性。</p>
+                <div class="breakthrough-solutions">
+                  <div class="solution-item">
+                    <span class="solution-label">问题 1</span>
+                    <p>权限对象被外部修改导致业务异常</p>
+                    <p class="solution-fix"><strong>方案：</strong>使用深拷贝隔离权限对象</p>
+                  </div>
+                  <div class="solution-item">
+                    <span class="solution-label">问题 2</span>
+                    <p>所有节点拓扑组网，数据获取需通过拓扑获取权限</p>
+                    <p class="solution-fix"><strong>方案：</strong>基于拓扑结构的权限查询架构</p>
+                  </div>
+                  <div class="solution-item">
+                    <span class="solution-label">问题 3</span>
+                    <p>拓扑网权限需要提供工具支持</p>
+                    <p class="solution-fix"><strong>方案：</strong>通过 <code>RequestParamArgumentResolver</code> 提供权限充血 DTO</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="breakthrough-card">
+              <div class="breakthrough-header">
+                <span class="breakthrough-num">02</span>
+                <h4>全局代理模式切换支持</h4>
+              </div>
+              <div class="breakthrough-content">
+                <p><strong>挑战：</strong>在微服务架构中，需要动态切换全局代理能力，支持不同场景的调用策略。</p>
+                <p><strong>方案：</strong>自定义 OpenFeign 客户端提供者，通过注解修改全局代理能力，实现灵活的代理模式切换。</p>
+                <div class="code-snippet">
+                  <code>@CustomFeignClient(proxyMode = "dynamic")</code>
+                </div>
+              </div>
+            </div>
+
+            <div class="breakthrough-card">
+              <div class="breakthrough-header">
+                <span class="breakthrough-num">03</span>
+                <h4>i18n 项目改造</h4>
+              </div>
+              <div class="breakthrough-content">
+                <p><strong>挑战：</strong>将现有项目改造为支持国际化，需要系统性地识别和处理所有中文内容。</p>
+                <div class="breakthrough-solutions">
+                  <div class="solution-item">
+                    <span class="solution-label">步骤 1</span>
+                    <p>创建扫描脚本，自动扫描项目涉及的所有中文位置</p>
+                    <p class="solution-fix"><strong>产出：</strong>工作量评估报告</p>
+                  </div>
+                  <div class="solution-item">
+                    <span class="solution-label">步骤 2</span>
+                    <p>根据模块和功能维度确定具体工作内容</p>
+                    <p class="solution-fix"><strong>产出：</strong>分阶段改造计划</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-coda">
+          <blockquote class="story-quote">
+            <p>「救急让我学会了在压力下保持判断，守城让我懂得了把经验沉淀成系统，攻城让我敢于面对未知问题。这三段经历，塑造了我对工程的理解：先让系统活下来，再让它活得久，最后让它活得更好。」</p>
+            <cite>— 一休 · 8 年密码学研发总结</cite>
+          </blockquote>
         </div>
       </section>
 
