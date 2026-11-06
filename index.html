@@ -629,6 +629,126 @@
       grid-column: 1;
     }
   }
+  
+  /* Value proposition section */
+  .value-prop {
+    margin-bottom: 48px;
+  }
+  
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  
+  .value-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    overflow: hidden;
+    transition: all 0.15s;
+  }
+  
+  .value-card:hover {
+    border-color: var(--line-strong);
+    background: var(--panel-2);
+  }
+  
+  .value-dev:hover {
+    border-color: var(--accent);
+  }
+  
+  .value-mgmt:hover {
+    border-color: var(--amber);
+  }
+  
+  .value-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .value-dev .value-header {
+    background: rgba(62, 224, 200, 0.03);
+  }
+  
+  .value-mgmt .value-header {
+    background: rgba(226, 163, 90, 0.03);
+  }
+  
+  .value-icon {
+    font-size: 32px;
+  }
+  
+  .value-header h3 {
+    font-size: 18px;
+    margin: 0;
+    color: var(--ink);
+  }
+  
+  .value-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .value-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .value-label {
+    font: 600 14px/1.4 var(--sans);
+    color: var(--ink);
+    padding: 6px 12px;
+    border-left: 3px solid var(--accent);
+    background: rgba(62, 224, 200, 0.05);
+  }
+  
+  .value-mgmt .value-label {
+    border-left-color: var(--amber);
+    background: rgba(226, 163, 90, 0.05);
+  }
+  
+  .value-item p {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--ink-2);
+    margin: 0;
+    padding-left: 15px;
+  }
+  
+  .value-footer {
+    padding: 24px;
+    border: 2px solid var(--line-strong);
+    background: rgba(255, 255, 255, 0.02);
+    text-align: center;
+  }
+  
+  .value-footer p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--ink);
+    margin: 0;
+  }
+  
+  .value-footer strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  
+  @media (max-width: 720px) {
+    .value-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 
 </style>
 </head>
@@ -668,6 +788,7 @@
             <div class="kpi"><b>—</b><span>TIME SPAN</span></div>
           </div>
           <div class="anchor-row">
+            <a class="chip" href="#value">能做什么</a>
             <a class="chip" href="#story">故事</a>
             <a class="chip" href="#about">关于</a>
             <a class="chip" href="#featured">精选项目</a>
@@ -689,6 +810,74 @@ public=<span class="k" id="t-pub">353</span>  notice=<span class="k" id="t-not">
 scanFindings=[]  <span class="c"># 出站脱敏扫描 0 命中</span>
 indexBytes=<span class="k">85792</span>  <span class="c"># ≤ 90KB</span>
 check: hashes identical across rerun</pre>
+        </div>
+      </section>
+
+      <section class="section value-prop" id="value">
+        <div class="section-head"><h2>我能为你做什么</h2><span class="meta">VALUE · 开发与管理双线能力</span></div>
+        
+        <div class="value-grid">
+          <div class="value-card value-dev">
+            <div class="value-header">
+              <div class="value-icon">⚙️</div>
+              <h3>作为开发</h3>
+            </div>
+            <div class="value-content">
+              <div class="value-item">
+                <div class="value-label">多思考一层</div>
+                <p>拿到需求不急着写代码。先问：这个功能解决什么问题？有没有更简单的方案？架构上会不会留下隐患？把问题想清楚再动手，避免返工。</p>
+              </div>
+              <div class="value-item">
+                <div class="value-label">把功能做扎实</div>
+                <p>代码不只是能跑，还要好维护。边界条件、异常处理、性能瓶颈，这些在开发阶段就考虑到，而不是等现场出问题再救火。</p>
+              </div>
+              <div class="value-item">
+                <div class="value-label">给客户讲明白</div>
+                <p>技术实现要翻译成业务价值。用客户听得懂的语言解释方案，画清楚拓扑图，让他们知道钱花在哪里、为什么这样设计。</p>
+              </div>
+              <div class="value-item">
+                <div class="value-label">安全意识</div>
+                <p>代码 Review 时关注安全漏洞：输入校验、权限控制、敏感数据处理。6 年密码学研发经验，能从协议层到应用层评估项目安全态势，不让安全隐患留到上线后。</p>
+              </div>
+              <div class="value-item">
+                <div class="value-label">前沿学习</div>
+                <p>持续跟踪 AI 最新进展：Agent 架构、RAG、大模型工程化。不是追热点，而是判断哪些技术能解决实际问题，把前沿研究转化为可落地的工程方案。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="value-card value-mgmt">
+            <div class="value-header">
+              <div class="value-icon">📋</div>
+              <h3>作为项目管理</h3>
+            </div>
+            <div class="value-content">
+              <div class="value-item">
+                <div class="value-label">有序管理</div>
+                <p>任务拆解、优先级排序、里程碑把控。让项目按节奏推进，而不是靠加班赶工。PMP 的方法论不是纸上谈兵，是实战中验证过的。</p>
+              </div>
+              <div class="value-item">
+                <div class="value-label">协调维稳</div>
+                <p>对内：保持团队稳定，避免关键人员流失导致项目断层。对外：维护客户关系，及时沟通预期，不让小问题演变成大矛盾。</p>
+              </div>
+              <div class="value-item">
+                <div class="value-label">高质量交付</div>
+                <p>交付不是终点，是起点。代码要能维护，文档要能看懂，培训要能上手。让客户接手后不骂娘，才是真正的高质量。</p>
+              </div>
+              <div class="value-item">
+                <div class="value-label">风险预判</div>
+                <p>项目初期就识别技术风险、人员风险、进度风险。不是等问题爆发再救火，而是提前准备预案。2000 万项目的经验告诉我：风险管控比危机处理更重要。</p>
+              </div>
+              <div class="value-item">
+                <div class="value-label">危机处理</div>
+                <p>现场出问题时能扛住压力：快速定位、果断决策、稳住客户。半夜排查 OOM、紧急限流恢复、现场挽救演示——这些经历让我学会在混乱中保持秩序。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="value-footer">
+          <p>8 年全栈开发、6 年密码学研发、2000 万级项目现场挽救、亿级平台性能优化——这些经历让我明白：<strong>技术和管理的本质，都是让复杂的事情可控。</strong></p>
         </div>
       </section>
 
